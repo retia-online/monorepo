@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-import { getThemeFromEnv } from '@/lib/theme';
-
-const inter = Inter({ subsets: ['latin'] });
+import { getThemeFromEnv, generateThemeCSS } from '@/lib/theme';
 
 export const metadata: Metadata = {
     title: 'Auth System',
@@ -16,24 +13,18 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     const theme = getThemeFromEnv();
+    const themeCSS = generateThemeCSS(theme);
+    const fontUrl = `https://fonts.googleapis.com/css2?family=${theme.fontFamily.replace(/\s+/g, '+')}:wght@300;400;500;600;700&display=swap`;
 
     return (
         <html lang="en">
             <head>
-                <style
-                    dangerouslySetInnerHTML={{
-                        __html: `
-              :root {
-                --primary-color: ${theme.primaryColor};
-                --secondary-color: ${theme.secondaryColor};
-                --background-color: ${theme.backgroundColor};
-                --text-color: ${theme.textColor};
-              }
-            `,
-                    }}
-                />
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link href={fontUrl} rel="stylesheet" />
+                <style dangerouslySetInnerHTML={{ __html: themeCSS }} />
             </head>
-            <body className={inter.className}>{children}</body>
+            <body>{children}</body>
         </html>
     );
 }
