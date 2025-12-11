@@ -13,6 +13,8 @@ export interface IUser extends Document {
     role: UserRole;
     emailVerified?: Date;
     image?: string;
+    resetPasswordToken?: string;
+    resetPasswordExpires?: Date;
     createdAt: Date;
     updatedAt: Date;
     comparePassword(candidatePassword: string): Promise<boolean>;
@@ -50,6 +52,14 @@ const userSchema = new Schema<IUser>(
         image: {
             type: String,
             default: null,
+        },
+        resetPasswordToken: {
+            type: String,
+            select: false, // Don't return by default
+        },
+        resetPasswordExpires: {
+            type: Date,
+            select: false, // Don't return by default
         },
     },
     {

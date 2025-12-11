@@ -2,8 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB, User, UserRole } from '@retia/database';
 import { registerSchema } from '@retia/utils';
 import { sendWelcomeEmail } from '@retia/utils';
+import { rateLimit } from '@/lib/rate-limit';
+import { logger, logAuth, logAPI } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+
+    // Rate limiting
+    const rateLimitResponse = await rateLimit(request, 'register');
+    if (rateLimitResponse) {
+        logAPI.rateLimited(ip, '/api/register');
+        return rateLimitResponse;
+    }
+
     try {
         const body = await request.json();
 
@@ -16,6 +27,12 @@ export async function POST(request: NextRequest) {
         // Check if user already exists
         const existingUser = await User.findOne({ email: validated.email });
         if (existingUser) {
+            logger.warn({
+                event: 'register.duplicate_email',
+                email: validated.email,
+                ip,
+            }, `Registration attempt with existing email: ${validated.email}`);
+
             return NextResponse.json(
                 { error: 'Email ya registrado' },
                 { status: 400 }
@@ -34,11 +51,18 @@ export async function POST(request: NextRequest) {
             role: isFirstUser ? UserRole.ADMIN : UserRole.USER,
         });
 
+        // Log successful registration
+        logAuth.register(user.email, user.role, ip);
+
         // Send welcome email (optional, catch errors to not block registration)
         try {
             await sendWelcomeEmail(user.name, user.email);
         } catch (emailError) {
-            console.error('Failed to send welcome email:', emailError);
+            logger.warn({
+                event: 'email.send_failed',
+                email: user.email,
+                error: emailError instanceof Error ? emailError.message : 'Unknown error',
+            }, 'Failed to send welcome email');
             // Continue anyway
         }
 
@@ -55,7 +79,7 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error: any) {
-        console.error('Registration error:', error);
+        logAPI.error('POST', '/api/register', error instanceof Error ? error : new Error(String(error)), ip);
 
         if (error.name === 'ZodError') {
             return NextResponse.json(

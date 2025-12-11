@@ -4,6 +4,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import { connectDB, User, UserRole } from '@retia/database';
 import { loginSchema } from '@retia/utils';
+import { logger, logAuth } from './logger';
 
 // Get enabled auth providers from environment
 const getEnabledProviders = (): string[] => {
@@ -37,6 +38,7 @@ if (enabledProviders.includes('email')) {
                     const user = await User.findOne({ email: validated.email }).select('+password');
 
                     if (!user || !user.password) {
+                        logAuth.login(validated.email, false);
                         return null;
                     }
 
@@ -44,8 +46,12 @@ if (enabledProviders.includes('email')) {
                     const isValid = await user.comparePassword(validated.password);
 
                     if (!isValid) {
+                        logAuth.login(validated.email, false);
                         return null;
                     }
+
+                    // Log successful login
+                    logAuth.login(user.email, true);
 
                     // Return user object
                     return {
@@ -56,7 +62,10 @@ if (enabledProviders.includes('email')) {
                         image: user.image,
                     };
                 } catch (error) {
-                    console.error('Authorization error:', error);
+                    logger.error({
+                        event: 'auth.error',
+                        error: error instanceof Error ? error.message : 'Unknown error',
+                    }, 'Authorization error');
                     return null;
                 }
             },
@@ -132,6 +141,9 @@ export const authConfig: NextAuthConfig = {
             if (user) {
                 token.id = user.id;
                 token.role = user.role;
+                token.name = user.name;
+                token.email = user.email;
+                token.picture = user.image;
             }
 
             // Refresh token data if needed
@@ -150,9 +162,11 @@ export const authConfig: NextAuthConfig = {
         },
         async session({ session, token }) {
             // Add custom fields to session
-            if (session.user) {
+            if (session.user && token) {
                 session.user.id = token.id as string;
                 session.user.role = token.role as string;
+                session.user.name = token.name as string;
+                session.user.email = token.email as string;
             }
             return session;
         },

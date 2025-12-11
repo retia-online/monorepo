@@ -2,8 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB, User } from '@retia/database';
 import { resetPasswordSchema, sendPasswordResetEmail } from '@retia/utils';
 import crypto from 'crypto';
+import { rateLimit } from '@/lib/rate-limit';
+import { logger, logAuth, logAPI } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+
+    // Rate limiting
+    const rateLimitResponse = await rateLimit(request, 'forgot-password');
+    if (rateLimitResponse) {
+        logAPI.rateLimited(ip, '/api/forgot-password');
+        return rateLimitResponse;
+    }
+
     try {
         const body = await request.json();
 
@@ -18,6 +29,12 @@ export async function POST(request: NextRequest) {
 
         // Always return success even if user doesn't exist (security best practice)
         if (!user) {
+            logger.info({
+                event: 'password_reset.user_not_found',
+                email: validated.email,
+                ip,
+            }, `Password reset requested for non-existent email: ${validated.email}`);
+
             return NextResponse.json(
                 { message: 'Si el email existe, recibirás un link de recuperación' },
                 { status: 200 }
@@ -31,15 +48,25 @@ export async function POST(request: NextRequest) {
             .update(resetToken)
             .digest('hex');
 
-        // Save hashed token to user (you'll need to add these fields to User model)
-        // For now, we'll just send the email
-        // In production, save: resetPasswordToken: hashedToken, resetPasswordExpires: Date.now() + 3600000
+        // Save hashed token to user with 1 hour expiration
+        user.resetPasswordToken = hashedToken;
+        user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
+        await user.save();
+
+        // Log password reset request
+        logAuth.passwordReset(user.email, ip);
 
         try {
             // Send email with reset token
             await sendPasswordResetEmail(user.email, resetToken);
         } catch (emailError) {
-            console.error('Failed to send password reset email:', emailError);
+            logger.error({
+                event: 'email.send_failed',
+                email: user.email,
+                error: emailError instanceof Error ? emailError.message : 'Unknown error',
+                ip,
+            }, 'Failed to send password reset email');
+
             return NextResponse.json(
                 { error: 'Error al enviar el email. Verifica la configuración SMTP.' },
                 { status: 500 }
@@ -51,7 +78,7 @@ export async function POST(request: NextRequest) {
             { status: 200 }
         );
     } catch (error: any) {
-        console.error('Forgot password error:', error);
+        logAPI.error('POST', '/api/forgot-password', error instanceof Error ? error : new Error(String(error)), ip);
 
         if (error.name === 'ZodError') {
             return NextResponse.json(

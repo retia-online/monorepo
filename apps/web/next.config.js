@@ -4,6 +4,7 @@ const nextConfig = {
     transpilePackages: ['@retia/database', '@retia/types', '@retia/utils', '@retia/ui'],
     experimental: {
         serverComponentsExternalPackages: ['mongoose'],
+        instrumentationHook: true,
     },
 }
 
