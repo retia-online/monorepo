@@ -1,0 +1,22 @@
+{
+    "name": "retia-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "yarn workspace @retia/web dev",
+        "build": "yarn workspaces run build",
+        "lint": "yarn workspaces run lint",
+        "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/.next"
+    },
+    "devDependencies": {
+        "typescript": "^5.3.3"
+    },
+    "engines": {
+        "node": ">=18.0.0",
+        "yarn": ">=1.22.0"
+    }
+}
