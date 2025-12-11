@@ -65,8 +65,10 @@ const envSchema = z.object({
     (data) => {
         // If SMTP is partially configured, all SMTP fields should be present
         const smtpFields = [data.SMTP_HOST, data.SMTP_PORT, data.SMTP_USER, data.SMTP_PASSWORD, data.SMTP_FROM];
-        const definedFields = smtpFields.filter(f => f !== undefined);
+        // Filter out undefined AND empty strings
+        const definedFields = smtpFields.filter(f => f !== undefined && f !== '');
 
+        // If some fields are defined but not all, it's an error
         if (definedFields.length > 0 && definedFields.length < 5) {
             return false;
         }
