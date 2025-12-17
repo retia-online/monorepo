@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.next/
+storybook-static/
+coverage/
+.expo/
+*.config.js
+*.config.ts
+next-env.d.ts
+yarn.lock
+package-lock.json
+.env*
+.git/
+scripts/database/test_db.ts

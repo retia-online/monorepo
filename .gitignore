@@ -23,7 +23,7 @@ dist/
 .env.local
 .env.development.local
 .env.test.local
-.env.production.local
+.env.prod
 .env.production
 
 # Debug
@@ -40,6 +40,9 @@ yarn-error.log*
 *~
 .DS_Store
 
+# Agent
+.kiro
+
 # Vercel
 .vercel
 
@@ -50,3 +53,6 @@ next-env.d.ts
 # Misc
 .turbo
 .cache
+
+
+

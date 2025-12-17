@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Retia Auth",
+    "slug": "retia-auth",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTabletMode": true,
+      "bundleIdentifier": "com.retia.auth"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.retia.auth",
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ],
+      "allowBackup": false,
+      "compileSdkVersion": 34,
+      "targetSdkVersion": 34
+    },
+    "web": {},
+    "plugins": [
+      "expo-secure-store",
+      "expo-web-browser"
+    ],
+    "scheme": "retia"
+  }
+}

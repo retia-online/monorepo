@@ -18,15 +18,35 @@ Sistema de autenticación completo construido con Next.js, MongoDB, y NextAuth.j
 ```
 /monorepo
 ├── apps/
-│   └── web/              # Aplicación Next.js
+│   ├── web/              # Aplicación Next.js (Web)
+│   └── mobile/           # Aplicación Expo (iOS/Android)
 ├── packages/
 │   ├── database/         # Modelos y conexión MongoDB
 │   ├── types/            # Tipos TypeScript compartidos
 │   ├── utils/            # Utilidades compartidas
 │   └── ui/               # Componentes UI compartidos
+├── .kiro/specs/          # Especificaciones de features
 ├── .env.local            # Variables de entorno local
 └── package.json          # Workspace root
 ```
+
+## 📱 Apps Disponibles
+
+### Web App (Next.js)
+- Autenticación completa
+- Dashboard de usuario
+- Panel de administración
+- Responsive design
+
+**Documentación**: [apps/web/README.md](./apps/web/README.md)
+
+### Mobile App (Expo)
+- Autenticación email/password
+- OAuth (Google & Facebook)
+- Perfil de usuario
+- iOS y Android
+
+**Documentación**: [MOBILE_GETTING_STARTED.md](./MOBILE_GETTING_STARTED.md) | [apps/mobile/README.md](./apps/mobile/README.md)
 
 ## 🛠️ Requisitos Previos
 
@@ -140,12 +160,41 @@ brew services start mongodb-community
 
 ### 6. Iniciar el Servidor de Desarrollo
 
+**Recomendación**: Usa múltiples terminales para ejecutar ambas apps simultáneamente.
+
+#### Terminal 1: Web App
+
 ```bash
 cd apps/web
 yarn dev
 ```
 
 La aplicación estará disponible en [http://localhost:3000](http://localhost:3000)
+
+#### Terminal 2: Mobile App
+
+```bash
+cd apps/mobile
+yarn start
+
+# Luego abre en simulador
+yarn ios    # iOS
+yarn android # Android
+```
+
+#### Terminal 3: MongoDB (Opcional)
+
+```bash
+# Si usas MongoDB local
+brew services start mongodb-community
+```
+
+**Puertos utilizados:**
+- Web: 3000
+- Mobile: 19000
+- MongoDB: 27017
+
+Ver [DEVELOPMENT_SETUP.md](./DEVELOPMENT_SETUP.md) para configuración completa de desarrollo con ambas apps.
 
 ## 🎨 Personalización del Tema
 
@@ -270,15 +319,19 @@ vercel --prod
 ```bash
 # Desde la raíz del monorepo
 yarn install              # Instalar todas las dependencias
+yarn build                # Build de todas las apps
+yarn lint                 # Linting de todas las apps
+yarn clean                # Limpiar node_modules
 
-# Desde apps/web
-yarn dev                  # Desarrollo
-yarn build                # Build de producción
-yarn start                # Servidor de producción
-yarn lint                 # Linter
+# Web App (apps/web)
+yarn workspace @retia/web dev      # Desarrollo
+yarn workspace @retia/web build    # Build
+yarn workspace @retia/web start    # Producción
 
-# Limpiar node_modules y reinstalar
-yarn clean                # (si está configurado)
+# Mobile App (apps/mobile)
+yarn workspace @retia/mobile start # Desarrollo
+yarn workspace @retia/mobile ios   # iOS
+yarn workspace @retia/mobile android # Android
 ```
 
 ## 🐛 Troubleshooting
@@ -304,14 +357,26 @@ yarn clean                # (si está configurado)
 
 ## 📚 Tecnologías Utilizadas
 
+### Web App
 - **Frontend**: Next.js 14 (App Router), React, TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes, NextAuth.js v5
 - **Base de Datos**: MongoDB con Mongoose
 - **Email**: Nodemailer
-- **Monorepo**: Yarn Workspaces
 - **Deployment**: Vercel
+
+### Mobile App
+- **Framework**: Expo, React Native
+- **Lenguaje**: TypeScript
+- **Navegación**: React Navigation
+- **Autenticación**: Expo Auth Session
+- **Almacenamiento**: Expo Secure Store
+- **Validación**: Zod
+
+### Compartido
+- **Monorepo**: Yarn Workspaces
 - **Validación**: Zod
 - **Seguridad**: bcryptjs para hashing de contraseñas
+- **Tipos**: TypeScript compartidos entre apps
 
 ## 📄 Licencia
 
@@ -321,6 +386,27 @@ MIT
 
 Pull requests son bienvenidos. Para cambios mayores, por favor abre un issue primero.
 
+## 🔗 Documentación Adicional
+
+### Web App
+- [apps/web/README.md](./apps/web/README.md) - Documentación completa
+
+### Mobile App
+- [MOBILE_GETTING_STARTED.md](./MOBILE_GETTING_STARTED.md) - Guía rápida
+- [apps/mobile/README.md](./apps/mobile/README.md) - Documentación completa
+- [apps/mobile/QUICKSTART.md](./apps/mobile/QUICKSTART.md) - Quick start (5 min)
+- [apps/mobile/ARCHITECTURE.md](./apps/mobile/ARCHITECTURE.md) - Arquitectura
+- [apps/mobile/OAUTH_SETUP.md](./apps/mobile/OAUTH_SETUP.md) - OAuth setup
+- [apps/mobile/API_ENDPOINTS.md](./apps/mobile/API_ENDPOINTS.md) - API docs
+
+### Specs
+- [.kiro/specs/mobile-auth-app/requirements.md](./.kiro/specs/mobile-auth-app/requirements.md) - Requisitos
+- [.kiro/specs/mobile-auth-app/design.md](./.kiro/specs/mobile-auth-app/design.md) - Diseño
+- [.kiro/specs/mobile-auth-app/tasks.md](./.kiro/specs/mobile-auth-app/tasks.md) - Tareas
+
 ---
 
-**¿Necesitas ayuda?** Revisa la documentación en `/docs/` o abre un issue.
+**¿Necesitas ayuda?** 
+- Web: Revisa [apps/web/README.md](./apps/web/README.md)
+- Mobile: Revisa [MOBILE_GETTING_STARTED.md](./MOBILE_GETTING_STARTED.md)
+- Abre un issue en el repositorio
