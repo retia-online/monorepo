@@ -11,7 +11,8 @@ const resetPasswordConfirmSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const ip =
+        request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
     // Rate limiting
     const rateLimitResponse = await rateLimit(request, 'reset-password');
@@ -27,10 +28,7 @@ export async function POST(request: NextRequest) {
         const validated = resetPasswordConfirmSchema.parse(body);
 
         // Hash the token to compare with stored hash
-        const hashedToken = crypto
-            .createHash('sha256')
-            .update(validated.token)
-            .digest('hex');
+        const hashedToken = crypto.createHash('sha256').update(validated.token).digest('hex');
 
         // Connect to database
         await connectDB();
@@ -44,10 +42,7 @@ export async function POST(request: NextRequest) {
         if (!user) {
             logSecurity.tokenExpired('unknown', 'password_reset');
 
-            return NextResponse.json(
-                { error: 'Token inválido o expirado' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Token inválido o expirado' }, { status: 400 });
         }
 
         // Update password
@@ -56,29 +51,31 @@ export async function POST(request: NextRequest) {
         user.resetPasswordExpires = undefined;
         await user.save();
 
-        logger.info({
-            event: 'password_reset.success',
-            email: user.email,
-            ip,
-        }, `Password successfully reset for ${user.email}`);
+        logger.info(
+            {
+                event: 'password_reset.success',
+                email: user.email,
+                ip,
+            },
+            `Password successfully reset for ${user.email}`
+        );
 
         return NextResponse.json(
             { message: 'Contraseña actualizada exitosamente' },
             { status: 200 }
         );
     } catch (error: any) {
-        logAPI.error('POST', '/api/reset-password', error instanceof Error ? error : new Error(String(error)), ip);
+        logAPI.error(
+            'POST',
+            '/api/reset-password',
+            error instanceof Error ? error : new Error(String(error)),
+            ip
+        );
 
         if (error.name === 'ZodError') {
-            return NextResponse.json(
-                { error: error.errors[0].message },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
         }
 
-        return NextResponse.json(
-            { error: 'Error al procesar la solicitud' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Error al procesar la solicitud' }, { status: 500 });
     }
 }

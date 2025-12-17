@@ -9,22 +9,22 @@ import { RootNavigator } from '@/navigation/RootNavigator';
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  React.useEffect(() => {
-    // Hide splash screen after a short delay
-    const timer = setTimeout(() => {
-      SplashScreen.hideAsync();
-    }, 1000);
+    React.useEffect(() => {
+        // Hide splash screen after a short delay
+        const timer = setTimeout(() => {
+            SplashScreen.hideAsync();
+        }, 1000);
 
-    return () => clearTimeout(timer);
-  }, []);
+        return () => clearTimeout(timer);
+    }, []);
 
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <AuthProvider>
-          <RootNavigator />
-        </AuthProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
-  );
+    return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaProvider>
+                <AuthProvider>
+                    <RootNavigator />
+                </AuthProvider>
+            </SafeAreaProvider>
+        </GestureHandlerRootView>
+    );
 }

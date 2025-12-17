@@ -16,18 +16,24 @@ export function initializeApp() {
         // Validate environment variables
         const env = validateEnv();
 
-        logger.info({
-            event: 'app.initialized',
-            nodeEnv: env.NODE_ENV,
-            authProviders: env.AUTH_PROVIDERS,
-        }, 'Application initialized successfully');
+        logger.info(
+            {
+                event: 'app.initialized',
+                nodeEnv: env.NODE_ENV,
+                authProviders: env.AUTH_PROVIDERS,
+            },
+            'Application initialized successfully'
+        );
 
         return env;
     } catch (error) {
-        logger.fatal({
-            event: 'app.initialization_failed',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        }, 'Failed to initialize application');
+        logger.fatal(
+            {
+                event: 'app.initialization_failed',
+                error: error instanceof Error ? error.message : 'Unknown error',
+            },
+            'Failed to initialize application'
+        );
 
         throw error;
     }

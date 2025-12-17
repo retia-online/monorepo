@@ -8,7 +8,8 @@ import { SignJWT } from 'jose';
 const JWT_SECRET = new TextEncoder().encode(process.env.NEXTAUTH_SECRET || 'fallback-secret');
 
 export async function POST(request: NextRequest) {
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const ip =
+        request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
     // Rate limiting
     const rateLimitResponse = await rateLimit(request, 'login');
@@ -31,10 +32,7 @@ export async function POST(request: NextRequest) {
 
         if (!user || !user.password) {
             logAuth.login(validated.email, false);
-            return NextResponse.json(
-                { error: 'Credenciales inválidas' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
         }
 
         // Verify password
@@ -42,10 +40,7 @@ export async function POST(request: NextRequest) {
 
         if (!isValid) {
             logAuth.login(validated.email, false);
-            return NextResponse.json(
-                { error: 'Credenciales inválidas' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
         }
 
         // Log successful login
@@ -74,8 +69,13 @@ export async function POST(request: NextRequest) {
             },
             token,
         });
-    } catch (error: any) {
-        logAPI.error('POST', '/api/mobile/auth/login', error instanceof Error ? error : new Error(String(error)), ip);
+    } catch (error: unknown) {
+        logAPI.error(
+            'POST',
+            '/api/mobile/auth/login',
+            error instanceof Error ? error : new Error(String(error)),
+            ip
+        );
 
         if (error.name === 'ZodError') {
             return NextResponse.json(
@@ -84,9 +84,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        return NextResponse.json(
-            { error: 'Error al iniciar sesión' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Error al iniciar sesión' }, { status: 500 });
     }
 }

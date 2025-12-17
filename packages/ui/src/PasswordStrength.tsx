@@ -11,7 +11,11 @@ export interface PasswordStrengthProps {
     className?: string;
 }
 
-export function PasswordStrength({ password, requirements, className = '' }: PasswordStrengthProps) {
+export function PasswordStrength({
+    password,
+    requirements,
+    className = '',
+}: PasswordStrengthProps) {
     if (!password) return null;
 
     return (

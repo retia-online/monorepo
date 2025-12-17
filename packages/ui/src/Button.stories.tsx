@@ -141,8 +141,12 @@ export const AllVariants: Story = {
                 <Button variant="danger">Danger</Button>
             </div>
             <div className="space-x-2">
-                <Button variant="primary" disabled>Disabled</Button>
-                <Button variant="primary" loading>Loading</Button>
+                <Button variant="primary" disabled>
+                    Disabled
+                </Button>
+                <Button variant="primary" loading>
+                    Loading
+                </Button>
             </div>
             <div className="space-x-2">
                 <Button size="sm">Small</Button>

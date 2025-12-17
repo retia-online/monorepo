@@ -1,4 +1,3 @@
-
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
@@ -24,7 +23,7 @@ async function testConnectionStep(name: string, uri: string) {
 
             const collections = await mongoose.connection.db.listCollections().toArray();
             console.log(`📚 Colecciones encontradas (${collections.length}):`);
-            collections.forEach(col => console.log(`   - ${col.name}`));
+            collections.forEach((col) => console.log(`   - ${col.name}`));
         }
     } catch (error) {
         console.error(`❌ Error conectando a ${name}:`, error);

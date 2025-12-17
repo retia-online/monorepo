@@ -142,18 +142,8 @@ export const Controlled: Story = {
 export const FormExample: Story = {
     render: () => (
         <form className="space-y-4 w-96">
-            <Input
-                label="Full Name"
-                type="text"
-                placeholder="John Doe"
-                required
-            />
-            <Input
-                label="Email"
-                type="email"
-                placeholder="john@example.com"
-                required
-            />
+            <Input label="Full Name" type="text" placeholder="John Doe" required />
+            <Input label="Email" type="email" placeholder="john@example.com" required />
             <Input
                 label="Password"
                 type="password"
@@ -161,11 +151,7 @@ export const FormExample: Story = {
                 helperText="Minimum 8 characters"
                 required
             />
-            <Input
-                label="Phone Number"
-                type="tel"
-                placeholder="+1 (555) 000-0000"
-            />
+            <Input label="Phone Number" type="tel" placeholder="+1 (555) 000-0000" />
         </form>
     ),
     parameters: {

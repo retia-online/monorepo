@@ -6,17 +6,15 @@ import { logAuth, logAPI } from '@/lib/logger';
 const JWT_SECRET = new TextEncoder().encode(process.env.NEXTAUTH_SECRET || 'fallback-secret');
 
 export async function POST(request: NextRequest) {
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const ip =
+        request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
     try {
         const body = await request.json();
         const { provider, code: _code, userInfo } = body;
 
         if (!provider || !userInfo || !userInfo.email) {
-            return NextResponse.json(
-                { error: 'Datos de OAuth inválidos' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Datos de OAuth inválidos' }, { status: 400 });
         }
 
         // Connect to database
@@ -77,12 +75,14 @@ export async function POST(request: NextRequest) {
             },
             token,
         });
-    } catch (error: any) {
-        logAPI.error('POST', '/api/mobile/auth/oauth', error instanceof Error ? error : new Error(String(error)), ip);
-
-        return NextResponse.json(
-            { error: 'Error en autenticación OAuth' },
-            { status: 500 }
+    } catch (error: unknown) {
+        logAPI.error(
+            'POST',
+            '/api/mobile/auth/oauth',
+            error instanceof Error ? error : new Error(String(error)),
+            ip
         );
+
+        return NextResponse.json({ error: 'Error en autenticación OAuth' }, { status: 500 });
     }
 }

@@ -28,9 +28,7 @@ export default function RegisterPage() {
                 { text: 'Al menos un carácter especial', met: /[^A-Za-z0-9]/.test(password) },
             ];
         } else {
-            return [
-                { text: 'Mínimo 6 caracteres', met: password.length >= 6 },
-            ];
+            return [{ text: 'Mínimo 6 caracteres', met: password.length >= 6 }];
         }
     }, [password]);
 
@@ -45,7 +43,7 @@ export default function RegisterPage() {
         }
 
         // Validate password requirements
-        const allRequirementsMet = passwordRequirements.every(req => req.met);
+        const allRequirementsMet = passwordRequirements.every((req) => req.met);
         if (!allRequirementsMet) {
             setError('La contraseña no cumple con todos los requisitos');
             return;
@@ -86,18 +84,15 @@ export default function RegisterPage() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                        Crear Cuenta
-                    </h1>
-                    <p className="text-gray-600">
-                        Regístrate para comenzar
-                    </p>
+                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Crear Cuenta</h1>
+                    <p className="text-gray-600">Regístrate para comenzar</p>
                 </div>
 
                 <Card>
                     <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-700 rounded">
                         <p className="text-sm">
-                            <strong>Nota:</strong> El primer usuario registrado obtendrá automáticamente privilegios de administrador.
+                            <strong>Nota:</strong> El primer usuario registrado obtendrá
+                            automáticamente privilegios de administrador.
                         </p>
                     </div>
 
@@ -127,7 +122,6 @@ export default function RegisterPage() {
                             required
                             fullWidth
                         />
-
 
                         <div>
                             <Input

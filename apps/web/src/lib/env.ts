@@ -4,81 +4,94 @@ import { z } from 'zod';
  * Schema for environment variables validation
  * This ensures all required environment variables are present and valid
  */
-const envSchema = z.object({
-    // Node Environment
-    NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+const envSchema = z
+    .object({
+        // Node Environment
+        NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
-    // Database
-    MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
+        // Database
+        MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
 
-    // NextAuth
-    NEXTAUTH_URL: z.string().url('NEXTAUTH_URL must be a valid URL'),
-    NEXTAUTH_SECRET: z.string().min(32, 'NEXTAUTH_SECRET must be at least 32 characters'),
+        // NextAuth
+        NEXTAUTH_URL: z.string().url('NEXTAUTH_URL must be a valid URL'),
+        NEXTAUTH_SECRET: z.string().min(32, 'NEXTAUTH_SECRET must be at least 32 characters'),
 
-    // Auth Providers
-    AUTH_PROVIDERS: z.string().default('email'),
+        // Auth Providers
+        AUTH_PROVIDERS: z.string().default('email'),
 
-    // Google OAuth (optional)
-    GOOGLE_CLIENT_ID: z.string().optional(),
-    GOOGLE_CLIENT_SECRET: z.string().optional(),
+        // Google OAuth (optional)
+        GOOGLE_CLIENT_ID: z.string().optional(),
+        GOOGLE_CLIENT_SECRET: z.string().optional(),
 
-    // Facebook OAuth (optional)
-    FACEBOOK_CLIENT_ID: z.string().optional(),
-    FACEBOOK_CLIENT_SECRET: z.string().optional(),
+        // Facebook OAuth (optional)
+        FACEBOOK_CLIENT_ID: z.string().optional(),
+        FACEBOOK_CLIENT_SECRET: z.string().optional(),
 
-    // Email/SMTP (optional but recommended)
-    SMTP_HOST: z.string().optional(),
-    SMTP_PORT: z.string().regex(/^\d+$/, 'SMTP_PORT must be a number').optional(),
-    SMTP_USER: z.string().optional(),
-    SMTP_PASSWORD: z.string().optional(),
-    SMTP_FROM: z.string().email('SMTP_FROM must be a valid email').optional(),
+        // Email/SMTP (optional but recommended)
+        SMTP_HOST: z.string().optional(),
+        SMTP_PORT: z.string().regex(/^\d+$/, 'SMTP_PORT must be a number').optional(),
+        SMTP_USER: z.string().optional(),
+        SMTP_PASSWORD: z.string().optional(),
+        SMTP_FROM: z.string().email('SMTP_FROM must be a valid email').optional(),
 
-    // Logging
-    LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).optional(),
-}).refine(
-    (data) => {
-        // If Google is in AUTH_PROVIDERS, both client ID and secret must be present
-        const providers = data.AUTH_PROVIDERS.split(',').map(p => p.trim().toLowerCase());
-        if (providers.includes('google')) {
-            return !!data.GOOGLE_CLIENT_ID && !!data.GOOGLE_CLIENT_SECRET;
+        // Logging
+        LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).optional(),
+    })
+    .refine(
+        (data) => {
+            // If Google is in AUTH_PROVIDERS, both client ID and secret must be present
+            const providers = data.AUTH_PROVIDERS.split(',').map((p) => p.trim().toLowerCase());
+            if (providers.includes('google')) {
+                return !!data.GOOGLE_CLIENT_ID && !!data.GOOGLE_CLIENT_SECRET;
+            }
+            return true;
+        },
+        {
+            message:
+                'GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required when Google is enabled in AUTH_PROVIDERS',
+            path: ['GOOGLE_CLIENT_ID'],
         }
-        return true;
-    },
-    {
-        message: 'GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required when Google is enabled in AUTH_PROVIDERS',
-        path: ['GOOGLE_CLIENT_ID'],
-    }
-).refine(
-    (data) => {
-        // If Facebook is in AUTH_PROVIDERS, both client ID and secret must be present
-        const providers = data.AUTH_PROVIDERS.split(',').map(p => p.trim().toLowerCase());
-        if (providers.includes('facebook')) {
-            return !!data.FACEBOOK_CLIENT_ID && !!data.FACEBOOK_CLIENT_SECRET;
+    )
+    .refine(
+        (data) => {
+            // If Facebook is in AUTH_PROVIDERS, both client ID and secret must be present
+            const providers = data.AUTH_PROVIDERS.split(',').map((p) => p.trim().toLowerCase());
+            if (providers.includes('facebook')) {
+                return !!data.FACEBOOK_CLIENT_ID && !!data.FACEBOOK_CLIENT_SECRET;
+            }
+            return true;
+        },
+        {
+            message:
+                'FACEBOOK_CLIENT_ID and FACEBOOK_CLIENT_SECRET are required when Facebook is enabled in AUTH_PROVIDERS',
+            path: ['FACEBOOK_CLIENT_ID'],
         }
-        return true;
-    },
-    {
-        message: 'FACEBOOK_CLIENT_ID and FACEBOOK_CLIENT_SECRET are required when Facebook is enabled in AUTH_PROVIDERS',
-        path: ['FACEBOOK_CLIENT_ID'],
-    }
-).refine(
-    (data) => {
-        // If SMTP is partially configured, all SMTP fields should be present
-        const smtpFields = [data.SMTP_HOST, data.SMTP_PORT, data.SMTP_USER, data.SMTP_PASSWORD, data.SMTP_FROM];
-        // Filter out undefined AND empty strings
-        const definedFields = smtpFields.filter(f => f !== undefined && f !== '');
+    )
+    .refine(
+        (data) => {
+            // If SMTP is partially configured, all SMTP fields should be present
+            const smtpFields = [
+                data.SMTP_HOST,
+                data.SMTP_PORT,
+                data.SMTP_USER,
+                data.SMTP_PASSWORD,
+                data.SMTP_FROM,
+            ];
+            // Filter out undefined AND empty strings
+            const definedFields = smtpFields.filter((f) => f !== undefined && f !== '');
 
-        // If some fields are defined but not all, it's an error
-        if (definedFields.length > 0 && definedFields.length < 5) {
-            return false;
+            // If some fields are defined but not all, it's an error
+            if (definedFields.length > 0 && definedFields.length < 5) {
+                return false;
+            }
+            return true;
+        },
+        {
+            message:
+                'If SMTP is configured, all SMTP fields (HOST, PORT, USER, PASSWORD, FROM) must be provided',
+            path: ['SMTP_HOST'],
         }
-        return true;
-    },
-    {
-        message: 'If SMTP is configured, all SMTP fields (HOST, PORT, USER, PASSWORD, FROM) must be provided',
-        path: ['SMTP_HOST'],
-    }
-);
+    );
 
 /**
  * Validated environment variables
@@ -110,7 +123,9 @@ export function validateEnv(): Env {
             });
 
             console.error('');
-            console.error('Please check your .env.local file and ensure all required variables are set correctly.');
+            console.error(
+                'Please check your .env.local file and ensure all required variables are set correctly.'
+            );
             console.error('');
 
             // Exit the process in production, throw in development for better DX
@@ -140,7 +155,7 @@ export function getEnv(): Env {
  */
 export function isProviderEnabled(provider: 'google' | 'facebook'): boolean {
     const env = getEnv();
-    const providers = env.AUTH_PROVIDERS.split(',').map(p => p.trim().toLowerCase());
+    const providers = env.AUTH_PROVIDERS.split(',').map((p) => p.trim().toLowerCase());
 
     if (!providers.includes(provider)) {
         return false;

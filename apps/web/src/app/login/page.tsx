@@ -11,11 +11,19 @@ const getEnabledProviders = (): string[] => {
     if (list.includes('email')) final.push('email');
 
     // Only enable OAuth providers if they are in the list AND have secrets configured
-    if (list.includes('google') && process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    if (
+        list.includes('google') &&
+        process.env.GOOGLE_CLIENT_ID &&
+        process.env.GOOGLE_CLIENT_SECRET
+    ) {
         final.push('google');
     }
 
-    if (list.includes('facebook') && process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
+    if (
+        list.includes('facebook') &&
+        process.env.FACEBOOK_CLIENT_ID &&
+        process.env.FACEBOOK_CLIENT_SECRET
+    ) {
         final.push('facebook');
     }
 
@@ -32,12 +40,8 @@ export default async function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                        Iniciar Sesión
-                    </h1>
-                    <p className="text-gray-600">
-                        Ingresa a tu cuenta
-                    </p>
+                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Iniciar Sesión</h1>
+                    <p className="text-gray-600">Ingresa a tu cuenta</p>
                 </div>
 
                 <Suspense fallback={<div className="text-center">Cargando...</div>}>

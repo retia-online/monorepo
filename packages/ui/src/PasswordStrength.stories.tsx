@@ -60,9 +60,7 @@ export const StrongPassword: Story = {
 export const SimpleRequirements: Story = {
     args: {
         password: 'pass123',
-        requirements: [
-            { text: 'Mínimo 6 caracteres', met: true },
-        ],
+        requirements: [{ text: 'Mínimo 6 caracteres', met: true }],
     },
 };
 
@@ -108,7 +106,7 @@ export const WithInputField: Story = {
             { text: 'Al menos un carácter especial', met: /[^A-Za-z0-9]/.test(password) },
         ];
 
-        const allMet = requirements.every(req => req.met);
+        const allMet = requirements.every((req) => req.met);
 
         return (
             <div className="w-96 space-y-4">

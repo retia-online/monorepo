@@ -1,9 +1,6 @@
 import { z } from 'zod';
 
-export const emailSchema = z
-    .string()
-    .min(1, 'Email is required')
-    .email('Invalid email address');
+export const emailSchema = z.string().min(1, 'Email is required').email('Invalid email address');
 
 // Check if we're in production
 const isProduction = process.env.NODE_ENV === 'production';
@@ -47,13 +44,15 @@ export const resetPasswordSchema = z.object({
     email: emailSchema,
 });
 
-export const updatePasswordSchema = z.object({
-    password: passwordSchema,
-    confirmPassword: passwordSchema,
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-});
+export const updatePasswordSchema = z
+    .object({
+        password: passwordSchema,
+        confirmPassword: passwordSchema,
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ['confirmPassword'],
+    });
 
 export function validateEmail(email: string): boolean {
     return emailSchema.safeParse(email).success;
@@ -81,12 +80,12 @@ export function getPasswordRequirements() {
         requireSpecialChar: isProduction,
         requirements: isProduction
             ? [
-                'Mínimo 8 caracteres',
-                'Al menos una letra mayúscula',
-                'Al menos una letra minúscula',
-                'Al menos un número',
-                'Al menos un carácter especial (!@#$%^&*)',
-            ]
+                  'Mínimo 8 caracteres',
+                  'Al menos una letra mayúscula',
+                  'Al menos una letra minúscula',
+                  'Al menos un número',
+                  'Al menos un carácter especial (!@#$%^&*)',
+              ]
             : ['Mínimo 6 caracteres'],
     };
 }

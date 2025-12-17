@@ -12,4 +12,5 @@ yarn.lock
 package-lock.json
 .env*
 .git/
-scripts/database/test_db.ts
+scripts/
+**/test_db.ts

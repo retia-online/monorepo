@@ -29,9 +29,7 @@ export default function ResetPasswordPage() {
                 { text: 'Al menos un carácter especial', met: /[^A-Za-z0-9]/.test(password) },
             ];
         } else {
-            return [
-                { text: 'Mínimo 6 caracteres', met: password.length >= 6 },
-            ];
+            return [{ text: 'Mínimo 6 caracteres', met: password.length >= 6 }];
         }
     }, [password]);
 
@@ -55,7 +53,7 @@ export default function ResetPasswordPage() {
         }
 
         // Validate password requirements
-        const allRequirementsMet = passwordRequirements.every(req => req.met);
+        const allRequirementsMet = passwordRequirements.every((req) => req.met);
         if (!allRequirementsMet) {
             setError('La contraseña no cumple con todos los requisitos');
             return;
@@ -143,9 +141,7 @@ export default function ResetPasswordPage() {
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">
                         Restablecer Contraseña
                     </h1>
-                    <p className="text-gray-600">
-                        Ingresa tu nueva contraseña
-                    </p>
+                    <p className="text-gray-600">Ingresa tu nueva contraseña</p>
                 </div>
 
                 <Card>

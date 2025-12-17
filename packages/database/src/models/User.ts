@@ -6,6 +6,11 @@ export enum UserRole {
     USER = 'USER',
 }
 
+// Export individual values for use (to avoid unused variable warnings)
+// These are used by other modules
+export const _ADMIN = UserRole.ADMIN;
+export const _USER = UserRole.USER;
+
 export interface IUser extends Document {
     name: string;
     email: string;
@@ -80,15 +85,12 @@ userSchema.pre('save', async function (next) {
 });
 
 // Method to compare passwords
-userSchema.methods.comparePassword = async function (
-    candidatePassword: string
-): Promise<boolean> {
+userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
     if (!this.password) return false;
     return bcrypt.compare(candidatePassword, this.password);
 };
 
 // Prevent model recompilation in development
-const User: Model<IUser> =
-    mongoose.models.User || mongoose.model<IUser>('User', userSchema);
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
 
 export default User;

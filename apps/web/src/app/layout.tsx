@@ -7,11 +7,7 @@ export const metadata: Metadata = {
     description: 'Authentication system with Next.js and MongoDB',
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     const theme = getThemeFromEnv();
     const themeCSS = generateThemeCSS(theme);
     const fontUrl = `https://fonts.googleapis.com/css2?family=${theme.fontFamily.replace(/\s+/g, '+')}:wght@300;400;500;600;700&display=swap`;

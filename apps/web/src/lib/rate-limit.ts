@@ -39,9 +39,8 @@ export async function rateLimit(
     type: RateLimiterType
 ): Promise<NextResponse | null> {
     // Get IP address from request
-    const ip = request.headers.get('x-forwarded-for') ||
-        request.headers.get('x-real-ip') ||
-        'unknown';
+    const ip =
+        request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
     // Select appropriate limiter
     let limiter: RateLimiterMemory;
@@ -71,13 +70,13 @@ export async function rateLimit(
         return NextResponse.json(
             {
                 error: 'Demasiados intentos. Por favor, intenta más tarde.',
-                retryAfter
+                retryAfter,
             },
             {
                 status: 429,
                 headers: {
                     'Retry-After': String(retryAfter),
-                }
+                },
             }
         );
     }

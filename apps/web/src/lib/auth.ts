@@ -62,10 +62,13 @@ if (enabledProviders.includes('email')) {
                         image: user.image,
                     };
                 } catch (error) {
-                    logger.error({
-                        event: 'auth.error',
-                        error: error instanceof Error ? error.message : 'Unknown error',
-                    }, 'Authorization error');
+                    logger.error(
+                        {
+                            event: 'auth.error',
+                            error: error instanceof Error ? error.message : 'Unknown error',
+                        },
+                        'Authorization error'
+                    );
                     return null;
                 }
             },
@@ -74,7 +77,11 @@ if (enabledProviders.includes('email')) {
 }
 
 // Google OAuth
-if (enabledProviders.includes('google') && process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+if (
+    enabledProviders.includes('google') &&
+    process.env.GOOGLE_CLIENT_ID &&
+    process.env.GOOGLE_CLIENT_SECRET
+) {
     providers.push(
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
@@ -84,7 +91,11 @@ if (enabledProviders.includes('google') && process.env.GOOGLE_CLIENT_ID && proce
 }
 
 // Facebook OAuth
-if (enabledProviders.includes('facebook') && process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
+if (
+    enabledProviders.includes('facebook') &&
+    process.env.FACEBOOK_CLIENT_ID &&
+    process.env.FACEBOOK_CLIENT_SECRET
+) {
     providers.push(
         FacebookProvider({
             clientId: process.env.FACEBOOK_CLIENT_ID,

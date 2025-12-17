@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+// import { redirect } from 'next/navigation';
 import { requireAuth } from '@/lib/route-protection';
 
 export default async function HomePage() {
@@ -20,9 +20,7 @@ export default async function HomePage() {
                         ¡Bienvenido, {user.name}!
                     </h1>
 
-                    <p className="text-xl text-gray-600 mb-2">
-                        Has iniciado sesión exitosamente
-                    </p>
+                    <p className="text-xl text-gray-600 mb-2">Has iniciado sesión exitosamente</p>
 
                     <div className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-8">
                         {user.role === 'ADMIN' ? '👑 Administrador' : '👤 Usuario'}
@@ -53,13 +51,23 @@ export default async function HomePage() {
                     <div className="mt-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
                         <div className="flex">
                             <div className="flex-shrink-0">
-                                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                                <svg
+                                    className="h-5 w-5 text-yellow-400"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                        clipRule="evenodd"
+                                    />
                                 </svg>
                             </div>
                             <div className="ml-3">
                                 <p className="text-sm text-yellow-700">
-                                    <strong>Panel de Administración:</strong> Como administrador, puedes agregar más funcionalidades como gestión de usuarios, configuración del sistema, etc.
+                                    <strong>Panel de Administración:</strong> Como administrador,
+                                    puedes agregar más funcionalidades como gestión de usuarios,
+                                    configuración del sistema, etc.
                                 </p>
                             </div>
                         </div>
