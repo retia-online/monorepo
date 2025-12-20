@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "dev": "next dev -p 3001",
+        "dev": "next dev -p 9000",
         "build": "next build",
         "start": "next start",
         "lint": "next lint"
@@ -13,6 +13,7 @@
         "@retia/types": "*",
         "@retia/ui": "*",
         "@retia/utils": "*",
+        "bcryptjs": "^3.0.3",
         "next": "^16.0.8",
         "next-auth": "^5.0.0-beta.4",
         "pino": "^10.1.0",
@@ -23,6 +24,7 @@
         "zod": "^3.22.4"
     },
     "devDependencies": {
+        "@types/bcryptjs": "^3.0.0",
         "@types/node": "^20.10.5",
         "@types/react": "^18.2.45",
         "@types/react-dom": "^18.2.18",

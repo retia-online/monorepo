@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { getThemeFromEnv, generateThemeCSS } from '@/lib/theme';
+import { SessionProvider } from '@/components/SessionProvider';
 
 export const metadata: Metadata = {
     title: 'Auth System',
@@ -18,9 +19,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
                 <link href={fontUrl} rel="stylesheet" />
+                <link rel="icon" href="/assets/images/branding/favicon.svg" type="image/svg+xml" />
                 <style dangerouslySetInnerHTML={{ __html: themeCSS }} />
             </head>
-            <body>{children}</body>
+            <body>
+                <SessionProvider>
+                    {children}
+                </SessionProvider>
+            </body>
         </html>
     );
 }

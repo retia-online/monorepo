@@ -8,6 +8,9 @@ const envSchema = z
     .object({
         // Node Environment
         NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+        
+        // Instance Configuration
+        INSTANCE: z.string().default('App'),
 
         // Database
         MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
@@ -41,11 +44,11 @@ const envSchema = z
         LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).optional(),
         
         // Design Configuration
-        NEXT_PUBLIC_PRIMARY_COLOR: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color').default('#6366f1'),
-        NEXT_PUBLIC_SECONDARY_COLOR: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color').default('#ec4899'),
-        NEXT_PUBLIC_BACKGROUND_COLOR: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color').default('#f8fafc'),
-        NEXT_PUBLIC_TEXT_COLOR: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color').default('#1e293b'),
-        NEXT_PUBLIC_FONT_FAMILY: z.string().default('Manrope'),
+        NEXT_PUBLIC_PRIMARY_COLOR: z.string().optional().default('#6366f1'),
+        NEXT_PUBLIC_SECONDARY_COLOR: z.string().optional().default('#ec4899'),
+        NEXT_PUBLIC_BACKGROUND_COLOR: z.string().optional().default('#f8fafc'),
+        NEXT_PUBLIC_TEXT_COLOR: z.string().optional().default('#1e293b'),
+        NEXT_PUBLIC_FONT_FAMILY: z.string().optional().default('Manrope'),
     })
     .refine(
         (data) => {
