@@ -1,15 +1,32 @@
 import { redirect } from 'next/navigation';
 import { auth } from './auth';
 import { connectDB, User } from '@retia/database';
+import { getEnv } from './env';
 
 /**
  * Protects a page by requiring authentication
- * Redirects to login if not authenticated
+ * Behavior depends on AUTH_MODE:
+ * - required: Redirects to login if not authenticated
+ * - disabled: Returns null (no auth required)
+ * - optional: Returns session if available, null if not (no redirect)
  * @param callbackUrl - Optional URL to redirect to after login
  */
 export async function requireAuth(callbackUrl?: string) {
+    const env = getEnv();
+    
+    // If auth is disabled, return null session
+    if (env.AUTH_MODE === 'disabled') {
+        return null;
+    }
+    
     const session = await auth();
 
+    // If auth is optional, return session (or null) without redirecting
+    if (env.AUTH_MODE === 'optional') {
+        return session;
+    }
+
+    // If auth is required and no session, redirect to login
     if (!session || !session.user) {
         const loginUrl = callbackUrl
             ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`

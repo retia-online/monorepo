@@ -8,25 +8,27 @@ export interface ThemeConfig {
 
 export function getThemeFromEnv(): ThemeConfig {
     return {
-        primaryColor: process.env.PRIMARY_COLOR || '#3b82f6',
-        secondaryColor: process.env.SECONDARY_COLOR || '#10b981',
-        backgroundColor: process.env.BACKGROUND_COLOR || '#ffffff',
-        textColor: process.env.TEXT_COLOR || '#1f2937',
-        fontFamily: process.env.FONT_FAMILY || 'Inter',
+        primaryColor: process.env.NEXT_PUBLIC_PRIMARY_COLOR || '#6366f1',
+        secondaryColor: process.env.NEXT_PUBLIC_SECONDARY_COLOR || '#ec4899',
+        backgroundColor: process.env.NEXT_PUBLIC_BACKGROUND_COLOR || '#f8fafc',
+        textColor: process.env.NEXT_PUBLIC_TEXT_COLOR || '#1e293b',
+        fontFamily: process.env.NEXT_PUBLIC_FONT_FAMILY || 'Manrope',
     };
 }
 
 export function generateThemeCSS(theme: ThemeConfig): string {
     return `
     :root {
-      --primary-color: ${theme.primaryColor};
-      --secondary-color: ${theme.secondaryColor};
-      --background-color: ${theme.backgroundColor};
-      --text-color: ${theme.textColor};
+      --color-primary: ${theme.primaryColor};
+      --color-secondary: ${theme.secondaryColor};
+      --color-background: ${theme.backgroundColor};
+      --color-text: ${theme.textColor};
       --font-family: '${theme.fontFamily}', sans-serif;
     }
     body {
       font-family: var(--font-family);
+      background-color: var(--color-background);
+      color: var(--color-text);
     }
   `;
 }

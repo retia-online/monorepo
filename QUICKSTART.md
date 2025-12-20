@@ -1,6 +1,21 @@
-# 🚀 Inicio Rápido - 5 Minutos
+# 🚀 Monorepo - Inicio Rápido (5 Minutos)
 
-Sigue estos pasos para tener el sistema corriendo localmente en menos de 5 minutos.
+Guía rápida para tener el sistema completo funcionando en menos de 5 minutos.
+
+## Elige tu Aplicación
+
+### 🌐 Solo Web App
+Si solo necesitas la aplicación web:
+
+**→ [Web App - Inicio Rápido](./apps/web/QUICKSTART.md)**
+
+### 📱 Solo Mobile App  
+Si solo necesitas la aplicación móvil:
+
+**→ [Mobile App - Inicio Rápido](./apps/mobile/QUICKSTART.md)**
+
+### 🔄 Sistema Completo (Recomendado)
+Para web y móvil integrados con usuarios compartidos:
 
 ## Paso 1: Instalar Dependencias (1 min)
 
@@ -11,139 +26,130 @@ yarn install
 
 ## Paso 2: Configurar Variables de Entorno (1 min)
 
-Ya existe un archivo `.env.local` con valores básicos. Si quieres personalizarlo:
-
 ```bash
-# Opcional: editar configuración
-nano .env.local
-
-# Mínimo requerido:
-# - MONGODB_URI (si tienes MongoDB local, ya está configurado)
-# - NEXTAUTH_SECRET (genera uno con: openssl rand -base64 32)
+# Copiar todos los templates
+cp .env.template .env.local
+cp apps/web/.env.template apps/web/.env.local  
+cp apps/mobile/.env.example apps/mobile/.env.local
 ```
 
-**MongoDB Local**: Si no tienes MongoDB instalado, puedes usar MongoDB Atlas (gratis) o instalarlo:
+**Configuración mínima** (editar `.env.local`):
 
 ```bash
-# macOS
-brew tap mongodb/brew
-brew install mongodb-community
-brew services start mongodb-community
+# Base de datos
+MONGODB_URI=mongodb://127.0.0.1:27017/monorepo
 
-# Linux (Ubuntu/Debian)
-# Ver instrucciones en docs/LOCAL_SETUP.md
-```
+# NextAuth (generar con: openssl rand -base64 32)
+NEXTAUTH_SECRET=tu-secret-muy-seguro-aqui
 
-## Paso 3: Generar Secret (30 seg)
-
-```bash
-# Genera un secret aleatorio
-openssl rand -base64 32
-
-# Copia el resultado y pégalo en .env.local como NEXTAUTH_SECRET
-```
-
-## Paso 4: Iniciar el Servidor (30 seg)
-
-```bash
-yarn dev
-```
-
-El servidor arrancará en: **http://localhost:3000**
-
-## Paso 5: Primer Uso (1 min)
-
-1. **Abre tu navegador**: http://localhost:3000
-2. **Serás redirigido a** `/register`
-3. **Completa el formulario** de registro
-4. **¡Listo!** Tu primer usuario es automáticamente **ADMINISTRADOR**
-
----
-
-## 🎨 Personaliza los Colores (Opcional)
-
-Edita `.env.local`:
-
-```bash
-PRIMARY_COLOR=#6366f1        # Color principal
-SECONDARY_COLOR=#ec4899      # Color secundario
-```
-
-Reinicia el servidor (`Ctrl+C` y `yarn dev`) para ver los cambios.
-
----
-
-## 📧 Configurar Email (Opcional - para recuperación de contraseña)
-
-### Opción Fácil: Mailtrap (Gratis, ideal para desarrollo)
-
-1. Crea cuenta en [mailtrap.io](https://mailtrap.io)
-2. Copia las credenciales SMTP
-3. Pégalas en `.env.local`:
-
-```bash
-SMTP_HOST=sandbox.smtp.mailtrap.io
-SMTP_PORT=2525
-SMTP_USER=tu-mailtrap-user
-SMTP_PASSWORD=tu-mailtrap-password
-```
-
-### Opción Gmail
-
-Ver instrucciones en [docs/LOCAL_SETUP.md](file:///Users/lo/Code/retia/monorepo/docs/LOCAL_SETUP.md)
-
----
-
-## 🔐 Configurar OAuth (Opcional - Google/Facebook)
-
-Solo necesario si quieres login con Google o Facebook.
-
-Ver guía completa en [docs/LOCAL_SETUP.md](file:///Users/lo/Code/retia/monorepo/docs/LOCAL_SETUP.md)
-
-Por ahora, puedes deshabilitarlos en `.env.local`:
-
-```bash
+# Proveedores de autenticación
 AUTH_PROVIDERS=email
 ```
 
----
-
-## ✅ ¡Todo Listo!
-
-Tu sistema de autenticación está funcionando. Ahora puedes:
-
-- 📖 Leer el [README.md](file:///Users/lo/Code/retia/monorepo/README.md) completo
-- 🛠️ Ver [docs/LOCAL_SETUP.md](file:///Users/lo/Code/retia/monorepo/docs/LOCAL_SETUP.md) para desarrollo
-- 🚀 Desplegar en Vercel con [docs/DEPLOYMENT.md](file:///Users/lo/Code/retia/monorepo/docs/DEPLOYMENT.md)
-
----
-
-## 🆘 ¿Problemas?
-
-### MongoDB no conecta
+## Paso 3: Configurar MongoDB (1 min)
 
 ```bash
-# Verifica que esté corriendo
-brew services list | grep mongodb
-
-# Si no está, inícialo
+# macOS con Homebrew
+brew tap mongodb/brew
+brew install mongodb-community
 brew services start mongodb-community
 ```
 
-### Puerto 3000 en uso
+## Paso 4: Iniciar Ambas Apps (1 min)
 
+**Terminal 1: Web App**
 ```bash
-# Usa otro puerto
-PORT=3001 yarn dev
+cd apps/web
+yarn dev
+# → http://localhost:3000
 ```
 
-### Dependencias no se instalan
+**Terminal 2: Mobile App**
+```bash
+cd apps/mobile  
+yarn start
+# → Escanea QR con Expo Go
+```
+
+## Paso 5: Primer Uso (1 min)
+
+1. **Web**: Abre http://localhost:3000 y regístrate
+2. **Mobile**: Escanea QR y usa las mismas credenciales
+3. **¡Listo!** Usuarios sincronizados entre ambas apps
+
+---
+
+## 🎨 Personalización Rápida (Opcional)
+
+### Colores del Tema
+Edita `.env.local`:
 
 ```bash
-# Reinstala todo
-yarn clean
-rm -rf yarn.lock
+PRIMARY_COLOR=#6366f1        # Púrpura
+SECONDARY_COLOR=#ec4899      # Rosa
+```
+
+### Configuración Móvil
+Edita `apps/mobile/.env.local`:
+
+```bash
+# Modo de autenticación
+EXPO_PUBLIC_AUTH_MODE=optional    # required/optional/disabled
+
+# Mensaje principal
+EXPO_PUBLIC_MAIN_SCREEN_MESSAGE=¡Bienvenido!
+```
+
+---
+
+## ✅ ¡Sistema Completo Listo!
+
+Tienes ambas aplicaciones funcionando:
+
+### 🌐 Web App
+- **URL**: http://localhost:3000
+- **Funciones**: Dashboard, admin panel, recuperación de contraseña
+- **Documentación**: [apps/web/README.md](./apps/web/README.md)
+
+### 📱 Mobile App
+- **Acceso**: Escanea QR con Expo Go
+- **Funciones**: Login, perfil, configuración flexible
+- **Documentación**: [apps/mobile/README.md](./apps/mobile/README.md)
+
+### 🔄 Integración
+- ✅ **Usuarios compartidos** entre web y móvil
+- ✅ **OAuth sincronizado** en ambas plataformas
+- ✅ **Base de datos unificada**
+
+---
+
+## 🆘 Solución de Problemas
+
+### MongoDB no conecta
+```bash
+brew services list | grep mongodb
+brew services start mongodb-community
+```
+
+### Puertos ocupados
+```bash
+# Web (puerto 3000)
+lsof -ti:3000 | xargs kill -9
+
+# Mobile (puerto 19000)  
+lsof -ti:19000 | xargs kill -9
+```
+
+### Dependencias
+```bash
+rm -rf node_modules yarn.lock
 yarn install
 ```
 
-Para más ayuda, revisa [docs/LOCAL_SETUP.md](file:///Users/lo/Code/retia/monorepo/docs/LOCAL_SETUP.md) sección "Troubleshooting".
+---
+
+## 📚 Próximos Pasos
+
+- 📖 **Documentación completa**: [README.md](./README.md)
+- 🛠️ **Configuración avanzada**: [DEVELOPMENT_SETUP.md](./DEVELOPMENT_SETUP.md)
+- 🚀 **Despliegue**: Ver docs específicas de cada app

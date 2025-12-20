@@ -1,17 +1,14 @@
-# Monorepo Auth System
+# Retia Monorepo - Sistema de Autenticación
 
-Sistema de autenticación completo construido con Next.js, MongoDB, y NextAuth.js en arquitectura monorepo.
+Monorepo completo con aplicaciones web y móvil que comparten un sistema de autenticación unificado.
 
-## 🚀 Características
+## 🚀 Características Principales
 
-- ✅ Autenticación con email/password
-- ✅ OAuth con Google y Facebook
-- ✅ Recuperación de contraseñas
-- ✅ Primer usuario automático como administrador
-- ✅ Sistema de roles (Admin, User)
-- ✅ Temas personalizables vía variables de entorno
-- ✅ Listo para desplegar en Vercel
-- ✅ MongoDB local o Atlas para producción
+- 🌐 **Aplicación Web**: Next.js 14 con NextAuth.js v5
+- 📱 **Aplicación Móvil**: Expo/React Native con autenticación nativa
+- 🔐 **Sistema unificado**: Usuarios compartidos entre web y móvil
+- 🎨 **Personalizable**: Temas y configuración vía variables de entorno
+- ☁️ **Listo para producción**: Optimizado para Vercel y MongoDB Atlas
 
 ## 📦 Estructura del Monorepo
 
@@ -25,28 +22,25 @@ Sistema de autenticación completo construido con Next.js, MongoDB, y NextAuth.j
 │   ├── types/            # Tipos TypeScript compartidos
 │   ├── utils/            # Utilidades compartidas
 │   └── ui/               # Componentes UI compartidos
+├── scripts/              # Scripts de utilidad
 ├── .kiro/specs/          # Especificaciones de features
-├── .env.local            # Variables de entorno local
+├── .env.template         # Variables de entorno compartidas
 └── package.json          # Workspace root
 ```
 
-## 📱 Apps Disponibles
+## 📱 Aplicaciones Disponibles
 
-### Web App (Next.js)
-- Autenticación completa
-- Dashboard de usuario
-- Panel de administración
-- Responsive design
+### 🌐 Web App (Next.js)
+Sistema de autenticación web completo con dashboard y panel de administración.
 
-**Documentación**: [apps/web/README.md](./apps/web/README.md)
+**→ [Documentación Web App](./apps/web/README.md)**  
+**→ [Inicio Rápido Web (5 min)](./apps/web/QUICKSTART.md)**
 
-### Mobile App (Expo)
-- Autenticación email/password
-- OAuth (Google & Facebook)
-- Perfil de usuario
-- iOS y Android
+### 📱 Mobile App (Expo)
+Aplicación móvil nativa para iOS y Android con autenticación integrada.
 
-**Documentación**: [MOBILE_GETTING_STARTED.md](./MOBILE_GETTING_STARTED.md) | [apps/mobile/README.md](./apps/mobile/README.md)
+**→ [Documentación Mobile App](./apps/mobile/README.md)**  
+**→ [Inicio Rápido Mobile (5 min)](./apps/mobile/QUICKSTART.md)**
 
 ## 🛠️ Requisitos Previos
 
@@ -56,263 +50,83 @@ Sistema de autenticación completo construido con Next.js, MongoDB, y NextAuth.j
   - [Google Cloud Console](https://console.cloud.google.com) para Google OAuth
   - [Facebook Developers](https://developers.facebook.com) para Facebook OAuth
 
-## 📝 Configuración Local
+## ⚡ Inicio Rápido
 
-### 1. Clonar e Instalar Dependencias
-
-```bash
-# Navegar al directorio del proyecto
-cd /Users/lo/Code/retia/monorepo
-
-# Instalar todas las dependencias del monorepo
-yarn install
-```
-
-### 2. Configurar Variables de Entorno
-
-Copia el template y configura tus variables:
-
-```bash
-cp .env.local.template .env.local
-```
-
-Edita `.env.local` con tus valores:
-
-```bash
-# MongoDB - Para desarrollo local
-MONGODB_URI=mongodb://localhost:27017/auth-system
-
-# NextAuth
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=tu-secreto-muy-seguro-cambiar-en-produccion
-
-# Proveedores de Auth (activa los que necesites)
-AUTH_PROVIDERS=email,google,facebook
-
-# Google OAuth (opcional)
-GOOGLE_CLIENT_ID=tu-google-client-id
-GOOGLE_CLIENT_SECRET=tu-google-client-secret
-
-# Facebook OAuth (opcional)
-FACEBOOK_CLIENT_ID=tu-facebook-app-id
-FACEBOOK_CLIENT_SECRET=tu-facebook-app-secret
-
-# Email (para recuperación de contraseña)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=tu-email@gmail.com
-SMTP_PASSWORD=tu-app-password
-
-# Colores del Tema
-PRIMARY_COLOR=#3b82f6
-SECONDARY_COLOR=#10b981
-BACKGROUND_COLOR=#ffffff
-TEXT_COLOR=#1f2937
-```
-
-### 3. Generar Secret de NextAuth
-
-```bash
-# Genera un secret aleatorio seguro
-openssl rand -base64 32
-```
-
-Copia el resultado en `NEXTAUTH_SECRET` en tu `.env.local`.
-
-### 4. Configurar MongoDB Local (Opcional)
-
-Si no tienes MongoDB instalado localmente:
-
-```bash
-# macOS con Homebrew
-brew tap mongodb/brew
-brew install mongodb-community
-brew services start mongodb-community
-
-# O usa MongoDB Atlas (recomendado para producción)
-```
-
-### 5. Configurar OAuth Providers (Opcional)
-
-#### Google OAuth
-
-1. Ve a [Google Cloud Console](https://console.cloud.google.com)
-2. Crea un nuevo proyecto o selecciona uno existente
-3. Habilita "Google+ API"
-4. Ve a "Credentials" → "Create Credentials" → "OAuth 2.0 Client ID"
-5. Tipo de aplicación: "Web application"
-6. Authorized redirect URIs:
-   - `http://localhost:3000/api/auth/callback/google` (local)
-   - `https://tu-dominio.com/api/auth/callback/google` (producción)
-7. Copia Client ID y Client Secret a tu `.env.local`
-
-#### Facebook OAuth
-
-1. Ve a [Facebook Developers](https://developers.facebook.com)
-2. Crea una nueva app
-3. Añade producto "Facebook Login"
-4. Configuración → Basic:
-   - Copia App ID y App Secret a tu `.env.local`
-5. Facebook Login → Settings:
-   - Valid OAuth Redirect URIs:
-     - `http://localhost:3000/api/auth/callback/facebook` (local)
-     - `https://tu-dominio.com/api/auth/callback/facebook` (producción)
-
-### 6. Iniciar el Servidor de Desarrollo
-
-**Recomendación**: Usa múltiples terminales para ejecutar ambas apps simultáneamente.
-
-#### Terminal 1: Web App
-
+### Opción A: Solo Web App
 ```bash
 cd apps/web
+yarn install
+cp .env.template .env.local
+# Editar .env.local con tu configuración
 yarn dev
+# → http://localhost:3000
 ```
 
-La aplicación estará disponible en [http://localhost:3000](http://localhost:3000)
-
-#### Terminal 2: Mobile App
-
+### Opción B: Solo Mobile App
 ```bash
 cd apps/mobile
+yarn install
+cp .env.example .env.local
+# Editar .env.local con tu configuración
 yarn start
-
-# Luego abre en simulador
-yarn ios    # iOS
-yarn android # Android
+# → Escanea QR con Expo Go
 ```
 
-#### Terminal 3: MongoDB (Opcional)
-
+### Opción C: Sistema Completo
 ```bash
-# Si usas MongoDB local
-brew services start mongodb-community
+# 1. Instalar dependencias
+yarn install
+
+# 2. Configurar variables
+cp .env.template .env.local
+cp apps/web/.env.template apps/web/.env.local
+cp apps/mobile/.env.example apps/mobile/.env.local
+
+# 3. Iniciar ambas apps
+cd apps/web && yarn dev &
+cd apps/mobile && yarn start
 ```
 
-**Puertos utilizados:**
-- Web: 3000
-- Mobile: 19000
-- MongoDB: 27017
+**→ [Guía Completa de Desarrollo](./DEVELOPMENT_SETUP.md)**
 
-Ver [DEVELOPMENT_SETUP.md](./DEVELOPMENT_SETUP.md) para configuración completa de desarrollo con ambas apps.
+## 👤 Sistema de Usuarios
 
-## 🎨 Personalización del Tema
+- **Primer usuario**: Automáticamente administrador
+- **Roles**: Admin (gestión completa) y User (acceso básico)
+- **Integración**: Usuarios compartidos entre web y móvil
+- **OAuth**: Google y Facebook disponibles en ambas plataformas
 
-Modifica los colores en `.env.local`:
+## 🎨 Personalización
+
+Ambas aplicaciones soportan personalización vía variables de entorno:
 
 ```bash
-PRIMARY_COLOR=#your-color      # Color principal (botones, links)
-SECONDARY_COLOR=#your-color    # Color secundario
-BACKGROUND_COLOR=#your-color   # Color de fondo
-TEXT_COLOR=#your-color         # Color de texto principal
+# Colores del tema
+PRIMARY_COLOR=#3b82f6      # Azul
+SECONDARY_COLOR=#10b981    # Verde  
+BACKGROUND_COLOR=#ffffff   # Blanco
+TEXT_COLOR=#1f2937        # Gris oscuro
+
+# Configuración de autenticación (móvil)
+EXPO_PUBLIC_AUTH_MODE=required    # required/optional/disabled
+EXPO_PUBLIC_AUTH_METHODS=email,google,facebook
 ```
 
-Los colores soportan formato hexadecimal (#RGB, #RRGGBB) y named colors CSS.
+## 🚀 Despliegue
 
-## 👤 Primer Usuario (Administrador)
-
-La primera vez que accedas a la aplicación:
-
-1. No habrá usuarios en la base de datos
-2. Serás redirigido automáticamente a la página de registro
-3. El primer usuario registrado recibe automáticamente rol de **ADMIN**
-4. Los usuarios subsiguientes pueden ser creados solo por administradores
-
-## 🚀 Despliegue en Vercel
-
-### 1. Preparar MongoDB Atlas
-
-1. Crea una cuenta en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Crea un cluster gratuito
-3. Database Access: Crea un usuario con contraseña
-4. Network Access: Añade `0.0.0.0/0` (permite todas las IPs) o específicas de Vercel
-5. Copia tu connection string:
-   ```
-   mongodb+srv://usuario:password@cluster.mongodb.net/nombre-db?retryWrites=true&w=majority
-   ```
-
-### 2. Desplegar en Vercel
-
+### Web App → Vercel
 ```bash
-# Instalar Vercel CLI (si no lo tienes)
-npm i -g vercel
-
-# Desde el directorio del proyecto
 cd apps/web
-
-# Desplegar
-vercel
-```
-
-Sigue las instrucciones interactivas:
-- **Set up and deploy**: Yes
-- **Which scope**: Tu cuenta/equipo
-- **Link to existing project**: No
-- **Project name**: auth-system (o tu nombre preferido)
-- **Directory**: ./
-- **Override settings**: No
-
-### 3. Configurar Variables de Entorno en Vercel
-
-En el dashboard de Vercel (o con CLI):
-
-```bash
-# Vía CLI
-vercel env add MONGODB_URI
-vercel env add NEXTAUTH_URL
-vercel env add NEXTAUTH_SECRET
-vercel env add AUTH_PROVIDERS
-vercel env add GOOGLE_CLIENT_ID
-vercel env add GOOGLE_CLIENT_SECRET
-vercel env add FACEBOOK_CLIENT_ID
-vercel env add FACEBOOK_CLIENT_SECRET
-vercel env add SMTP_HOST
-vercel env add SMTP_PORT
-vercel env add SMTP_USER
-vercel env add SMTP_PASSWORD
-vercel env add PRIMARY_COLOR
-vercel env add SECONDARY_COLOR
-vercel env add BACKGROUND_COLOR
-vercel env add TEXT_COLOR
-```
-
-O vía dashboard:
-1. Project Settings → Environment Variables
-2. Añade todas las variables de `.env.production.template`
-
-**Importante**:
-- `NEXTAUTH_URL`: debe ser tu dominio de producción (ej: `https://tu-app.vercel.app`)
-- `NEXTAUTH_SECRET`: genera uno nuevo para producción con `openssl rand -base64 32`
-
-### 4. Actualizar URLs de OAuth
-
-Añade las URLs de producción en:
-- Google Cloud Console → OAuth redirect URIs: `https://tu-dominio.vercel.app/api/auth/callback/google`
-- Facebook Developers → Valid OAuth Redirect URIs: `https://tu-dominio.vercel.app/api/auth/callback/facebook`
-
-### 5. Re-desplegar
-
-```bash
 vercel --prod
 ```
 
-## 🔐 Flujos de Autenticación
+### Mobile App → Expo/EAS
+```bash
+cd apps/mobile
+eas build --platform all
+```
 
-### Login
-1. Usuario ingresa email y contraseña
-2. Opcionalmente puede usar Google o Facebook OAuth (si están habilitados)
-3. Al autenticarse, es redirigido a la página de bienvenida
-
-### Registro
-1. Solo accesible si no hay usuarios o si eres admin
-2. Requiere: nombre, email, contraseña
-3. Primer usuario → rol ADMIN automáticamente
-4. Usuarios subsiguientes → rol USER
-
-### Recuperación de Contraseña
-1. Usuario ingresa su email
-2. Sistema envía email con token de recuperación
-3. Usuario usa el link para establecer nueva contraseña
+Ver documentación específica de cada app para instrucciones detalladas.
 
 ## 📁 Scripts Útiles
 
@@ -386,27 +200,36 @@ MIT
 
 Pull requests son bienvenidos. Para cambios mayores, por favor abre un issue primero.
 
-## 🔗 Documentación Adicional
+## � Doocumentación Completa
 
-### Web App
-- [apps/web/README.md](./apps/web/README.md) - Documentación completa
+### 🌐 Web App
+- 📖 [Documentación completa](./apps/web/README.md)
+- 🚀 [Inicio rápido (5 min)](./apps/web/QUICKSTART.md)
 
-### Mobile App
-- [MOBILE_GETTING_STARTED.md](./MOBILE_GETTING_STARTED.md) - Guía rápida
-- [apps/mobile/README.md](./apps/mobile/README.md) - Documentación completa
-- [apps/mobile/QUICKSTART.md](./apps/mobile/QUICKSTART.md) - Quick start (5 min)
-- [apps/mobile/ARCHITECTURE.md](./apps/mobile/ARCHITECTURE.md) - Arquitectura
-- [apps/mobile/OAUTH_SETUP.md](./apps/mobile/OAUTH_SETUP.md) - OAuth setup
-- [apps/mobile/API_ENDPOINTS.md](./apps/mobile/API_ENDPOINTS.md) - API docs
+### 📱 Mobile App  
+- 📖 [Documentación completa](./apps/mobile/README.md)
+- 🚀 [Inicio rápido (5 min)](./apps/mobile/QUICKSTART.md)
+- 📱 [Guía móvil](./MOBILE_GETTING_STARTED.md)
+- 🏗️ [Arquitectura](./apps/mobile/ARCHITECTURE.md)
+- 🔐 [OAuth setup](./apps/mobile/OAUTH_SETUP.md)
+- 🔌 [API endpoints](./apps/mobile/API_ENDPOINTS.md)
 
-### Specs
-- [.kiro/specs/mobile-auth-app/requirements.md](./.kiro/specs/mobile-auth-app/requirements.md) - Requisitos
-- [.kiro/specs/mobile-auth-app/design.md](./.kiro/specs/mobile-auth-app/design.md) - Diseño
-- [.kiro/specs/mobile-auth-app/tasks.md](./.kiro/specs/mobile-auth-app/tasks.md) - Tareas
+### 🛠️ Desarrollo
+- 🔧 [Configuración de desarrollo](./DEVELOPMENT_SETUP.md)
+- 📋 [Especificaciones](./.kiro/specs/mobile-auth-app/)
+
+### 📦 Packages
+- 🗄️ [Database](./packages/database/) - Modelos MongoDB
+- 🔧 [Utils](./packages/utils/) - Utilidades compartidas
+- 🎨 [UI](./packages/ui/) - Componentes compartidos
+- 📝 [Types](./packages/types/) - Tipos TypeScript
 
 ---
 
-**¿Necesitas ayuda?** 
-- Web: Revisa [apps/web/README.md](./apps/web/README.md)
-- Mobile: Revisa [MOBILE_GETTING_STARTED.md](./MOBILE_GETTING_STARTED.md)
-- Abre un issue en el repositorio
+## 🆘 Soporte
+
+**¿Necesitas ayuda?**
+- 🌐 **Web**: [apps/web/README.md](./apps/web/README.md)
+- 📱 **Mobile**: [apps/mobile/README.md](./apps/mobile/README.md)
+- 🐛 **Issues**: Abre un issue en el repositorio
+- 📖 **Docs**: Revisa la documentación específica de cada app

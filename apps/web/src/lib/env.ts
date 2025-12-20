@@ -18,6 +18,9 @@ const envSchema = z
 
         // Auth Providers
         AUTH_PROVIDERS: z.string().default('email'),
+        
+        // Auth Mode
+        AUTH_MODE: z.enum(['required', 'disabled', 'optional']).default('required'),
 
         // Google OAuth (optional)
         GOOGLE_CLIENT_ID: z.string().optional(),
@@ -36,6 +39,13 @@ const envSchema = z
 
         // Logging
         LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).optional(),
+        
+        // Design Configuration
+        NEXT_PUBLIC_PRIMARY_COLOR: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color').default('#6366f1'),
+        NEXT_PUBLIC_SECONDARY_COLOR: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color').default('#ec4899'),
+        NEXT_PUBLIC_BACKGROUND_COLOR: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color').default('#f8fafc'),
+        NEXT_PUBLIC_TEXT_COLOR: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a valid hex color').default('#1e293b'),
+        NEXT_PUBLIC_FONT_FAMILY: z.string().default('Manrope'),
     })
     .refine(
         (data) => {
@@ -112,6 +122,7 @@ export function validateEnv(): Env {
 
     try {
         _env = envSchema.parse(process.env);
+        console.log('✅ Environment variables validated successfully');
         return _env;
     } catch (error) {
         if (error instanceof z.ZodError) {
@@ -141,11 +152,12 @@ export function validateEnv(): Env {
 
 /**
  * Get validated environment variables
- * Throws if env hasn't been validated yet
+ * Automatically validates if not done before
  */
 export function getEnv(): Env {
     if (!_env) {
-        throw new Error('Environment variables have not been validated. Call validateEnv() first.');
+        // Auto-validate if not done before
+        return validateEnv();
     }
     return _env;
 }

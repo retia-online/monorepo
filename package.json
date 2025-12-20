@@ -27,7 +27,10 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/.next",
-    "prepare": "husky"
+    "prepare": "husky",
+    "clean-db": "ts-node --project scripts/tsconfig.json scripts/database/clean-database.ts",
+    "clean-db:force": "ts-node --project scripts/tsconfig.json scripts/database/clean-database.ts --force",
+    "clean-db:stats": "ts-node --project scripts/tsconfig.json scripts/database/clean-database.ts --stats"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

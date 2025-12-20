@@ -9,10 +9,13 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                primary: 'var(--primary-color)',
-                secondary: 'var(--secondary-color)',
-                background: 'var(--background-color)',
-                text: 'var(--text-color)',
+                primary: 'var(--color-primary)',
+                secondary: 'var(--color-secondary)',
+                background: 'var(--color-background)',
+                text: 'var(--color-text)',
+            },
+            fontFamily: {
+                sans: ['var(--font-family)', 'system-ui', 'sans-serif'],
             },
         },
     },

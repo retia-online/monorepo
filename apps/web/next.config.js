@@ -2,10 +2,7 @@
 const nextConfig = {
     reactStrictMode: true,
     transpilePackages: ['@retia/database', '@retia/types', '@retia/utils', '@retia/ui'],
-    experimental: {
-        serverComponentsExternalPackages: ['mongoose'],
-        instrumentationHook: true,
-    },
+    serverExternalPackages: ['mongoose'],
 }
 
 module.exports = nextConfig

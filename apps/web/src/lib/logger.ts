@@ -7,14 +7,12 @@ const isProduction = process.env.NODE_ENV === 'production';
 export const logger = pino({
     level: process.env.LOG_LEVEL || (isProduction ? 'info' : 'debug'),
 
-    // Pretty print in development for better readability
+    // Simple console output in development to avoid thread-stream issues
     transport: !isProduction
         ? {
-              target: 'pino-pretty',
+              target: 'pino/file',
               options: {
-                  colorize: true,
-                  translateTime: 'HH:MM:ss Z',
-                  ignore: 'pid,hostname',
+                  destination: 1, // stdout
               },
           }
         : undefined,
