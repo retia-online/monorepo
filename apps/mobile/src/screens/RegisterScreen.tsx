@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../lib/error-handler';
+import { envConfig } from '../lib/env';
+import { Logo } from '../components/Logo';
 
 interface RegisterScreenProps {
     onNavigateToLogin: () => void;
@@ -45,11 +47,12 @@ export function RegisterScreen({ onNavigateToLogin }: RegisterScreenProps) {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
+            style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}
         >
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>Crear Cuenta</Text>
+                    <Logo size={100} variant="square" />
+                    <Text style={[styles.title, { color: envConfig.textColor }]}>Crear Cuenta</Text>
                     <Text style={styles.subtitle}>Regístrate para comenzar</Text>
                 </View>
 
@@ -102,7 +105,11 @@ export function RegisterScreen({ onNavigateToLogin }: RegisterScreenProps) {
                     </View>
 
                     <TouchableOpacity
-                        style={[styles.button, isLoading && styles.buttonDisabled]}
+                        style={[
+                            styles.button,
+                            { backgroundColor: envConfig.primaryColor },
+                            isLoading && styles.buttonDisabled,
+                        ]}
                         onPress={handleRegister}
                         disabled={isLoading}
                     >
@@ -117,7 +124,9 @@ export function RegisterScreen({ onNavigateToLogin }: RegisterScreenProps) {
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>¿Ya tienes una cuenta? </Text>
                     <TouchableOpacity onPress={onNavigateToLogin} disabled={isLoading}>
-                        <Text style={styles.link}>Inicia sesión aquí</Text>
+                        <Text style={[styles.link, { color: envConfig.primaryColor }]}>
+                            Inicia sesión aquí
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -128,7 +137,6 @@ export function RegisterScreen({ onNavigateToLogin }: RegisterScreenProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
     },
     scrollContent: {
         flexGrow: 1,
@@ -140,9 +148,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: 'bold',
-        color: '#1f2937',
+        marginTop: 16,
         marginBottom: 8,
     },
     subtitle: {
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
         borderLeftWidth: 4,
         borderLeftColor: '#dc2626',
         padding: 12,
-        borderRadius: 4,
+        borderRadius: 8,
         marginBottom: 20,
     },
     errorText: {
@@ -189,8 +197,7 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
     button: {
-        backgroundColor: '#3b82f6',
-        paddingVertical: 12,
+        paddingVertical: 14,
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 20,
@@ -213,8 +220,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     link: {
-        color: '#3b82f6',
         fontSize: 14,
         fontWeight: '600',
     },
 });
+

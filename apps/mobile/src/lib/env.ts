@@ -12,6 +12,7 @@ interface EnvConfig {
     secondaryColor: string;
     backgroundColor: string;
     textColor: string;
+    fontFamily: string;
     isDevelopment: boolean;
     isProduction: boolean;
     googleClientId: string | null;
@@ -27,10 +28,11 @@ interface EnvConfig {
 export function getEnvConfig(): EnvConfig {
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
     const appName = process.env.EXPO_PUBLIC_INSTANCE || 'monorepo';
-    const primaryColor = process.env.EXPO_PUBLIC_PRIMARY_COLOR || '#3b82f6';
-    const secondaryColor = process.env.EXPO_PUBLIC_SECONDARY_COLOR || '#10b981';
-    const backgroundColor = process.env.EXPO_PUBLIC_BACKGROUND_COLOR || '#ffffff';
-    const textColor = process.env.EXPO_PUBLIC_TEXT_COLOR || '#1f2937';
+    const primaryColor = process.env.EXPO_PUBLIC_PRIMARY_COLOR || '#6366f1';
+    const secondaryColor = process.env.EXPO_PUBLIC_SECONDARY_COLOR || '#ec4899';
+    const backgroundColor = process.env.EXPO_PUBLIC_BACKGROUND_COLOR || '#f8fafc';
+    const textColor = process.env.EXPO_PUBLIC_TEXT_COLOR || '#1e293b';
+    const fontFamily = process.env.EXPO_PUBLIC_FONT_FAMILY || 'Manrope';
     const nodeEnv = process.env.NODE_ENV || 'development';
     const googleClientId = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || null;
     const facebookAppId = process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || null;
@@ -55,7 +57,7 @@ export function getEnvConfig(): EnvConfig {
 
     // Validate required variables
     if (!apiUrl) {
-        console.warn('⚠️  EXPO_PUBLIC_API_URL is not set. Using default: http://localhost:3000');
+        console.warn('⚠️  EXPO_PUBLIC_API_URL is not set. Using default: http://localhost:9001');
     }
 
     // Validate colors
@@ -70,12 +72,13 @@ export function getEnvConfig(): EnvConfig {
     const isProduction = nodeEnv === 'production';
 
     return {
-        apiUrl: apiUrl || 'http://localhost:3000',
+        apiUrl: apiUrl || 'http://localhost:9001',
         appName,
         primaryColor,
         secondaryColor,
         backgroundColor,
         textColor,
+        fontFamily,
         isDevelopment,
         isProduction,
         googleClientId,
@@ -178,6 +181,24 @@ export function getMainScreenConfig() {
     const config = getEnvConfig();
     return {
         message: config.mainScreenMessage,
+    };
+}
+
+/**
+ * Get theme configuration (colors and font)
+ */
+export function getThemeConfig() {
+    const config = getEnvConfig();
+    return {
+        colors: {
+            primary: config.primaryColor,
+            secondary: config.secondaryColor,
+            background: config.backgroundColor,
+            text: config.textColor,
+        },
+        font: {
+            family: config.fontFamily,
+        },
     };
 }
 

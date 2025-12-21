@@ -60,9 +60,17 @@ EXPO_PUBLIC_API_URL=http://localhost:3000
 EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
 EXPO_PUBLIC_FACEBOOK_APP_ID=your-facebook-app-id
 
-# Configuración de la app
+# Configuración
 EXPO_PUBLIC_APP_NAME=Retia Auth
-EXPO_PUBLIC_PRIMARY_COLOR=#3b82f6
+
+# Theme colors (hex format)
+EXPO_PUBLIC_PRIMARY_COLOR=#6366f1
+EXPO_PUBLIC_SECONDARY_COLOR=#ec4899
+EXPO_PUBLIC_BACKGROUND_COLOR=#f8fafc
+EXPO_PUBLIC_TEXT_COLOR=#1e293b
+
+# Font family
+EXPO_PUBLIC_FONT_FAMILY=Manrope
 ```
 
 ### 3. Iniciar el Servidor de Desarrollo

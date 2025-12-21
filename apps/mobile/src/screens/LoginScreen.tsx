@@ -15,6 +15,7 @@ import { useAuth } from '../context/AuthContext';
 // import { isOAuthProviderAvailable } from '../lib/oauth';
 import { getErrorMessage } from '../lib/error-handler';
 import { getAuthConfig, envConfig } from '../lib/env';
+import { Logo } from '../components/Logo';
 
 interface LoginScreenProps {
     onNavigateToRegister: () => void;
@@ -67,11 +68,14 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
+            style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}
         >
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>{envConfig.appName}</Text>
+                    <Logo size={100} variant="square" />
+                    <Text style={[styles.title, { color: envConfig.textColor }]}>
+                        {envConfig.appName}
+                    </Text>
                     <Text style={styles.subtitle}>Inicia sesión en tu cuenta</Text>
                 </View>
 
@@ -114,6 +118,7 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
                             <TouchableOpacity
                                 style={[
                                     styles.button,
+                                    { backgroundColor: envConfig.primaryColor },
                                     (isLoading || oauthLoading) && styles.buttonDisabled,
                                 ]}
                                 onPress={handleLogin}
@@ -192,7 +197,9 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>¿No tienes una cuenta? </Text>
                     <TouchableOpacity onPress={onNavigateToRegister} disabled={isLoading}>
-                        <Text style={styles.link}>Regístrate aquí</Text>
+                        <Text style={[styles.link, { color: envConfig.primaryColor }]}>
+                            Regístrate aquí
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -203,7 +210,6 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
     },
     scrollContent: {
         flexGrow: 1,
@@ -215,9 +221,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: 'bold',
-        color: '#1f2937',
+        marginTop: 16,
         marginBottom: 8,
     },
     subtitle: {
@@ -229,7 +235,7 @@ const styles = StyleSheet.create({
         borderLeftWidth: 4,
         borderLeftColor: '#dc2626',
         padding: 12,
-        borderRadius: 4,
+        borderRadius: 8,
         marginBottom: 20,
     },
     errorText: {
@@ -259,8 +265,7 @@ const styles = StyleSheet.create({
         color: '#1f2937',
     },
     button: {
-        backgroundColor: '#3b82f6',
-        paddingVertical: 12,
+        paddingVertical: 14,
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 20,
@@ -317,7 +322,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     link: {
-        color: '#3b82f6',
         fontSize: 14,
         fontWeight: '600',
     },
@@ -334,3 +338,4 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 });
+
