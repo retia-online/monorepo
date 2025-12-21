@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB, User } from '@retia/database';
 import { loginSchema } from '@retia/utils';
 import { rateLimit } from '@/lib/rate-limit';
-import { logAuth, logAPI } from '@/lib/logger';
+import { logger, logAuth, logAPI } from '@/lib/logger';
 import { SignJWT } from 'jose';
 
 const JWT_SECRET = new TextEncoder().encode(process.env.NEXTAUTH_SECRET || 'fallback-secret');
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
         if (!user || !user.password) {
             logAuth.login(validated.email, false);
-            return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
+            return NextResponse.json({ error: 'El email o la contraseña son incorrectos' }, { status: 401 });
         }
 
         // Verify password
@@ -40,7 +40,18 @@ export async function POST(request: NextRequest) {
 
         if (!isValid) {
             logAuth.login(validated.email, false);
-            return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
+            return NextResponse.json({ error: 'El email o la contraseña son incorrectos' }, { status: 401 });
+        }
+
+        // Check if user is approved (for whitelist mode)
+        // ADMINs are always considered approved
+        if (user.role !== 'ADMIN' && !user.approved) {
+            logger.warn({
+                event: 'auth.pending_approval',
+                email: user.email,
+            }, 'User login attempt (mobile) - pending approval');
+            logAuth.login(validated.email, false);
+            return NextResponse.json({ error: 'Tu cuenta está pendiente de aprobación' }, { status: 403 });
         }
 
         // Log successful login
@@ -69,7 +80,7 @@ export async function POST(request: NextRequest) {
             },
             token,
         });
-    } catch (error: unknown) {
+    } catch (error: any) {
         logAPI.error(
             'POST',
             '/api/mobile/auth/login',
@@ -77,7 +88,7 @@ export async function POST(request: NextRequest) {
             ip
         );
 
-        if (error.name === 'ZodError') {
+        if (error?.name === 'ZodError') {
             return NextResponse.json(
                 { error: 'Datos inválidos', details: error.errors },
                 { status: 400 }

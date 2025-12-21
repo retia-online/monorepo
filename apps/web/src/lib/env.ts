@@ -8,7 +8,7 @@ const envSchema = z
     .object({
         // Node Environment
         NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-        
+
         // Instance Configuration
         INSTANCE: z.string().default('App'),
 
@@ -21,9 +21,9 @@ const envSchema = z
 
         // Auth Providers
         AUTH_PROVIDERS: z.string().default('email'),
-        
+
         // Auth Mode
-        AUTH_MODE: z.enum(['required', 'disabled', 'optional']).default('required'),
+        AUTH_MODE: z.enum(['required', 'disabled', 'optional', 'whitelist', 'invite-only']).default('required'),
 
         // Google OAuth (optional)
         GOOGLE_CLIENT_ID: z.string().optional(),
@@ -42,7 +42,7 @@ const envSchema = z
 
         // Logging
         LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).optional(),
-        
+
         // Design Configuration
         NEXT_PUBLIC_PRIMARY_COLOR: z.string().optional().default('#6366f1'),
         NEXT_PUBLIC_SECONDARY_COLOR: z.string().optional().default('#ec4899'),

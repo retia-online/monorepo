@@ -50,6 +50,17 @@ if (enabledProviders.includes('email')) {
                         return null;
                     }
 
+                    // Check if user is approved (for whitelist mode)
+                    // ADMINs are always considered approved
+                    if (user.role !== UserRole.ADMIN && !user.approved) {
+                        logger.warn({
+                            event: 'auth.pending_approval',
+                            email: user.email,
+                        }, 'User login attempt - pending approval');
+                        logAuth.login(validated.email, false);
+                        return null;
+                    }
+
                     // Log successful login
                     logAuth.login(user.email, true);
 
@@ -129,6 +140,7 @@ export const authConfig: NextAuthConfig = {
                             name: user.name || profile?.name || 'User',
                             email: user.email,
                             role: isFirstUser ? UserRole.ADMIN : UserRole.USER,
+                            approved: isFirstUser ? true : true, // OAuth is usually trusted, but we could check AUTH_MODE here
                             emailVerified: new Date(),
                             image: user.image || profile?.image,
                         });

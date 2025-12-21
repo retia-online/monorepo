@@ -116,6 +116,21 @@ export function Navbar({ showAuthButtons = true, instanceName = 'App' }: NavbarP
                                                     Cambiar Contraseña
                                                 </div>
                                             </Link>
+
+                                            {session.user?.role === 'ADMIN' && (
+                                                <Link
+                                                    href="/admin/users"
+                                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                                    onClick={() => setIsUserMenuOpen(false)}
+                                                >
+                                                    <div className="flex items-center">
+                                                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                        </svg>
+                                                        Gestión de Usuarios
+                                                    </div>
+                                                </Link>
+                                            )}
                                             <div className="border-t border-gray-100 mt-1">
                                                 <button
                                                     type="button"

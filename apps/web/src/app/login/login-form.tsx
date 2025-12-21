@@ -8,9 +8,10 @@ import Link from 'next/link';
 
 interface LoginFormProps {
     enabledProviders: string[];
+    showRegisterLink?: boolean;
 }
 
-export default function LoginForm({ enabledProviders }: LoginFormProps) {
+export default function LoginForm({ enabledProviders, showRegisterLink = true }: LoginFormProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [email, setEmail] = useState('');
@@ -169,15 +170,17 @@ export default function LoginForm({ enabledProviders }: LoginFormProps) {
                 </>
             )}
 
-            <div className="mt-6 text-center text-sm text-gray-600">
-                ¿No tienes una cuenta?{' '}
-                <Link
-                    href="/register"
-                    className="font-medium text-primary hover:text-primary/80 transition-colors"
-                >
-                    Regístrate aquí
-                </Link>
-            </div>
+            {showRegisterLink && (
+                <div className="mt-6 text-center text-sm text-gray-600">
+                    ¿No tienes una cuenta?{' '}
+                    <Link
+                        href="/register"
+                        className="font-medium text-primary hover:text-primary/80 transition-colors"
+                    >
+                        Regístrate aquí
+                    </Link>
+                </div>
+            )}
         </Card>
     );
 }

@@ -35,6 +35,8 @@ export default async function LoginPage() {
     await redirectIfAuthenticated();
 
     const enabledProviders = getEnabledProviders();
+    const authMode = process.env.AUTH_MODE || 'required';
+    const isRegisterEnabled = authMode !== 'invite-only' && authMode !== 'disabled';
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 py-12 px-4 sm:px-6 lg:px-8">
@@ -45,7 +47,10 @@ export default async function LoginPage() {
                 </div>
 
                 <Suspense fallback={<div className="text-center">Cargando...</div>}>
-                    <LoginForm enabledProviders={enabledProviders} />
+                    <LoginForm
+                        enabledProviders={enabledProviders}
+                        showRegisterLink={isRegisterEnabled}
+                    />
                 </Suspense>
             </div>
         </div>
