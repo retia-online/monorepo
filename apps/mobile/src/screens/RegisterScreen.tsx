@@ -37,10 +37,19 @@ export function RegisterScreen({ onNavigateToLogin }: RegisterScreenProps) {
 
         try {
             await register({ name, email, password });
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = getErrorMessage(err);
-            setError(errorMessage);
-            Alert.alert('Error', errorMessage);
+
+            if (err.message === 'PENDING_APPROVAL') {
+                Alert.alert(
+                    'Registro Recibido',
+                    'Tu cuenta ha sido creada exitosamente pero requiere aprobación de un administrador antes de iniciar sesión.',
+                    [{ text: 'OK', onPress: onNavigateToLogin }]
+                );
+            } else {
+                setError(errorMessage);
+                Alert.alert('Error', errorMessage);
+            }
         }
     };
 

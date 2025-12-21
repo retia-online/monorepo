@@ -1,2 +1,2 @@
 export * from './validation';
-export * from './email';
+export { sendEmail, sendPasswordResetEmail, sendWelcomeEmail, sendPendingApprovalEmail } from './email';

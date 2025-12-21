@@ -42,10 +42,15 @@ export function parseError(error: unknown): ApiError {
             };
         }
 
-        // Invalid credentials
-        if (message.includes('Email o contraseña incorrectos')) {
+        // Invalid credentials or unauthorized
+        if (
+            message.includes('incorrectos') ||
+            message.includes('inválidas') ||
+            message.includes('Unauthorized') ||
+            message.includes('unauthorized')
+        ) {
             return {
-                message: 'Email o contraseña incorrectos',
+                message: 'El email o la contraseña son incorrectos',
                 code: 'INVALID_CREDENTIALS',
                 statusCode: 401,
                 isNetworkError: false,
@@ -54,8 +59,20 @@ export function parseError(error: unknown): ApiError {
             };
         }
 
+        // Pending approval
+        if (message === 'PENDING_APPROVAL' || message.includes('pendiente de aprobación')) {
+            return {
+                message: 'Tu registro ha sido recibido. Tu cuenta está pendiente de validar por un administrador.',
+                code: 'PENDING_APPROVAL',
+                statusCode: 403,
+                isNetworkError: false,
+                isAuthError: true,
+                isValidationError: false,
+            };
+        }
+
         // Email already registered
-        if (message.includes('Email ya registrado')) {
+        if (message.includes('Email ya registrado') || message.includes('already registered')) {
             return {
                 message: 'Este email ya está registrado',
                 code: 'EMAIL_EXISTS',

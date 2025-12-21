@@ -194,14 +194,16 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
                     </>
                 )}
 
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>¿No tienes una cuenta? </Text>
-                    <TouchableOpacity onPress={onNavigateToRegister} disabled={isLoading}>
-                        <Text style={[styles.link, { color: envConfig.primaryColor }]}>
-                            Regístrate aquí
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                {(authConfig.mode !== 'invite-only' && !authConfig.isDisabled) && (
+                    <View style={styles.footer}>
+                        <Text style={styles.footerText}>¿No tienes una cuenta? </Text>
+                        <TouchableOpacity onPress={onNavigateToRegister} disabled={isLoading}>
+                            <Text style={[styles.link, { color: envConfig.primaryColor }]}>
+                                Regístrate aquí
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </ScrollView>
         </KeyboardAvoidingView>
     );

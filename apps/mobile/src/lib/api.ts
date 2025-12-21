@@ -92,9 +92,18 @@ export const api = {
 
             const data = await response.json();
 
-            // Auto-login after registration
+            // Auto-login after registration if token is provided (user is approved)
+            if (data.token) {
+                await secureStorage.setToken(data.token);
+            }
             if (data.user) {
                 await secureStorage.setUser(data.user);
+            }
+
+            // If we don't have a token but the registration was successful, 
+            // it means the user is pending approval.
+            if (!data.token && data.needsApproval) {
+                throw new Error('PENDING_APPROVAL');
             }
 
             return data;

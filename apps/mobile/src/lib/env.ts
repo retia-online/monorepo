@@ -2,7 +2,7 @@
  * Environment variable validation and configuration
  */
 
-export type AuthMode = 'required' | 'disabled' | 'optional';
+export type AuthMode = 'required' | 'disabled' | 'optional' | 'whitelist' | 'invite-only';
 export type AuthMethod = 'email' | 'phone' | 'facebook' | 'google';
 
 interface EnvConfig {
@@ -43,7 +43,7 @@ export function getEnvConfig(): EnvConfig {
     const mainScreenMessage = process.env.EXPO_PUBLIC_MAIN_SCREEN_MESSAGE || 'Hola Mundo';
 
     // Validate auth mode
-    const validAuthModes: AuthMode[] = ['required', 'disabled', 'optional'];
+    const validAuthModes: AuthMode[] = ['required', 'disabled', 'optional', 'whitelist', 'invite-only'];
     const authMode: AuthMode = validAuthModes.includes(authModeRaw as AuthMode)
         ? (authModeRaw as AuthMode)
         : 'required';

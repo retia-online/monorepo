@@ -20,6 +20,14 @@ export interface IUser extends Document {
     image?: string;
     resetPasswordToken?: string;
     resetPasswordExpires?: Date;
+    // Whitelist mode: usuario necesita aprobación del admin
+    approved: boolean;
+    approvedAt?: Date;
+    approvedBy?: mongoose.Types.ObjectId;
+    // Invite-only mode: usuario creado por invitación
+    inviteToken?: string;
+    inviteExpires?: Date;
+    invitedBy?: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
     comparePassword(candidatePassword: string): Promise<boolean>;
@@ -65,6 +73,34 @@ const userSchema = new Schema<IUser>(
         resetPasswordExpires: {
             type: Date,
             select: false, // Don't return by default
+        },
+        // Whitelist mode fields
+        approved: {
+            type: Boolean,
+            default: true, // Por defecto aprobado (para backward compatibility)
+        },
+        approvedAt: {
+            type: Date,
+            default: null,
+        },
+        approvedBy: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            default: null,
+        },
+        // Invite-only mode fields
+        inviteToken: {
+            type: String,
+            select: false,
+        },
+        inviteExpires: {
+            type: Date,
+            select: false,
+        },
+        invitedBy: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            default: null,
         },
     },
     {
