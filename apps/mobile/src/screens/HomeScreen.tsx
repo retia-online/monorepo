@@ -3,7 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-na
 import { useAuth } from '../context/AuthContext';
 import { getMainScreenConfig, getAuthConfig } from '../lib/env';
 
-export function HomeScreen() {
+interface HomeScreenProps {
+    onNavigateToProfile?: () => void;
+}
+
+export function HomeScreen({ onNavigateToProfile }: HomeScreenProps) {
     const { user, logout } = useAuth();
     const mainConfig = getMainScreenConfig();
     const authConfig = getAuthConfig();
@@ -27,12 +31,15 @@ export function HomeScreen() {
                                 <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
                             </TouchableOpacity>
                         ) : (
-                            authConfig.isOptional && (
+                            authConfig.isOptional && onNavigateToProfile && (
                                 <View style={styles.authButtons}>
                                     <Text style={styles.optionalAuthText}>
                                         ¿Quieres iniciar sesión para una mejor experiencia?
                                     </Text>
-                                    <TouchableOpacity style={styles.loginButton}>
+                                    <TouchableOpacity 
+                                        style={styles.loginButton}
+                                        onPress={onNavigateToProfile}
+                                    >
                                         <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
                                     </TouchableOpacity>
                                 </View>

@@ -148,4 +148,59 @@ export const api = {
             throw error;
         }
     },
+
+    async canChangePassword() {
+        try {
+            const headers = await getAuthHeaders();
+
+            const response = await fetch(`${API_URL}/api/mobile/auth/can-change-password`, {
+                method: 'GET',
+                headers,
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    await handleUnauthorized();
+                    throw new Error('Session expired');
+                }
+                throw new Error('Failed to check password capability');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Can change password error:', error);
+            throw error;
+        }
+    },
+
+    async changePassword(currentPassword: string, newPassword: string) {
+        try {
+            const headers = await getAuthHeaders();
+
+            const response = await fetch(`${API_URL}/api/mobile/auth/change-password`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword,
+                }),
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    await handleUnauthorized();
+                    throw new Error('Session expired');
+                }
+                const error = await response.json();
+                throw new Error(error.error || 'Failed to change password');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Change password error:', error);
+            throw error;
+        }
+    },
 };

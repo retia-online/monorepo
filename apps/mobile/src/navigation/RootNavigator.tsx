@@ -50,7 +50,6 @@ function AppStack() {
         >
             <Tab.Screen
                 name="HomeTab"
-                component={HomeScreen}
                 options={{
                     title: 'Inicio',
                     tabBarLabel: 'Inicio',
@@ -58,7 +57,13 @@ function AppStack() {
                         <View style={{ width: 24, height: 24, backgroundColor: color }} />
                     ),
                 }}
-            />
+            >
+                {({ navigation }) => (
+                    <HomeScreen 
+                        onNavigateToProfile={() => navigation.navigate('ProfileTab')}
+                    />
+                )}
+            </Tab.Screen>
 
             {/* Solo mostrar perfil si el usuario está logueado o auth no está deshabilitado */}
             {(user || !authConfig.isDisabled) && (

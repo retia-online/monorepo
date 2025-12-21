@@ -13,12 +13,14 @@ import { useAuth } from '@/context/AuthContext';
 import { getAuthConfig } from '@/lib/env';
 import { LoginScreen } from './LoginScreen';
 import { RegisterScreen } from './RegisterScreen';
+import { ChangePasswordScreen } from './ChangePasswordScreen';
 
 export function ProfileScreen() {
     const { user, logout, refreshProfile, isLoading } = useAuth();
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState('');
     const [showLogin, setShowLogin] = useState(true);
+    const [showChangePassword, setShowChangePassword] = useState(false);
     const authConfig = getAuthConfig();
 
     const handleLogout = async () => {
@@ -79,6 +81,13 @@ export function ProfileScreen() {
         );
     }
 
+    // Si está mostrando la pantalla de cambio de contraseña
+    if (showChangePassword) {
+        return (
+            <ChangePasswordScreen onGoBack={() => setShowChangePassword(false)} />
+        );
+    }
+
     const initials = user.name
         .split(' ')
         .map((n) => n[0])
@@ -134,17 +143,27 @@ export function ProfileScreen() {
                 </View>
             )}
 
-            <TouchableOpacity
-                style={[styles.logoutButton, isLoading && styles.buttonDisabled]}
-                onPress={handleLogout}
-                disabled={isLoading}
-            >
-                {isLoading ? (
-                    <ActivityIndicator color="#fff" />
-                ) : (
-                    <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
-                )}
-            </TouchableOpacity>
+            <View style={styles.actionsContainer}>
+                <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => setShowChangePassword(true)}
+                    disabled={isLoading}
+                >
+                    <Text style={styles.actionButtonText}>🔐 Cambiar Contraseña</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.logoutButton, isLoading && styles.buttonDisabled]}
+                    onPress={handleLogout}
+                    disabled={isLoading}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
+                    )}
+                </TouchableOpacity>
+            </View>
 
             <View style={styles.spacing} />
         </ScrollView>
@@ -265,10 +284,24 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#b45309',
     },
-    logoutButton: {
-        backgroundColor: '#dc2626',
+    actionsContainer: {
         marginHorizontal: 16,
         marginTop: 20,
+    },
+    actionButton: {
+        backgroundColor: '#3b82f6',
+        paddingVertical: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    actionButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    logoutButton: {
+        backgroundColor: '#dc2626',
         paddingVertical: 12,
         borderRadius: 8,
         alignItems: 'center',
