@@ -11,10 +11,10 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
-import { api } from '@/lib/api';
-import { getErrorMessage } from '@/lib/error-handler';
-import { envConfig } from '@/lib/env';
+import { useAuth } from '../context/AuthContext';
+import { api } from '../lib/api';
+import { getErrorMessage } from '../lib/error-handler';
+import { envConfig } from '../lib/env';
 
 interface ChangePasswordScreenProps {
     onGoBack: () => void;

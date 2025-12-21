@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { api, setSessionExpiredCallback } from '@/lib/api';
-import { secureStorage } from '@/lib/secure-storage';
-import { loginWithGoogle, loginWithFacebook } from '@/lib/oauth';
-import { User, AuthContextType, LoginCredentials, RegisterCredentials } from '@/types';
+import { api, setSessionExpiredCallback } from '../lib/api';
+import { secureStorage } from '../lib/secure-storage';
+import { loginWithGoogle, loginWithFacebook } from '../lib/oauth';
+import { User, AuthContextType, LoginCredentials, RegisterCredentials } from '../types';
 
 interface ExtendedAuthContextType extends AuthContextType {
     loginWithGoogle: () => Promise<void>;
@@ -28,7 +28,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const bootstrapAsync = async () => {
+        console.log('--- AuthContext: bootstrapAsync started ---');
         try {
+            console.log('--- AuthContext: calling secureStorage ---');
             // Try to restore token and user from secure storage
             const [token, storedUser] = await Promise.all([
                 secureStorage.getToken(),
@@ -36,12 +38,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             ]);
 
             if (token && storedUser) {
-                setUser(storedUser);
+                console.log('--- AuthContext: restored session ---');
+                setUser(storedUser as User);
                 setIsSignedIn(true);
+            } else {
+                console.log('--- AuthContext: no restored session ---');
             }
         } catch (error) {
-            console.error('Failed to restore session:', error);
+            console.error('--- AuthContext: Failed to restore session:', error);
         } finally {
+            console.log('--- AuthContext: bootstrapAsync finished ---');
             setIsLoading(false);
         }
     };
@@ -112,7 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(true);
         try {
             const response = await loginWithGoogle();
-            setUser(response.user);
+            setUser(response.user as User);
             setIsSignedIn(true);
         } catch (error) {
             setIsSignedIn(false);
@@ -126,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(true);
         try {
             const response = await loginWithFacebook();
-            setUser(response.user);
+            setUser(response.user as User);
             setIsSignedIn(true);
         } catch (error) {
             setIsSignedIn(false);

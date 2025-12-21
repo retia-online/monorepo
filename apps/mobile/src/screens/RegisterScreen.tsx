@@ -11,8 +11,8 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
-import { getErrorMessage } from '@/lib/error-handler';
+import { useAuth } from '../context/AuthContext';
+import { getErrorMessage } from '../lib/error-handler';
 
 interface RegisterScreenProps {
     onNavigateToLogin: () => void;

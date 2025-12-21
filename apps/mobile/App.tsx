@@ -1,30 +1,25 @@
 import React from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import * as SplashScreen from 'expo-splash-screen';
-import { AuthProvider } from '@/context/AuthContext';
-import { RootNavigator } from '@/navigation/RootNavigator';
+import { NavigationContainer } from '@react-navigation/native';
+import { AuthProvider } from './src/context/AuthContext';
+import { RootNavigator } from './src/navigation/RootNavigator';
 
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
+import { envConfig } from './src/lib/env';
 
 export default function App() {
-    React.useEffect(() => {
-        // Hide splash screen after a short delay
-        const timer = setTimeout(() => {
-            SplashScreen.hideAsync();
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    }, []);
+    console.log('--- APP CONFIG ---');
+    console.log('API URL:', envConfig.apiUrl);
+    console.log('------------------');
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <SafeAreaProvider>
+        <SafeAreaProvider>
+            <NavigationContainer>
                 <AuthProvider>
                     <RootNavigator />
                 </AuthProvider>
-            </SafeAreaProvider>
-        </GestureHandlerRootView>
+            </NavigationContainer>
+        </SafeAreaProvider>
     );
 }
+

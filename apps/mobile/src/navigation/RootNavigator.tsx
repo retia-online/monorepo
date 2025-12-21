@@ -1,40 +1,27 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ActivityIndicator, View } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
-import { LoginScreen } from '@/screens/LoginScreen';
-import { RegisterScreen } from '@/screens/RegisterScreen';
-import { ProfileScreen } from '@/screens/ProfileScreen';
-import { HomeScreen } from '@/screens/HomeScreen';
-import { getAuthConfig } from '@/lib/env';
+import { useAuth } from '../context/AuthContext';
+import { LoginScreen } from '../screens/LoginScreen';
+import { RegisterScreen } from '../screens/RegisterScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
+import { HomeScreen } from '../screens/HomeScreen';
+import { getAuthConfig } from '../lib/env';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function AuthStack() {
-    const [showLogin, setShowLogin] = React.useState(true);
-
     return (
-        <Stack.Navigator
-            screenOptions={{
-                headerShown: false,
-                animationEnabled: true,
-            }}
-        >
-            {showLogin ? (
-                <Stack.Screen name="Login" options={{ animationTypeForReplace: 'pop' }}>
-                    {() => <LoginScreen onNavigateToRegister={() => setShowLogin(false)} />}
-                </Stack.Screen>
-            ) : (
-                <Stack.Screen name="Register" options={{ animationTypeForReplace: 'pop' }}>
-                    {() => <RegisterScreen onNavigateToLogin={() => setShowLogin(true)} />}
-                </Stack.Screen>
-            )}
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
         </Stack.Navigator>
     );
 }
+
 
 function AppStack() {
     const { user } = useAuth();
@@ -59,7 +46,7 @@ function AppStack() {
                 }}
             >
                 {({ navigation }) => (
-                    <HomeScreen 
+                    <HomeScreen
                         onNavigateToProfile={() => navigation.navigate('ProfileTab')}
                     />
                 )}
@@ -109,9 +96,5 @@ export function RootNavigator() {
         return !isSignedIn; // Fallback por defecto
     };
 
-    return (
-        <NavigationContainer>
-            {shouldShowAuthStack() ? <AuthStack /> : <AppStack />}
-        </NavigationContainer>
-    );
+    return shouldShowAuthStack() ? <AuthStack /> : <AppStack />;
 }

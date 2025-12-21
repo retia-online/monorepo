@@ -16,8 +16,7 @@
     "packages/*"
   ],
   "resolutions": {
-    "react": "^18.2.0",
-    "react-native": "^0.74.0"
+    "expo-constants": "18.0.12"
   },
   "scripts": {
     "dev": "yarn workspace @retia/web dev",

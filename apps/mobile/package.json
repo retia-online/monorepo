@@ -1,6 +1,7 @@
 {
   "name": "@retia/mobile",
   "version": "1.0.0",
+  "main": "index.js",
   "private": true,
   "scripts": {
     "start": "expo start",
@@ -12,16 +13,17 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@react-navigation/bottom-tabs": "^6.6.1",
-    "@react-navigation/native": "^6.1.18",
-    "@react-navigation/stack": "^6.4.1",
+    "@react-navigation/bottom-tabs": "^7.9.0",
+    "@react-navigation/native": "^7.1.26",
+    "@react-navigation/native-stack": "^7.9.0",
+    "@react-navigation/stack": "^7.6.13",
     "@retia/types": "*",
     "@retia/utils": "*",
-    "expo": "~54.0.0",
+    "expo": "~54.0.30",
     "expo-auth-session": "~7.0.10",
-    "expo-constants": "~18.0.11",
+    "expo-constants": "~18.0.12",
     "expo-secure-store": "~15.0.8",
-    "expo-splash-screen": "~31.0.12",
+    "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "expo-web-browser": "~15.0.10",
     "react": "19.1.0",

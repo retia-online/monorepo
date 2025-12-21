@@ -13,7 +13,6 @@
       "**/*"
     ],
     "ios": {
-      "supportsTabletMode": true,
       "bundleIdentifier": "com.retia.auth"
     },
     "android": {
@@ -26,8 +25,7 @@
         "android.permission.ACCESS_NETWORK_STATE"
       ],
       "allowBackup": false,
-      "compileSdkVersion": 34,
-      "targetSdkVersion": 34
+      "usesCleartextTraffic": true
     },
     "web": {},
     "plugins": [

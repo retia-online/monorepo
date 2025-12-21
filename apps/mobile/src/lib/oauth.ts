@@ -11,7 +11,7 @@ const API_URL = getApiUrl();
 interface OAuthConfig {
     clientId: string;
     clientSecret?: string;
-    redirectUrl: string;
+    redirectUri: string;
     discoveryUrl?: string;
 }
 
@@ -25,7 +25,7 @@ interface OAuthResponse {
  */
 export const googleOAuthConfig: OAuthConfig = {
     clientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || '',
-    redirectUrl: AuthSession.getRedirectUrl(),
+    redirectUri: AuthSession.makeRedirectUri(),
     discoveryUrl: 'https://accounts.google.com/.well-known/openid-configuration',
 };
 
@@ -34,7 +34,7 @@ export const googleOAuthConfig: OAuthConfig = {
  */
 export const facebookOAuthConfig: OAuthConfig = {
     clientId: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || '',
-    redirectUrl: AuthSession.getRedirectUrl(),
+    redirectUri: AuthSession.makeRedirectUri(),
 };
 
 /**
@@ -46,14 +46,14 @@ export async function loginWithGoogle(): Promise<OAuthResponse> {
     }
 
     try {
+        const discovery = await AuthSession.fetchDiscoveryAsync(googleOAuthConfig.discoveryUrl!);
         const request = new AuthSession.AuthRequest({
             clientId: googleOAuthConfig.clientId,
             scopes: ['openid', 'profile', 'email'],
-            redirectUrl: googleOAuthConfig.redirectUrl,
-            discoveryUrl: googleOAuthConfig.discoveryUrl,
+            redirectUri: googleOAuthConfig.redirectUri,
         });
 
-        const result = await request.promptAsync({ useProxy: true }, { useProxy: true });
+        const result = await request.promptAsync(discovery);
 
         if (result.type !== 'success') {
             throw new Error('OAuth cancelled or failed');
@@ -86,14 +86,14 @@ export async function loginWithFacebook(): Promise<OAuthResponse> {
     }
 
     try {
+        const discovery = await AuthSession.fetchDiscoveryAsync('https://www.facebook.com/.well-known/openid-configuration');
         const request = new AuthSession.AuthRequest({
             clientId: facebookOAuthConfig.clientId,
             scopes: ['public_profile', 'email'],
-            redirectUrl: facebookOAuthConfig.redirectUrl,
-            discoveryUrl: 'https://www.facebook.com/.well-known/openid-configuration',
+            redirectUri: facebookOAuthConfig.redirectUri,
         });
 
-        const result = await request.promptAsync({ useProxy: true }, { useProxy: true });
+        const result = await request.promptAsync(discovery);
 
         if (result.type !== 'success') {
             throw new Error('OAuth cancelled or failed');

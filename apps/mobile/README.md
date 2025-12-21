@@ -91,7 +91,7 @@ Esto abrirá el Expo CLI con opciones para:
 yarn ios
 
 # O con Expo CLI
-expo start --ios
+npx expo start --ios
 ```
 
 **Requisitos:**
@@ -105,12 +105,27 @@ expo start --ios
 yarn android
 
 # O con Expo CLI
-expo start --android
+npx expo start --android
 ```
 
 **Requisitos:**
 - Android Studio instalado
 - Emulador de Android configurado
+
+### Desarrollo General
+
+```bash
+# Iniciar servidor de desarrollo
+yarn start
+
+# O con npx
+npx expo start
+
+# Opciones adicionales:
+npx expo start --clear    # Limpiar caché
+npx expo start --tunnel   # Usar túnel para dispositivos remotos
+npx expo start --lan      # Usar red local
+```
 
 ### Web (Desarrollo)
 
@@ -400,7 +415,7 @@ rm -rf node_modules
 yarn install
 
 # Limpiar caché de Expo
-expo start --clear
+npx expo start --clear
 ```
 
 ### OAuth no funciona
@@ -413,7 +428,7 @@ expo start --clear
 
 ```bash
 # Reiniciar Expo
-expo start --clear
+npx expo start --clear
 
 # Reiniciar simulador
 xcrun simctl erase all  # iOS

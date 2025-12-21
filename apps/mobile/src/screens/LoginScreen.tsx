@@ -11,10 +11,10 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
-// import { isOAuthProviderAvailable } from '@/lib/oauth';
-import { getErrorMessage } from '@/lib/error-handler';
-import { getAuthConfig, envConfig } from '@/lib/env';
+import { useAuth } from '../context/AuthContext';
+// import { isOAuthProviderAvailable } from '../lib/oauth';
+import { getErrorMessage } from '../lib/error-handler';
+import { getAuthConfig, envConfig } from '../lib/env';
 
 interface LoginScreenProps {
     onNavigateToRegister: () => void;

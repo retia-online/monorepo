@@ -9,8 +9,8 @@ import {
     ScrollView,
     RefreshControl,
 } from 'react-native';
-import { useAuth } from '@/context/AuthContext';
-import { getAuthConfig } from '@/lib/env';
+import { useAuth } from '../context/AuthContext';
+import { getAuthConfig } from '../lib/env';
 import { LoginScreen } from './LoginScreen';
 import { RegisterScreen } from './RegisterScreen';
 import { ChangePasswordScreen } from './ChangePasswordScreen';

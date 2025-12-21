@@ -1,4 +1,4 @@
-import { loginSchema, registerSchema } from '@retia/utils';
+import { loginSchema, registerSchema } from '../../../../packages/utils/src/validation';
 import { secureStorage } from './secure-storage';
 import { getApiUrl } from './env';
 

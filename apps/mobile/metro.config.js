@@ -14,17 +14,10 @@ config.resolver.nodeModulesPaths = [
     path.resolve(projectRoot, 'node_modules'),
     path.resolve(workspaceRoot, 'node_modules'),
 ];
+config.resolver.disableHierarchicalLookup = true;
+
 
 // Set the project root
 config.projectRoot = projectRoot;
-
-// Add support for path aliases and workspace packages
-config.resolver.extraNodeModules = {
-    '@': path.resolve(projectRoot, 'src'),
-    '@retia/types': path.resolve(workspaceRoot, 'packages/types'),
-    '@retia/utils': path.resolve(workspaceRoot, 'packages/utils'),
-    '@retia/ui': path.resolve(workspaceRoot, 'packages/ui'),
-    '@retia/database': path.resolve(workspaceRoot, 'packages/database'),
-};
 
 module.exports = config;
