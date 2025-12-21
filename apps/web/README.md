@@ -48,7 +48,7 @@ Edita `.env.local` con tu configuración:
 MONGODB_URI=mongodb://127.0.0.1:27017/
 
 # NextAuth (REQUIRED)
-NEXTAUTH_URL=http://localhost:9000
+NEXTAUTH_URL=http://localhost:9001
 NEXTAUTH_SECRET=tu-secret-generado-con-openssl
 
 # Proveedores de autenticación (REQUIRED)
@@ -76,7 +76,7 @@ SMTP_FROM=tu-email@gmail.com
 yarn dev
 ```
 
-Abre [http://localhost:3000](http://localhost:3000)
+Abre [http://localhost:9001](http://localhost:9001)
 
 ## 📁 Estructura del Proyecto
 
@@ -137,14 +137,14 @@ FACEBOOK_CLIENT_SECRET=tu-app-secret
 1. Ve a [Google Cloud Console](https://console.cloud.google.com)
 2. Crea un proyecto → Habilita Google+ API
 3. Credentials → Create OAuth 2.0 Client ID
-4. Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google`
+4. Authorized redirect URIs: `http://localhost:9001/api/auth/callback/google`
 5. Copia Client ID y Client Secret a `.env.local`
 
 #### Facebook OAuth
 1. Ve a [Facebook Developers](https://developers.facebook.com)
 2. Crea una app → Añade producto "Facebook Login"
 3. Settings → Basic: copia App ID y App Secret
-4. Valid OAuth Redirect URIs: `http://localhost:3000/api/auth/callback/facebook`
+4. Valid OAuth Redirect URIs: `http://localhost:9001/api/auth/callback/facebook`
 5. Copia App ID y App Secret a `.env.local`
 
 ## 👤 Sistema de Usuarios

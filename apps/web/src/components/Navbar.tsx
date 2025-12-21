@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface NavbarProps {
@@ -12,7 +13,16 @@ interface NavbarProps {
 
 export function Navbar({ showAuthButtons = true, instanceName = 'App' }: NavbarProps) {
     const { data: session } = useSession();
+    const router = useRouter();
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+    const handleLogout = async () => {
+        setIsUserMenuOpen(false);
+        // Sign out without callbackUrl to avoid NEXTAUTH_URL port issue
+        await signOut({ redirect: false });
+        // Use router.push to redirect to current port
+        router.push('/login');
+    };
 
     return (
         <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -109,10 +119,7 @@ export function Navbar({ showAuthButtons = true, instanceName = 'App' }: NavbarP
                                             <div className="border-t border-gray-100 mt-1">
                                                 <button
                                                     type="button"
-                                                    onClick={async () => {
-                                                        setIsUserMenuOpen(false);
-                                                        await signOut({ callbackUrl: '/' });
-                                                    }}
+                                                    onClick={handleLogout}
                                                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                                                 >
                                                     <div className="flex items-center">
