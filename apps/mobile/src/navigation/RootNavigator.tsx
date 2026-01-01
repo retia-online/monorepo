@@ -10,14 +10,24 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { getAuthConfig } from '../lib/env';
 
+import { Ionicons } from '@expo/vector-icons';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function AuthStack() {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Login">
+                {(props: any) => (
+                    <LoginScreen onNavigateToRegister={() => props.navigation.navigate('Register')} />
+                )}
+            </Stack.Screen>
+            <Stack.Screen name="Register">
+                {(props: any) => (
+                    <RegisterScreen onNavigateToLogin={() => props.navigation.navigate('Login')} />
+                )}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 }
@@ -31,7 +41,7 @@ function AppStack() {
         <Tab.Navigator
             screenOptions={{
                 headerShown: true,
-                tabBarActiveTintColor: '#3b82f6',
+                tabBarActiveTintColor: authConfig.isDisabled ? '#94a3b8' : '#3b82f6',
                 tabBarInactiveTintColor: '#9ca3af',
             }}
         >
@@ -40,28 +50,36 @@ function AppStack() {
                 options={{
                     title: 'Inicio',
                     tabBarLabel: 'Inicio',
-                    tabBarIcon: ({ color }) => (
-                        <View style={{ width: 24, height: 24, backgroundColor: color }} />
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="home-outline" size={size} color={color} />
                     ),
                 }}
             >
                 {({ navigation }) => (
                     <HomeScreen
-                        onNavigateToProfile={() => navigation.navigate('ProfileTab')}
+                        onNavigateToProfile={() => {
+                            if (!authConfig.isDisabled) {
+                                navigation.navigate('ProfileTab');
+                            }
+                        }}
                     />
                 )}
             </Tab.Screen>
 
-            {/* Solo mostrar perfil si el usuario está logueado o auth no está deshabilitado */}
-            {(user || !authConfig.isDisabled) && (
+            {/* Solo mostrar perfil si auth no está deshabilitado */}
+            {!authConfig.isDisabled && (
                 <Tab.Screen
                     name="ProfileTab"
                     component={ProfileScreen}
                     options={{
                         title: user ? 'Mi Perfil' : 'Iniciar Sesión',
                         tabBarLabel: user ? 'Perfil' : 'Login',
-                        tabBarIcon: ({ color }) => (
-                            <View style={{ width: 24, height: 24, backgroundColor: color }} />
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons
+                                name={user ? "person-outline" : "log-in-outline"}
+                                size={size}
+                                color={color}
+                            />
                         ),
                     }}
                 />
@@ -84,16 +102,14 @@ export function RootNavigator() {
 
     // Determinar qué mostrar basado en el modo de autenticación
     const shouldShowAuthStack = () => {
-        if (authConfig.isDisabled) {
-            return false; // Nunca mostrar auth si está deshabilitado
+        // En modo deshabilitado u opcional, siempre vamos al AppStack primero
+        if (authConfig.isDisabled || authConfig.isOptional) {
+            return false;
         }
-        if (authConfig.isRequired) {
-            return !isSignedIn; // Mostrar auth solo si no está logueado
-        }
-        if (authConfig.isOptional) {
-            return false; // Nunca forzar auth, siempre ir a app
-        }
-        return !isSignedIn; // Fallback por defecto
+
+        // En cualquier otro modo (required, whitelist, invite-only), 
+        // mostramos el login si no está autenticado
+        return !isSignedIn;
     };
 
     return shouldShowAuthStack() ? <AuthStack /> : <AppStack />;

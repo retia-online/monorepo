@@ -10,7 +10,10 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint . --ext .ts,.tsx",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "clean-db": "yarn workspace retia-monorepo clean-db",
+    "clean-db:force": "yarn workspace retia-monorepo clean-db:force",
+    "clean-db:stats": "yarn workspace retia-monorepo clean-db:stats"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.9.0",

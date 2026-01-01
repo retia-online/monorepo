@@ -16,6 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../lib/error-handler';
 import { getAuthConfig, envConfig } from '../lib/env';
 import { Logo } from '../components/Logo';
+import { Ionicons } from '@expo/vector-icons';
 
 interface LoginScreenProps {
     onNavigateToRegister: () => void;
@@ -127,7 +128,10 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
                                 {isLoading ? (
                                     <ActivityIndicator color="#fff" />
                                 ) : (
-                                    <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                                    <View style={styles.buttonContent}>
+                                        <Ionicons name="log-in-outline" size={20} color="#fff" style={styles.buttonIcon} />
+                                        <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                                    </View>
                                 )}
                             </TouchableOpacity>
                         </>
@@ -165,9 +169,10 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
                                     {oauthLoading === 'google' ? (
                                         <ActivityIndicator color="#1f2937" size="small" />
                                     ) : (
-                                        <>
-                                            <Text style={styles.oauthButtonText}>🔵 Google</Text>
-                                        </>
+                                        <View style={styles.oauthButtonContent}>
+                                            <Ionicons name="logo-google" size={18} color="#EA4335" style={styles.oauthIcon} />
+                                            <Text style={styles.oauthButtonText}>Google</Text>
+                                        </View>
                                     )}
                                 </TouchableOpacity>
                             )}
@@ -184,9 +189,10 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
                                     {oauthLoading === 'facebook' ? (
                                         <ActivityIndicator color="#1f2937" size="small" />
                                     ) : (
-                                        <>
-                                            <Text style={styles.oauthButtonText}>👥 Facebook</Text>
-                                        </>
+                                        <View style={styles.oauthButtonContent}>
+                                            <Ionicons name="logo-facebook" size={18} color="#1877F2" style={styles.oauthIcon} />
+                                            <Text style={styles.oauthButtonText}>Facebook</Text>
+                                        </View>
                                     )}
                                 </TouchableOpacity>
                             )}
@@ -338,6 +344,22 @@ const styles = StyleSheet.create({
         color: '#6b7280',
         fontSize: 14,
         textAlign: 'center',
+    },
+    buttonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonIcon: {
+        marginRight: 8,
+    },
+    oauthButtonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    oauthIcon: {
+        marginRight: 8,
     },
 });
 

@@ -31,7 +31,9 @@ export function HomeScreen({ onNavigateToProfile }: HomeScreenProps) {
                             ¡Bienvenido!
                         </Text>
                         <Text style={styles.welcomeDescription}>
-                            Explora nuestra aplicación. Puedes usar todas las funciones como invitado o registrarte para una experiencia personalizada.
+                            {authConfig.isDisabled
+                                ? 'Explora nuestra aplicación. Todas las funciones están disponibles sin necesidad de registro.'
+                                : 'Explora nuestra aplicación. Puedes usar todas las funciones como invitado o registrarte para una experiencia personalizada.'}
                         </Text>
                     </View>
                 )}

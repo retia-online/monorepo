@@ -15,6 +15,7 @@ import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../lib/error-handler';
 import { envConfig } from '../lib/env';
 import { Logo } from '../components/Logo';
+import { Ionicons } from '@expo/vector-icons';
 
 interface RegisterScreenProps {
     onNavigateToLogin: () => void;
@@ -125,7 +126,10 @@ export function RegisterScreen({ onNavigateToLogin }: RegisterScreenProps) {
                         {isLoading ? (
                             <ActivityIndicator color="#fff" />
                         ) : (
-                            <Text style={styles.buttonText}>Registrarse</Text>
+                            <View style={styles.buttonContent}>
+                                <Ionicons name="person-add-outline" size={20} color="#fff" style={styles.buttonIcon} />
+                                <Text style={styles.buttonText}>Registrarse</Text>
+                            </View>
                         )}
                     </TouchableOpacity>
                 </View>
@@ -231,6 +235,14 @@ const styles = StyleSheet.create({
     link: {
         fontSize: 14,
         fontWeight: '600',
+    },
+    buttonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonIcon: {
+        marginRight: 8,
     },
 });
 

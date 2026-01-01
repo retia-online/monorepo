@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -8,9 +8,12 @@ import {
     Alert,
     ScrollView,
     RefreshControl,
+    SafeAreaView,
+    Platform,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { getAuthConfig, envConfig } from '../lib/env';
+import { api } from '../lib/api';
 import { LoginScreen } from './LoginScreen';
 import { RegisterScreen } from './RegisterScreen';
 import { ChangePasswordScreen } from './ChangePasswordScreen';
@@ -22,7 +25,23 @@ export function ProfileScreen() {
     const [error, setError] = useState('');
     const [showLogin, setShowLogin] = useState(true);
     const [showChangePassword, setShowChangePassword] = useState(false);
+    const [canChange, setCanChange] = useState<boolean>(true);
     const authConfig = getAuthConfig();
+
+    // Comprobar si puede cambiar contraseña
+    useEffect(() => {
+        const checkPermission = async () => {
+            if (user) {
+                try {
+                    const data = await api.canChangePassword();
+                    setCanChange(data.canChangePassword);
+                } catch (err) {
+                    console.error('Error checking password permission:', err);
+                }
+            }
+        };
+        checkPermission();
+    }, [user]);
 
     const handleLogout = async () => {
         Alert.alert('Cerrar sesión', '¿Estás seguro de que deseas cerrar sesión?', [
@@ -50,7 +69,6 @@ export function ProfileScreen() {
             const errorMessage =
                 _err instanceof Error ? _err.message : 'Error al actualizar perfil';
 
-            // Don't show error if session expired (logout will handle it)
             if (errorMessage !== 'Session expired') {
                 setError(errorMessage);
             }
@@ -59,31 +77,28 @@ export function ProfileScreen() {
         }
     };
 
-    // Si no hay usuario y auth está deshabilitado, no mostrar nada
     if (!user && authConfig.isDisabled) {
         return (
-            <View style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}>
+            <SafeAreaView style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}>
                 <View style={styles.noAuthContainer}>
                     <Text style={styles.noAuthText}>La autenticación está deshabilitada</Text>
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 
-    // Si no hay usuario pero auth es opcional, mostrar pantalla de login
     if (!user) {
         return (
-            <View style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}>
+            <SafeAreaView style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}>
                 {showLogin ? (
                     <LoginScreen onNavigateToRegister={() => setShowLogin(false)} />
                 ) : (
                     <RegisterScreen onNavigateToLogin={() => setShowLogin(true)} />
                 )}
-            </View>
+            </SafeAreaView>
         );
     }
 
-    // Si está mostrando la pantalla de cambio de contraseña
     if (showChangePassword) {
         return (
             <ChangePasswordScreen onGoBack={() => setShowChangePassword(false)} />
@@ -91,103 +106,103 @@ export function ProfileScreen() {
     }
 
     return (
-        <ScrollView
-            style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-        >
-            {/* Header with Avatar */}
-            <View style={styles.header}>
-                <Avatar size={100} />
-                <Text style={[styles.name, { color: envConfig.textColor }]}>{user.name}</Text>
-                <View style={[
-                    styles.roleBadge,
-                    { backgroundColor: user.role === 'ADMIN' ? '#fef3c7' : `${envConfig.primaryColor}15` }
-                ]}>
-                    <Text style={[
-                        styles.roleText,
-                        { color: user.role === 'ADMIN' ? '#92400e' : envConfig.primaryColor }
+        <SafeAreaView style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}>
+            <ScrollView
+                style={[styles.container, { backgroundColor: envConfig.backgroundColor }]}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+                contentContainerStyle={{ flexGrow: 1 }}
+            >
+                <View style={styles.header}>
+                    <Avatar size={100} />
+                    <Text style={[styles.name, { color: envConfig.textColor }]}>{user.name}</Text>
+                    <View style={[
+                        styles.roleBadge,
+                        { backgroundColor: user.role === 'ADMIN' ? '#fef3c7' : `${envConfig.primaryColor}15` }
                     ]}>
-                        {user.role === 'ADMIN' ? '👑 Administrador' : '👤 Usuario'}
-                    </Text>
+                        <Text style={[
+                            styles.roleText,
+                            { color: user.role === 'ADMIN' ? '#92400e' : envConfig.primaryColor }
+                        ]}>
+                            {user.role === 'ADMIN' ? '👑 Administrador' : '👤 Usuario'}
+                        </Text>
+                    </View>
                 </View>
-            </View>
 
-            {/* Error Message */}
-            {error ? (
-                <View style={styles.errorContainer}>
-                    <Text style={styles.errorText}>{error}</Text>
-                    <TouchableOpacity style={styles.retryButton} onPress={handleRefresh}>
-                        <Text style={styles.retryButtonText}>Reintentar</Text>
+                {error ? (
+                    <View style={styles.errorContainer}>
+                        <Text style={styles.errorText}>{error}</Text>
+                        <TouchableOpacity style={styles.retryButton} onPress={handleRefresh}>
+                            <Text style={styles.retryButtonText}>Reintentar</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : null}
+
+                <View style={styles.infoCard}>
+                    <Text style={styles.cardTitle}>Información del Perfil</Text>
+
+                    <View style={styles.infoRow}>
+                        <View style={styles.infoIcon}>
+                            <Text style={styles.iconText}>📧</Text>
+                        </View>
+                        <View style={styles.infoContent}>
+                            <Text style={styles.infoLabel}>Email</Text>
+                            <Text style={styles.infoValue}>{user.email}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.divider} />
+
+                    <View style={styles.infoRow}>
+                        <View style={styles.infoIcon}>
+                            <Text style={styles.iconText}>👤</Text>
+                        </View>
+                        <View style={styles.infoContent}>
+                            <Text style={styles.infoLabel}>Rol</Text>
+                            <Text style={styles.infoValue}>{user.role}</Text>
+                        </View>
+                    </View>
+                </View>
+
+                {user.role === 'ADMIN' && (
+                    <View style={styles.adminNotice}>
+                        <Text style={styles.adminNoticeTitle}>🎯 Panel de Administración</Text>
+                        <Text style={styles.adminNoticeText}>
+                            Como administrador, tienes acceso a funcionalidades adicionales de gestión del sistema.
+                        </Text>
+                    </View>
+                )}
+
+                <View style={styles.actionsContainer}>
+                    {canChange && (
+                        <TouchableOpacity
+                            style={[styles.actionButton, { backgroundColor: envConfig.primaryColor }]}
+                            onPress={() => setShowChangePassword(true)}
+                            disabled={isLoading}
+                        >
+                            <Text style={styles.actionButtonIcon}>🔐</Text>
+                            <Text style={styles.actionButtonText}>Cambiar Contraseña</Text>
+                        </TouchableOpacity>
+                    )}
+
+                    <TouchableOpacity
+                        style={[styles.logoutButton, isLoading && styles.buttonDisabled]}
+                        onPress={handleLogout}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <>
+                                <Text style={styles.logoutButtonIcon}>🚪</Text>
+                                <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
+                            </>
+                        )}
                     </TouchableOpacity>
                 </View>
-            ) : null}
 
-            {/* Profile Info Card */}
-            <View style={styles.infoCard}>
-                <Text style={styles.cardTitle}>Información del Perfil</Text>
-
-                <View style={styles.infoRow}>
-                    <View style={styles.infoIcon}>
-                        <Text style={styles.iconText}>📧</Text>
-                    </View>
-                    <View style={styles.infoContent}>
-                        <Text style={styles.infoLabel}>Email</Text>
-                        <Text style={styles.infoValue}>{user.email}</Text>
-                    </View>
-                </View>
-
-                <View style={styles.divider} />
-
-                <View style={styles.infoRow}>
-                    <View style={styles.infoIcon}>
-                        <Text style={styles.iconText}>👤</Text>
-                    </View>
-                    <View style={styles.infoContent}>
-                        <Text style={styles.infoLabel}>Rol</Text>
-                        <Text style={styles.infoValue}>{user.role}</Text>
-                    </View>
-                </View>
-            </View>
-
-            {/* Admin Notice */}
-            {user.role === 'ADMIN' && (
-                <View style={styles.adminNotice}>
-                    <Text style={styles.adminNoticeTitle}>🎯 Panel de Administración</Text>
-                    <Text style={styles.adminNoticeText}>
-                        Como administrador, tienes acceso a funcionalidades adicionales de gestión del sistema.
-                    </Text>
-                </View>
-            )}
-
-            {/* Actions */}
-            <View style={styles.actionsContainer}>
-                <TouchableOpacity
-                    style={[styles.actionButton, { backgroundColor: envConfig.primaryColor }]}
-                    onPress={() => setShowChangePassword(true)}
-                    disabled={isLoading}
-                >
-                    <Text style={styles.actionButtonIcon}>🔐</Text>
-                    <Text style={styles.actionButtonText}>Cambiar Contraseña</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[styles.logoutButton, isLoading && styles.buttonDisabled]}
-                    onPress={handleLogout}
-                    disabled={isLoading}
-                >
-                    {isLoading ? (
-                        <ActivityIndicator color="#fff" />
-                    ) : (
-                        <>
-                            <Text style={styles.logoutButtonIcon}>🚪</Text>
-                            <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
-                        </>
-                    )}
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.spacing} />
-        </ScrollView>
+                <View style={styles.spacing} />
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
@@ -203,10 +218,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 24,
         borderBottomRightRadius: 24,
         shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
+        shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 5,
@@ -258,10 +270,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 20,
         shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
         elevation: 3,
@@ -341,10 +350,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         marginBottom: 12,
         shadowColor: '#6366f1',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 4,
         elevation: 3,
@@ -366,10 +372,7 @@ const styles = StyleSheet.create({
         paddingVertical: 14,
         borderRadius: 12,
         shadowColor: '#ef4444',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 4,
         elevation: 3,

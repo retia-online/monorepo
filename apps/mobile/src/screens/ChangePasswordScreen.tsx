@@ -10,6 +10,8 @@ import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
+    RefreshControl,
+    SafeAreaView,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
@@ -109,7 +111,7 @@ export function ChangePasswordScreen({ onGoBack }: ChangePasswordScreenProps) {
 
         try {
             await api.changePassword(currentPassword, newPassword);
-            
+
             Alert.alert(
                 '¡Éxito!',
                 'Tu contraseña ha sido cambiada exitosamente.',
@@ -172,124 +174,126 @@ export function ChangePasswordScreen({ onGoBack }: ChangePasswordScreenProps) {
     }
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
-        >
-            <View style={styles.header}>
-                <TouchableOpacity onPress={onGoBack} style={styles.backButton}>
-                    <Text style={styles.backButtonText}>← Volver</Text>
-                </TouchableOpacity>
-                <Text style={styles.title}>Cambiar Contraseña</Text>
-            </View>
-
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                <Text style={styles.subtitle}>
-                    Actualiza tu contraseña para mantener tu cuenta segura
-                </Text>
-
-                {error ? (
-                    <View style={styles.errorContainer}>
-                        <Text style={styles.errorText}>{error}</Text>
-                    </View>
-                ) : null}
-
-                <View style={styles.form}>
-                    {/* Current Password */}
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.label}>Contraseña Actual</Text>
-                        <View style={styles.passwordContainer}>
-                            <TextInput
-                                style={styles.passwordInput}
-                                placeholder="Ingresa tu contraseña actual"
-                                placeholderTextColor="#999"
-                                value={currentPassword}
-                                onChangeText={setCurrentPassword}
-                                secureTextEntry={!showPasswords.current}
-                                editable={!isLoading}
-                            />
-                            <TouchableOpacity
-                                style={styles.eyeButton}
-                                onPress={() => togglePasswordVisibility('current')}
-                            >
-                                <Text style={styles.eyeText}>
-                                    {showPasswords.current ? '🙈' : '👁️'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* New Password */}
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.label}>Nueva Contraseña</Text>
-                        <View style={styles.passwordContainer}>
-                            <TextInput
-                                style={styles.passwordInput}
-                                placeholder="Ingresa tu nueva contraseña"
-                                placeholderTextColor="#999"
-                                value={newPassword}
-                                onChangeText={setNewPassword}
-                                secureTextEntry={!showPasswords.new}
-                                editable={!isLoading}
-                            />
-                            <TouchableOpacity
-                                style={styles.eyeButton}
-                                onPress={() => togglePasswordVisibility('new')}
-                            >
-                                <Text style={styles.eyeText}>
-                                    {showPasswords.new ? '🙈' : '👁️'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={styles.hint}>Mínimo 6 caracteres</Text>
-                    </View>
-
-                    {/* Confirm Password */}
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.label}>Confirmar Nueva Contraseña</Text>
-                        <View style={styles.passwordContainer}>
-                            <TextInput
-                                style={styles.passwordInput}
-                                placeholder="Confirma tu nueva contraseña"
-                                placeholderTextColor="#999"
-                                value={confirmPassword}
-                                onChangeText={setConfirmPassword}
-                                secureTextEntry={!showPasswords.confirm}
-                                editable={!isLoading}
-                            />
-                            <TouchableOpacity
-                                style={styles.eyeButton}
-                                onPress={() => togglePasswordVisibility('confirm')}
-                            >
-                                <Text style={styles.eyeText}>
-                                    {showPasswords.confirm ? '🙈' : '👁️'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    <TouchableOpacity
-                        style={[styles.button, isLoading && styles.buttonDisabled]}
-                        onPress={handleChangePassword}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? (
-                            <ActivityIndicator color="#fff" />
-                        ) : (
-                            <Text style={styles.buttonText}>Cambiar Contraseña</Text>
-                        )}
+        <SafeAreaView style={styles.container}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={styles.container}
+            >
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={onGoBack} style={styles.backButton}>
+                        <Text style={styles.backButtonText}>← Volver</Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.cancelButton}
-                        onPress={onGoBack}
-                        disabled={isLoading}
-                    >
-                        <Text style={styles.cancelButtonText}>Cancelar</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.title}>Cambiar Contraseña</Text>
                 </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+
+                <ScrollView contentContainerStyle={styles.scrollContent}>
+                    <Text style={styles.subtitle}>
+                        Actualiza tu contraseña para mantener tu cuenta segura
+                    </Text>
+
+                    {error ? (
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorText}>{error}</Text>
+                        </View>
+                    ) : null}
+
+                    <View style={styles.form}>
+                        {/* Current Password */}
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Contraseña Actual</Text>
+                            <View style={styles.passwordContainer}>
+                                <TextInput
+                                    style={styles.passwordInput}
+                                    placeholder="Ingresa tu contraseña actual"
+                                    placeholderTextColor="#999"
+                                    value={currentPassword}
+                                    onChangeText={setCurrentPassword}
+                                    secureTextEntry={!showPasswords.current}
+                                    editable={!isLoading}
+                                />
+                                <TouchableOpacity
+                                    style={styles.eyeButton}
+                                    onPress={() => togglePasswordVisibility('current')}
+                                >
+                                    <Text style={styles.eyeText}>
+                                        {showPasswords.current ? '🙈' : '👁️'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        {/* New Password */}
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Nueva Contraseña</Text>
+                            <View style={styles.passwordContainer}>
+                                <TextInput
+                                    style={styles.passwordInput}
+                                    placeholder="Ingresa tu nueva contraseña"
+                                    placeholderTextColor="#999"
+                                    value={newPassword}
+                                    onChangeText={setNewPassword}
+                                    secureTextEntry={!showPasswords.new}
+                                    editable={!isLoading}
+                                />
+                                <TouchableOpacity
+                                    style={styles.eyeButton}
+                                    onPress={() => togglePasswordVisibility('new')}
+                                >
+                                    <Text style={styles.eyeText}>
+                                        {showPasswords.new ? '🙈' : '👁️'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={styles.hint}>Mínimo 6 caracteres</Text>
+                        </View>
+
+                        {/* Confirm Password */}
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Confirmar Nueva Contraseña</Text>
+                            <View style={styles.passwordContainer}>
+                                <TextInput
+                                    style={styles.passwordInput}
+                                    placeholder="Confirma tu nueva contraseña"
+                                    placeholderTextColor="#999"
+                                    value={confirmPassword}
+                                    onChangeText={setConfirmPassword}
+                                    secureTextEntry={!showPasswords.confirm}
+                                    editable={!isLoading}
+                                />
+                                <TouchableOpacity
+                                    style={styles.eyeButton}
+                                    onPress={() => togglePasswordVisibility('confirm')}
+                                >
+                                    <Text style={styles.eyeText}>
+                                        {showPasswords.confirm ? '🙈' : '👁️'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <TouchableOpacity
+                            style={[styles.button, isLoading && styles.buttonDisabled]}
+                            onPress={handleChangePassword}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.buttonText}>Cambiar Contraseña</Text>
+                            )}
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.cancelButton}
+                            onPress={onGoBack}
+                            disabled={isLoading}
+                        >
+                            <Text style={styles.cancelButtonText}>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     );
 }
 

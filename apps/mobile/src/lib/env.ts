@@ -38,7 +38,7 @@ export function getEnvConfig(): EnvConfig {
     const facebookAppId = process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || null;
 
     // Auth configuration
-    const authModeRaw = process.env.EXPO_PUBLIC_AUTH_MODE || 'required';
+    const authModeRaw = (process.env.EXPO_PUBLIC_AUTH_MODE || 'required').toLowerCase().trim();
     const authMethodsRaw = process.env.EXPO_PUBLIC_AUTH_METHODS || 'email';
     const mainScreenMessage = process.env.EXPO_PUBLIC_MAIN_SCREEN_MESSAGE || 'Hola Mundo';
 
@@ -167,6 +167,8 @@ export function getAuthConfig() {
         isRequired: config.authMode === 'required',
         isDisabled: config.authMode === 'disabled',
         isOptional: config.authMode === 'optional',
+        isWhitelist: config.authMode === 'whitelist',
+        isInviteOnly: config.authMode === 'invite-only',
         allowsEmail: config.authMethods.includes('email'),
         allowsPhone: config.authMethods.includes('phone'),
         allowsGoogle: config.authMethods.includes('google') && !!config.googleClientId,
