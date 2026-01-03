@@ -1,13 +1,12 @@
 # Retia Monorepo - Sistema de Autenticación
 
-Monorepo simplificado con aplicaciones web y móvil que utilizan SDKs externos para funcionalidad compartida.
+Monorepo con aplicaciones web y móvil que comparten un sistema de autenticación unificado.
 
 ## 🚀 Características Principales
 
 - 🌐 **Aplicación Web**: Next.js 14 con NextAuth.js v5
 - 📱 **Aplicación Móvil**: Expo/React Native con autenticación nativa
 - 🔐 **Sistema unificado**: Usuarios compartidos entre web y móvil
-- 📦 **SDKs Externos**: Funcionalidad core distribuida via GitHub Packages
 - 🎨 **Personalizable**: Temas y configuración vía variables de entorno
 - ☁️ **Listo para producción**: Optimizado para Vercel y MongoDB Atlas
 
@@ -18,34 +17,24 @@ Monorepo simplificado con aplicaciones web y móvil que utilizan SDKs externos p
 ├── apps/
 │   ├── web/              # Aplicación Next.js (Web)
 │   └── mobile/           # Aplicación Expo (iOS/Android)
+├── docs/                 # Documentación del proyecto
 ├── scripts/              # Scripts de utilidad
+├── __tests__/            # Tests del sistema
 ├── .kiro/specs/          # Especificaciones de features
-├── .env.template         # Variables de entorno compartidas
 └── package.json          # Workspace root
 ```
-
-## 📦 SDKs Externos (@megamercado)
-
-Las aplicaciones utilizan los siguientes SDKs publicados en GitHub Packages:
-
-- 🔐 **@megamercado/auth** - Configuración NextAuth y middleware de rutas
-- 🗄️ **@megamercado/api** - Modelos de base de datos y servicios
-- 🎨 **@megamercado/ui** - Componentes UI y layouts compartidos
-- ⚙️ **@megamercado/configs** - Presets de Tailwind y TypeScript
 
 ## 📱 Aplicaciones Disponibles
 
 ### 🌐 Web App (Next.js)
 Sistema de autenticación web completo con dashboard y panel de administración.
 
-**→ [Documentación Web App](./apps/web/README.md)**  
-**→ [Inicio Rápido Web (5 min)](./apps/web/QUICKSTART.md)**
+**→ [Documentación Web App](./apps/web/README.md)**
 
 ### 📱 Mobile App (Expo)
 Aplicación móvil nativa para iOS y Android con autenticación integrada.
 
-**→ [Documentación Mobile App](./apps/mobile/README.md)**  
-**→ [Inicio Rápido Mobile (5 min)](./apps/mobile/QUICKSTART.md)**
+**→ [Documentación Mobile App](./apps/mobile/README.md)**
 
 ## 🛠️ Requisitos Previos
 
@@ -64,7 +53,7 @@ yarn install
 cp .env.template .env.local
 # Editar .env.local con tu configuración
 yarn dev
-# → http://localhost:3000
+# → http://localhost:9001
 ```
 
 ### Opción B: Solo Mobile App
@@ -83,7 +72,6 @@ yarn start
 yarn install
 
 # 2. Configurar variables
-cp .env.template .env.local
 cp apps/web/.env.template apps/web/.env.local
 cp apps/mobile/.env.example apps/mobile/.env.local
 
@@ -92,7 +80,7 @@ cd apps/web && yarn dev &
 cd apps/mobile && yarn start
 ```
 
-**→ [Guía Completa de Desarrollo](./DEVELOPMENT_SETUP.md)**
+**→ [Documentación Completa](./docs/README.md)**
 
 ## 👤 Sistema de Usuarios
 
@@ -205,36 +193,27 @@ MIT
 
 Pull requests son bienvenidos. Para cambios mayores, por favor abre un issue primero.
 
-## � Doocumentación Completa
+## 📚 Documentación
+
+### 📖 Documentación General
+- [**Documentación Completa**](./docs/README.md) - Índice de toda la documentación
+- [**Setup Local**](./docs/LOCAL_SETUP.md) - Configuración de desarrollo
+- [**Autenticación**](./docs/AUTH.md) - Sistema de autenticación
+- [**Seguridad**](./docs/SECURITY.md) - Mejores prácticas de seguridad
 
 ### 🌐 Web App
-- 📖 [Documentación completa](./apps/web/README.md)
-- 🚀 [Inicio rápido (5 min)](./apps/web/QUICKSTART.md)
+- [**README Web**](./apps/web/README.md) - Documentación completa de la web app
 
 ### 📱 Mobile App  
-- 📖 [Documentación completa](./apps/mobile/README.md)
-- 🚀 [Inicio rápido (5 min)](./apps/mobile/QUICKSTART.md)
-- 📱 [Guía móvil](./MOBILE_GETTING_STARTED.md)
-- 🏗️ [Arquitectura](./apps/mobile/ARCHITECTURE.md)
-- 🔐 [OAuth setup](./apps/mobile/OAUTH_SETUP.md)
-- 🔌 [API endpoints](./apps/mobile/API_ENDPOINTS.md)
-
-### 🛠️ Desarrollo
-- 🔧 [Configuración de desarrollo](./DEVELOPMENT_SETUP.md)
-- 📋 [Especificaciones](./.kiro/specs/mobile-auth-app/)
-
-### 📦 SDKs Externos
-- 🔐 [@megamercado/auth](https://github.com/orgs/megamercado/packages) - Configuración NextAuth y middleware
-- 🗄️ [@megamercado/api](https://github.com/orgs/megamercado/packages) - Modelos y servicios de base de datos
-- 🎨 [@megamercado/ui](https://github.com/orgs/megamercado/packages) - Componentes UI compartidos
-- ⚙️ [@megamercado/configs](https://github.com/orgs/megamercado/packages) - Presets de configuración
-
----
+- [**README Mobile**](./apps/mobile/README.md) - Documentación completa de la mobile app
+- [**OAuth Setup**](./docs/mobile/OAUTH_SETUP.md) - Configuración de OAuth
+- [**Arquitectura**](./docs/mobile/ARCHITECTURE.md) - Arquitectura del sistema móvil
+- [**API Endpoints**](./docs/mobile/API_ENDPOINTS.md) - Documentación de endpoints
 
 ## 🆘 Soporte
 
 **¿Necesitas ayuda?**
+- 📖 **Documentación**: [docs/README.md](./docs/README.md)
 - 🌐 **Web**: [apps/web/README.md](./apps/web/README.md)
 - 📱 **Mobile**: [apps/mobile/README.md](./apps/mobile/README.md)
 - 🐛 **Issues**: Abre un issue en el repositorio
-- 📖 **Docs**: Revisa la documentación específica de cada app

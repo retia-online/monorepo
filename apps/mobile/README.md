@@ -1,4 +1,4 @@
-# Retia Mobile App - Expo
+# 📱 Retia Mobile App - Expo
 
 Aplicación móvil nativa (iOS/Android) construida con Expo y React Native que se conecta al sistema de autenticación Retia.
 
@@ -15,17 +15,69 @@ Aplicación móvil nativa (iOS/Android) construida con Expo y React Native que s
 - ✅ Interfaz responsive y moderna
 - ✅ Manejo robusto de errores
 
-## 📋 Requisitos Previos
+## ⚡ Inicio Rápido (5 Minutos)
 
-- **Node.js** 18+ y **Yarn** 1.22+
-- **Expo CLI**: `npm install -g expo-cli`
-- **iOS**: Xcode (para simulador o dispositivo)
-- **Android**: Android Studio (para emulador o dispositivo)
-- **Backend**: Servidor Next.js corriendo en `http://localhost:3000`
+### 1. Instalar Dependencias (1 min)
 
-## ⚡ Quick Start
+```bash
+# Desde la raíz del monorepo
+yarn install
+```
 
-Para empezar rápidamente, ve a [QUICKSTART.md](./QUICKSTART.md).
+### 2. Configurar Variables de Entorno (1 min)
+
+```bash
+# Copiar template
+cp .env.example .env.local
+
+# Editar .env.local con configuración mínima
+```
+
+**Variables requeridas:**
+
+```bash
+# Backend API - Debe apuntar a tu servidor Next.js
+EXPO_PUBLIC_API_URL=http://localhost:9001
+
+# OAuth (opcional)
+EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
+EXPO_PUBLIC_FACEBOOK_APP_ID=your-facebook-app-id
+
+# Configuración
+EXPO_PUBLIC_APP_NAME=Retia Auth
+```
+
+### 3. Iniciar el Servidor de Desarrollo (1 min)
+
+```bash
+yarn start
+```
+
+### 4. Abrir en Simulador (1 min)
+
+**iOS:**
+```bash
+# Presiona 'i' en la terminal o ejecuta:
+yarn ios
+```
+
+**Android:**
+```bash
+# Presiona 'a' en la terminal o ejecuta:
+yarn android
+```
+
+**Dispositivo Físico:**
+1. Instala Expo Go desde App Store o Google Play
+2. Escanea el código QR que aparece en la terminal
+
+### 5. Probar Autenticación (1 min)
+
+1. **Registro**: Toca "Regístrate aquí" y crea una cuenta
+2. **Login**: Usa las credenciales que acabas de crear
+3. **Perfil**: Verás tu información de usuario
+
+¡Listo! 🎉
 
 ## 🛠️ Instalación Completa
 
@@ -90,89 +142,58 @@ Esto abrirá el Expo CLI con opciones para:
 - `r` - Recargar la app
 - `m` - Cambiar modo
 
-## 📱 Ejecutar en Diferentes Plataformas
+## 🚀 Comandos de Despliegue
 
-### iOS
-
-```bash
-# Simulador
-yarn ios
-
-# O con Expo CLI
-npx expo start --ios
-```
-
-**Requisitos:**
-- Xcode instalado
-- Simulador de iOS configurado
-
-### Android
-
-```bash
-# Emulador
-yarn android
-
-# O con Expo CLI
-npx expo start --android
-```
-
-**Requisitos:**
-- Android Studio instalado
-- Emulador de Android configurado
-
-### Desarrollo General
+### Desarrollo
 
 ```bash
 # Iniciar servidor de desarrollo
 yarn start
 
-# O con npx
-npx expo start
+# iOS
+yarn ios
 
-# Opciones adicionales:
-npx expo start --clear    # Limpiar caché
-npx expo start --tunnel   # Usar túnel para dispositivos remotos
-npx expo start --lan      # Usar red local
-```
+# Android
+yarn android
 
-### Web (Desarrollo)
-
-```bash
+# Web (para testing rápido)
 yarn web
 ```
 
-Útil para testing rápido, pero la experiencia no es idéntica a la app nativa.
+### Producción
 
-### Dispositivo Físico
+#### iOS
 
-1. Instala **Expo Go** desde App Store o Google Play
-2. Ejecuta `yarn start`
-3. Escanea el código QR que aparece en la terminal
-4. La app se abrirá en Expo Go
+```bash
+# Crear build para TestFlight/App Store
+eas build --platform ios
 
-## 🔐 Autenticación
+# O usar Xcode directamente
+eas build --platform ios --local
+```
 
-### Email/Password
+#### Android
 
-1. Abre la app
-2. Ingresa email y contraseña
-3. Toca "Iniciar Sesión"
-4. Serás redirigido a tu perfil
+```bash
+# Crear APK o AAB
+eas build --platform android
 
-### Registro
+# O generar APK localmente
+eas build --platform android --local
+```
 
-1. En la pantalla de login, toca "Regístrate aquí"
-2. Ingresa nombre, email y contraseña
-3. Toca "Registrarse"
-4. Serás automáticamente logueado
+### Utilidades
 
-### OAuth (Google/Facebook)
+```bash
+# Linting
+yarn lint
 
-1. En la pantalla de login, toca el botón del proveedor
-2. Completa el flujo de autorización
-3. Serás automáticamente logueado
+# Type checking
+yarn type-check
 
-**Nota:** Requiere configuración en el backend. Ver [OAUTH_SETUP.md](./OAUTH_SETUP.md).
+# Limpiar caché
+yarn start --clear
+```
 
 ## 📁 Estructura del Proyecto
 
@@ -444,35 +465,12 @@ emulator -avd <name> -wipe-data  # Android
 
 ## 📚 Documentación Adicional
 
-- [QUICKSTART.md](./QUICKSTART.md) - Guía rápida de inicio
-- [OAUTH_SETUP.md](./OAUTH_SETUP.md) - Configuración de OAuth
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Arquitectura del sistema
-- [API_ENDPOINTS.md](./API_ENDPOINTS.md) - Documentación de API
-- [IMPLEMENTATION_STATUS.md](./IMPLEMENTATION_STATUS.md) - Estado de implementación
-- [PROGRESS_SUMMARY.md](./PROGRESS_SUMMARY.md) - Resumen de progreso
+- [docs/mobile/OAUTH_SETUP.md](../../docs/mobile/OAUTH_SETUP.md) - Configuración de OAuth
+- [docs/mobile/ARCHITECTURE.md](../../docs/mobile/ARCHITECTURE.md) - Arquitectura del sistema
+- [docs/mobile/API_ENDPOINTS.md](../../docs/mobile/API_ENDPOINTS.md) - Documentación de API
 
-## 🔗 Recursos Externos
+## 🆘 Soporte
 
-- [Expo Documentation](https://docs.expo.dev)
-- [React Navigation](https://reactnavigation.org)
-- [React Native](https://reactnative.dev)
-- [Expo Secure Store](https://docs.expo.dev/modules/expo-secure-store/)
-- [Expo Auth Session](https://docs.expo.dev/modules/expo-auth-session/)
-
-## 🤝 Contribuir
-
-Pull requests son bienvenidos. Para cambios mayores, abre un issue primero.
-
-## 📄 Licencia
-
-MIT
-
----
-
-**¿Necesitas ayuda?** 
-- Revisa la documentación en este directorio
-- Consulta [QUICKSTART.md](./QUICKSTART.md) para empezar rápidamente
-- Abre un issue en el repositorio
-
-**Última actualización**: Diciembre 11, 2024
-**Estado**: En Desarrollo (50% completado)
+- 🌐 **Web App**: [../web/README.md](../web/README.md)
+- 🏠 **Monorepo**: [../../README.md](../../README.md)
+- 🐛 **Issues**: Abre un issue en el repositorio

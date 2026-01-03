@@ -12,9 +12,58 @@ Aplicación web completa con autenticación, dashboard de usuario y panel de adm
 - 📱 **Responsive**: Diseño adaptable a todos los dispositivos
 - ☁️ **Listo para producción**: Optimizado para Vercel
 
-## 🚀 Inicio Rápido
+## 🚀 Inicio Rápido (5 Minutos)
 
-Ver [QUICKSTART.md](./QUICKSTART.md) para iniciar en 5 minutos.
+### Paso 1: Instalar Dependencias (1 min)
+
+```bash
+# Desde la raíz del monorepo
+yarn install
+```
+
+### Paso 2: Configurar Variables de Entorno (1 min)
+
+```bash
+# Copiar template
+cp .env.template .env.local
+```
+
+**Editar `.env.local`** con configuración mínima:
+
+```bash
+# Base de datos (REQUIRED)
+MONGODB_URI=mongodb://127.0.0.1:27017/monorepo
+
+# NextAuth (REQUIRED)
+NEXTAUTH_URL=http://localhost:9001
+NEXTAUTH_SECRET=F+yuaKb5WnXUxk/uidMumpjcYj2gOALwXO3oFR+7/4c=
+
+# Proveedores de autenticación (REQUIRED)
+AUTH_PROVIDERS=email
+```
+
+### Paso 3: Configurar MongoDB (1 min)
+
+```bash
+# macOS con Homebrew
+brew tap mongodb/brew
+brew install mongodb-community
+brew services start mongodb-community
+```
+
+### Paso 4: Iniciar Aplicación (1 min)
+
+```bash
+yarn dev
+```
+
+**¡Listo!** → [http://localhost:9001](http://localhost:9001)
+
+### Paso 5: Primer Uso (1 min)
+
+1. **Abre** http://localhost:9001
+2. **Regístrate** con tu email (serás automáticamente admin)
+3. **Explora** el dashboard y panel de administración
 
 ## 📋 Requisitos
 
@@ -233,9 +282,20 @@ SMTP_FROM=tu-email@gmail.com
 
 Cualquier servidor SMTP funciona. Ajusta `SMTP_HOST`, `SMTP_PORT` según tu proveedor.
 
-## 🚀 Despliegue
+## 🚀 Comandos de Despliegue
 
-### Vercel (Recomendado)
+### Desarrollo
+
+```bash
+# Iniciar servidor de desarrollo
+yarn dev
+
+# Servidor estará disponible en http://localhost:9001
+```
+
+### Producción
+
+#### Vercel (Recomendado)
 
 ```bash
 # Instalar Vercel CLI
@@ -251,7 +311,7 @@ vercel --prod
 3. Cambia `NEXTAUTH_URL` a tu dominio de producción
 4. Usa `MONGODB_URI` de MongoDB Atlas
 
-### Docker
+#### Docker
 
 ```bash
 # Build
@@ -259,6 +319,16 @@ docker build -t retia-web .
 
 # Run
 docker run -p 3000:3000 --env-file .env.local retia-web
+```
+
+#### Build Manual
+
+```bash
+# Crear build de producción
+yarn build
+
+# Iniciar servidor de producción
+yarn start
 ```
 
 ## 📊 Logging y Monitoreo
@@ -323,27 +393,14 @@ NEXTAUTH_SECRET=el-secret-generado
 ## 📚 Scripts Disponibles
 
 ```bash
-yarn dev          # Desarrollo (http://localhost:3000)
+yarn dev          # Desarrollo (http://localhost:9001)
 yarn build        # Build para producción
 yarn start        # Iniciar build de producción
 yarn lint         # Linting
-yarn type-check   # Verificar tipos TypeScript
 ```
-
-## 🔗 Enlaces Útiles
-
-- 📖 [Next.js Documentation](https://nextjs.org/docs)
-- 🔐 [NextAuth.js Documentation](https://next-auth.js.org)
-- 🎨 [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- 🗄️ [MongoDB Documentation](https://docs.mongodb.com)
-- ☁️ [Vercel Documentation](https://vercel.com/docs)
 
 ## 🆘 Soporte
 
 - 📱 **Mobile App**: [../mobile/README.md](../mobile/README.md)
 - 🏠 **Monorepo**: [../../README.md](../../README.md)
-- 🐛 **Issues**: Abre un issue en el repositorio
-
----
-
-**¿Listo para empezar?** → [QUICKSTART.md](./QUICKSTART.md)
+- � **eIssues**: Abre un issue en el repositorio
