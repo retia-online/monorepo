@@ -1,12 +1,13 @@
 # Retia Monorepo - Sistema de Autenticación
 
-Monorepo completo con aplicaciones web y móvil que comparten un sistema de autenticación unificado.
+Monorepo simplificado con aplicaciones web y móvil que utilizan SDKs externos para funcionalidad compartida.
 
 ## 🚀 Características Principales
 
 - 🌐 **Aplicación Web**: Next.js 14 con NextAuth.js v5
 - 📱 **Aplicación Móvil**: Expo/React Native con autenticación nativa
 - 🔐 **Sistema unificado**: Usuarios compartidos entre web y móvil
+- 📦 **SDKs Externos**: Funcionalidad core distribuida via GitHub Packages
 - 🎨 **Personalizable**: Temas y configuración vía variables de entorno
 - ☁️ **Listo para producción**: Optimizado para Vercel y MongoDB Atlas
 
@@ -17,16 +18,20 @@ Monorepo completo con aplicaciones web y móvil que comparten un sistema de aute
 ├── apps/
 │   ├── web/              # Aplicación Next.js (Web)
 │   └── mobile/           # Aplicación Expo (iOS/Android)
-├── packages/
-│   ├── database/         # Modelos y conexión MongoDB
-│   ├── types/            # Tipos TypeScript compartidos
-│   ├── utils/            # Utilidades compartidas
-│   └── ui/               # Componentes UI compartidos
 ├── scripts/              # Scripts de utilidad
 ├── .kiro/specs/          # Especificaciones de features
 ├── .env.template         # Variables de entorno compartidas
 └── package.json          # Workspace root
 ```
+
+## 📦 SDKs Externos (@megamercado)
+
+Las aplicaciones utilizan los siguientes SDKs publicados en GitHub Packages:
+
+- 🔐 **@megamercado/auth** - Configuración NextAuth y middleware de rutas
+- 🗄️ **@megamercado/api** - Modelos de base de datos y servicios
+- 🎨 **@megamercado/ui** - Componentes UI y layouts compartidos
+- ⚙️ **@megamercado/configs** - Presets de Tailwind y TypeScript
 
 ## 📱 Aplicaciones Disponibles
 
@@ -138,14 +143,14 @@ yarn lint                 # Linting de todas las apps
 yarn clean                # Limpiar node_modules
 
 # Web App (apps/web)
-yarn workspace @retia/web dev      # Desarrollo
-yarn workspace @retia/web build    # Build
-yarn workspace @retia/web start    # Producción
+yarn workspace @megamercado/web dev      # Desarrollo
+yarn workspace @megamercado/web build    # Build
+yarn workspace @megamercado/web start    # Producción
 
 # Mobile App (apps/mobile)
-yarn workspace @retia/mobile start # Desarrollo
-yarn workspace @retia/mobile ios   # iOS
-yarn workspace @retia/mobile android # Android
+yarn workspace @megamercado/mobile start # Desarrollo
+yarn workspace @megamercado/mobile ios   # iOS
+yarn workspace @megamercado/mobile android # Android
 ```
 
 ## 🐛 Troubleshooting
@@ -218,11 +223,11 @@ Pull requests son bienvenidos. Para cambios mayores, por favor abre un issue pri
 - 🔧 [Configuración de desarrollo](./DEVELOPMENT_SETUP.md)
 - 📋 [Especificaciones](./.kiro/specs/mobile-auth-app/)
 
-### 📦 Packages
-- 🗄️ [Database](./packages/database/) - Modelos MongoDB
-- 🔧 [Utils](./packages/utils/) - Utilidades compartidas
-- 🎨 [UI](./packages/ui/) - Componentes compartidos
-- 📝 [Types](./packages/types/) - Tipos TypeScript
+### 📦 SDKs Externos
+- 🔐 [@megamercado/auth](https://github.com/orgs/megamercado/packages) - Configuración NextAuth y middleware
+- 🗄️ [@megamercado/api](https://github.com/orgs/megamercado/packages) - Modelos y servicios de base de datos
+- 🎨 [@megamercado/ui](https://github.com/orgs/megamercado/packages) - Componentes UI compartidos
+- ⚙️ [@megamercado/configs](https://github.com/orgs/megamercado/packages) - Presets de configuración
 
 ---
 

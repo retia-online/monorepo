@@ -280,7 +280,7 @@ describe('Dependency Migration Property Tests', () => {
           const packageInfo = loadAppPackageJson(appPath);
           
           // For any application, should maintain its specific configuration
-          expect(packageInfo.name).toMatch(/^@retia\/(web|mobile)$/);
+          expect(packageInfo.name).toMatch(/^@megamercado\/(web|mobile)$/);
           expect(packageInfo.version).toBeDefined();
           expect(packageInfo.private).toBe(true);
           
