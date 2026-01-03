@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    transpilePackages: ['@retia/database', '@retia/types', '@retia/utils', '@retia/ui'],
+    transpilePackages: ['@megamercado/auth', '@megamercado/api', '@megamercado/ui', '@megamercado/configs'],
     serverExternalPackages: ['mongoose', 'pino', 'thread-stream'],
 }
 

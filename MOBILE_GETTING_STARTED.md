@@ -55,7 +55,7 @@ Asegúrate de que el backend esté corriendo:
 
 ```bash
 # En otra terminal
-yarn workspace @retia/web dev
+yarn workspace @megamercado/web dev
 ```
 
 ## 📚 Documentación

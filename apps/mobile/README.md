@@ -80,7 +80,7 @@ EXPO_PUBLIC_FONT_FAMILY=Manrope
 yarn start
 
 # O desde la raíz
-yarn workspace @retia/mobile start
+yarn workspace @megamercado/mobile start
 ```
 
 Esto abrirá el Expo CLI con opciones para:
@@ -298,7 +298,7 @@ await secureStorage.removeToken();
 Todas las entradas se validan usando Zod (mismo que en el backend):
 
 ```typescript
-import { loginSchema } from '@retia/utils';
+import { loginSchema } from '@megamercado/api';
 
 const validated = loginSchema.parse({ email, password });
 ```
@@ -349,14 +349,13 @@ EXPO_PUBLIC_API_URL=http://192.168.1.100:3000
 
 La app móvil reutiliza:
 
-- **@retia/types**: Tipos TypeScript compartidos
-- **@retia/utils**: Validación (Zod), utilidades de email, etc.
-- **@retia/database**: Modelos (solo tipos, no la conexión)
+- **@megamercado/api**: Servicios de API y validación
+- **@megamercado/ui**: Componentes UI compartidos (cuando sea compatible con React Native)
 
 ```typescript
-// Importar desde packages compartidos
-import { loginSchema, registerSchema } from '@retia/utils';
-import type { User } from '@retia/types';
+// Importar desde SDKs externos
+import { loginSchema, registerSchema } from '@megamercado/api';
+import type { User } from '@megamercado/api';
 ```
 
 ## 🧪 Testing

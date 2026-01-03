@@ -22,18 +22,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@retia/database": [
-        "../../packages/database/src"
-      ],
-      "@retia/types": [
-        "../../packages/types/src"
-      ],
-      "@retia/utils": [
-        "../../packages/utils/src"
-      ],
-      "@retia/ui": [
-        "../../packages/ui/src"
       ]
     }
   },

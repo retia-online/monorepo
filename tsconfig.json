@@ -14,12 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@retia/*": [
-        "packages/*/src"
-      ]
-    }
+    "baseUrl": "."
   },
   "include": [
     "**/*.ts",

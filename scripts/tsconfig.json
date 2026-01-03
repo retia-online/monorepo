@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "baseUrl": "..",
     "paths": {
-      "@retia/*": ["packages/*/src"]
+      "@megamercado/*": ["external-sdks/*/src"]
     }
   },
   "include": [

@@ -1,4 +1,4 @@
-import { connectDB, User, UserRole } from './packages/database/src';
+import { connectDB, User, UserRole } from '@megamercado/api';
 import mongoose from 'mongoose';
 
 async function testRegistrationLogic() {
