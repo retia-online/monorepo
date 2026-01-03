@@ -1,15 +1,39 @@
 {
-    "name": "@retia/ui",
+    "name": "@megamercado/ui",
     "version": "1.0.0",
+    "description": "UI components and layouts for MegaMercado applications",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md"
+    ],
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
         "storybook": "storybook dev -p 6006",
-        "build-storybook": "storybook build"
+        "build-storybook": "storybook build",
+        "test": "jest",
+        "test:watch": "jest --watch"
     },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com",
+        "@megamercado:registry": "https://npm.pkg.github.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/megamercado/ui.git"
+    },
+    "keywords": [
+        "ui",
+        "components",
+        "react",
+        "storybook",
+        "megamercado"
+    ],
+    "author": "MegaMercado Team",
+    "license": "MIT",
     "dependencies": {
         "react": "^18.2.0"
     },
