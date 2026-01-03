@@ -1,0 +1,55 @@
+{
+  "name": "@megamercado/api",
+  "version": "1.0.0",
+  "description": "API services and database models for MegaMercado platform",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "@megamercado:registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/megamercado/api.git"
+  },
+  "keywords": [
+    "api",
+    "database",
+    "mongoose",
+    "services",
+    "megamercado"
+  ],
+  "author": "MegaMercado Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "mongoose": "^8.0.3",
+    "nodemailer": "^6.9.7",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.10.5",
+    "@types/nodemailer": "^6.4.14",
+    "fast-check": "^3.23.2",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  }
+}

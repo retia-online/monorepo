@@ -243,4 +243,8 @@ export function setAuthLogger(customLogger: AuthLogger) {
   logger = customLogger;
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
+const nextAuth = NextAuth(authConfig);
+export const handlers: any = nextAuth.handlers;
+export const auth: any = nextAuth.auth;
+export const signIn: any = nextAuth.signIn;
+export const signOut: any = nextAuth.signOut;

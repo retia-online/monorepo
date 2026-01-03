@@ -1,0 +1,11 @@
+# GitHub Packages configuration template
+# Copy this file to .npmrc and replace YOUR_GITHUB_TOKEN with your actual token
+
+@tu-org:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+
+# Optional: Set registry for all packages (if you want to use GitHub Packages for all dependencies)
+# registry=https://npm.pkg.github.com
+
+# For development: you can also use npm login
+# npm login --scope=@tu-org --registry=https://npm.pkg.github.com

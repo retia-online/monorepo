@@ -1,0 +1,58 @@
+name: Publish Packages to GitHub Packages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
+  release:
+    types: [published]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    strategy:
+      matrix:
+        package:
+          - auth
+          - api
+          - ui
+          - configs
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@megamercado'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build package
+        run: |
+          cd packages/${{ matrix.package }}
+          npm run build
+          
+      - name: Run tests
+        run: |
+          cd packages/${{ matrix.package }}
+          npm test
+          
+      - name: Publish to GitHub Packages
+        run: |
+          cd packages/${{ matrix.package }}
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

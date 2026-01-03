@@ -1,20 +1,4 @@
 // Unit tests for NextAuth configuration
-
-// Mock @megamercado/api at the top level
-jest.mock('@megamercado/api', () => ({
-  connectDB: jest.fn(),
-  User: {
-    findOne: jest.fn(),
-    countDocuments: jest.fn(),
-    create: jest.fn(),
-    findById: jest.fn(),
-  },
-  UserRole: {
-    ADMIN: 'ADMIN',
-    USER: 'USER',
-  },
-}));
-
 describe('Auth Configuration', () => {
   beforeAll(() => {
     // Set up environment variables for testing
