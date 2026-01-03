@@ -1,6 +1,6 @@
 {
-    "name": "@megamercado/ui",
-    "version": "1.0.0",
+    "name": "@megamercado-vzla/ui",
+    "version": "1.0.1",
     "description": "UI components and layouts for MegaMercado applications",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
@@ -11,7 +11,7 @@
     ],
     "publishConfig": {
         "registry": "https://npm.pkg.github.com",
-        "@megamercado:registry": "https://npm.pkg.github.com"
+        "@megamercado-vzla:registry": "https://npm.pkg.github.com"
     },
     "scripts": {
         "build": "tsup",
@@ -61,6 +61,6 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/megamercado/ui.git"
+        "url": "https://github.com/megamercado-vzla/ui.git"
     }
 }
