@@ -7,7 +7,7 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  external: ['next', 'react', 'next-auth', '@megamercado/api'],
+  external: ['next', 'react', 'next-auth', '@megamercado-vzla/api'],
   treeshake: true,
   minify: false,
   target: 'es2020',

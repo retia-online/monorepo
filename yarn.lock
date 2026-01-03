@@ -2084,8 +2084,8 @@
   dependencies:
     "@types/mdx" "^2.0.0"
 
-"@megamercado/api@^1.0.0", "@megamercado/api@file:/Users/lo/Code/retia/monorepo/packages/api":
-  version "1.0.0"
+"@megamercado-vzla/api@^1.0.0", "@megamercado-vzla/api@file:/Users/lo/Code/retia/monorepo/packages/api":
+  version "1.0.1"
   resolved "file:packages/api"
   dependencies:
     bcryptjs "^2.4.3"
@@ -2093,20 +2093,20 @@
     nodemailer "^6.9.7"
     zod "^3.22.4"
 
-"@megamercado/auth@file:/Users/lo/Code/retia/monorepo/packages/auth":
-  version "1.0.0"
+"@megamercado-vzla/auth@file:/Users/lo/Code/retia/monorepo/packages/auth":
+  version "1.0.1"
   resolved "file:packages/auth"
   dependencies:
-    "@megamercado/api" "^1.0.0"
+    "@megamercado-vzla/api" "^1.0.0"
     next-auth "^5.0.0-beta.4"
     zod "^3.22.4"
 
-"@megamercado/configs@file:/Users/lo/Code/retia/monorepo/packages/configs":
-  version "1.0.0"
+"@megamercado-vzla/configs@file:/Users/lo/Code/retia/monorepo/packages/configs":
+  version "1.0.1"
   resolved "file:packages/configs"
 
-"@megamercado/ui@file:/Users/lo/Code/retia/monorepo/packages/ui-sdk":
-  version "1.0.0"
+"@megamercado-vzla/ui@file:/Users/lo/Code/retia/monorepo/packages/ui-sdk":
+  version "1.0.1"
   resolved "file:packages/ui-sdk"
   dependencies:
     react "^18.2.0"

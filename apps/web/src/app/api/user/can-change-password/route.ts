@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { connectDB, User } from '@retia/database';
+import { connectDB, User } from '@megamercado/api';
 
 export async function GET() {
     try {

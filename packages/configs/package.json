@@ -1,6 +1,6 @@
 {
-  "name": "@megamercado/configs",
-  "version": "1.0.0",
+  "name": "@megamercado-vzla/configs",
+  "version": "1.0.1",
   "description": "Shared configuration presets for MegaMercado applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,11 +19,11 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "@megamercado:registry": "https://npm.pkg.github.com"
+    "@megamercado-vzla:registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/megamercado/configs.git"
+    "url": "git+https://github.com/megamercado-vzla/configs.git"
   },
   "keywords": [
     "config",

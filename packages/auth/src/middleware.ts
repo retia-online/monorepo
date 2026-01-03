@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from './auth-config';
-import { connectDB, User } from '@megamercado/api';
+import { connectDB, User } from '@megamercado-vzla/api';
 
 // Environment helper - simplified version for the SDK
 function getAuthMode(): string {

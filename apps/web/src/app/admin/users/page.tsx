@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Card } from '@retia/ui';
+import { Card } from '@megamercado/ui';
 
 interface User {
     id: string;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User, UserRole } from '@retia/database';
+import { connectDB, User, UserRole } from '@megamercado/api';
 import { SignJWT } from 'jose';
 import { logAuth, logAPI } from '@/lib/logger';
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Input, Button, Card, PasswordStrength, type PasswordRequirement } from '@retia/ui';
+import { Input, Button, Card, PasswordStrength, type PasswordRequirement } from '@megamercado/ui';
 import Link from 'next/link';
 
 // Check environment

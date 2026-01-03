@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@retia/database';
-import { loginSchema } from '@retia/utils';
+import { connectDB, User } from '@megamercado/api';
+import { loginSchema } from '@megamercado/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';
 import { SignJWT } from 'jose';

@@ -1,11 +1,11 @@
-# @megamercado/configs
+# @megamercado-vzla/configs
 
 Shared configuration presets for MegaMercado applications.
 
 ## Installation
 
 ```bash
-npm install @megamercado/configs
+npm install @megamercado-vzla/configs
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install @megamercado/configs
 ```javascript
 // tailwind.config.js
 module.exports = {
-  presets: [require('@megamercado/configs/tailwind.preset')],
+  presets: [require('@megamercado-vzla/configs/tailwind.preset')],
   content: [
     // your content paths
   ],
@@ -28,7 +28,7 @@ module.exports = {
 ```json
 // tsconfig.json
 {
-  "extends": "@megamercado/configs/tsconfig.base.json",
+  "extends": "@megamercado-vzla/configs/tsconfig.base.json",
   "compilerOptions": {
     // your additional options
   }
@@ -40,7 +40,7 @@ For React projects:
 ```json
 // tsconfig.json
 {
-  "extends": "@megamercado/configs/tsconfig.react.json",
+  "extends": "@megamercado-vzla/configs/tsconfig.react.json",
   "compilerOptions": {
     // your additional options
   }
@@ -51,7 +51,7 @@ For React projects:
 
 ```javascript
 // eslint.config.js
-const megamercadoConfig = require('@megamercado/configs/eslint.config');
+const megamercadoConfig = require('@megamercado-vzla/configs/eslint.config');
 
 module.exports = [
   ...megamercadoConfig,

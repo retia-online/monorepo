@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import { z } from 'zod';
-import { connectDB, User, UserRole } from '@megamercado/api';
+import { connectDB, User, UserRole } from '@megamercado-vzla/api';
 import './types'; // Import type extensions
 
 // Simple logger interface for auth events

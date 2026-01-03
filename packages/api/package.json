@@ -1,6 +1,6 @@
 {
-  "name": "@megamercado/api",
-  "version": "1.0.0",
+  "name": "@megamercado-vzla/api",
+  "version": "1.0.1",
   "description": "API services and database models for MegaMercado platform",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -17,11 +17,11 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "@megamercado:registry": "https://npm.pkg.github.com"
+    "@megamercado-vzla:registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/megamercado/api.git"
+    "url": "git+https://github.com/megamercado-vzla/api.git"
   },
   "keywords": [
     "api",

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@retia/database';
+import { connectDB, User } from '@megamercado/api';
 import crypto from 'crypto';
 import { z } from 'zod';
 import { rateLimit } from '@/lib/rate-limit';

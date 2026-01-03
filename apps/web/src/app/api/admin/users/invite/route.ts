@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User, UserRole } from '@retia/database';
+import { connectDB, User, UserRole } from '@megamercado/api';
 import { auth } from '@/lib/auth';
 import { logger } from '@/lib/logger';
-import { sendEmail } from '@retia/utils';
+import { sendEmail } from '@megamercado/api';
 import crypto from 'crypto';
 
 /**

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { connectDB, User } from '@retia/database';
+import { connectDB, User } from '@megamercado/api';
 import { z } from 'zod';
 
 const updateProfileSchema = z.object({
