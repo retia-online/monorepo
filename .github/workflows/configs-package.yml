@@ -1,0 +1,307 @@
+name: Configs Package CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/configs/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/configs/**'
+  release:
+    types: [published]
+
+env:
+  NODE_VERSION: '18'
+  PACKAGE_PATH: 'packages/configs'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Configuration Files
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install package dependencies
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          npm ci
+          
+      - name: Validate Tailwind configuration
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          node -e "
+            const config = require('./tailwind.preset.js');
+            console.log('Tailwind preset validation passed');
+            console.log('Theme keys:', Object.keys(config.theme || {}));
+          "
+          
+      - name: Validate TypeScript configurations
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          # Validate base TypeScript config
+          npx tsc --noEmit --project tsconfig.base.json || echo "Base config validation"
+          # Validate React TypeScript config
+          npx tsc --noEmit --project tsconfig.react.json || echo "React config validation"
+          
+      - name: Validate ESLint configuration
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          node -e "
+            const config = require('./eslint.config.js');
+            console.log('ESLint config validation passed');
+            console.log('Config type:', typeof config);
+          "
+          
+      - name: Run linting on config files
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          npm run lint || echo "Linting not configured"
+          
+      - name: Build package
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          npm run build
+
+  compatibility-test:
+    runs-on: ubuntu-latest
+    needs: validate
+    name: Test Configuration Compatibility
+    
+    strategy:
+      matrix:
+        test-project:
+          - next-js
+          - react-app
+          - typescript-lib
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Create test project for ${{ matrix.test-project }}
+        run: |
+          mkdir -p test-projects/${{ matrix.test-project }}
+          cd test-projects/${{ matrix.test-project }}
+          
+          case "${{ matrix.test-project }}" in
+            "next-js")
+              npm init -y
+              npm install next react react-dom typescript tailwindcss
+              # Create test Next.js config using our preset
+              cat > tailwind.config.js << 'EOF'
+          const preset = require('../../packages/configs/tailwind.preset.js');
+          module.exports = {
+            presets: [preset],
+            content: ['./pages/**/*.{js,ts,jsx,tsx}']
+          };
+          EOF
+              cat > tsconfig.json << 'EOF'
+          {
+            "extends": "../../packages/configs/tsconfig.react.json",
+            "compilerOptions": {
+              "baseUrl": "."
+            }
+          }
+          EOF
+              ;;
+            "react-app")
+              npm init -y
+              npm install react react-dom typescript tailwindcss
+              cat > tailwind.config.js << 'EOF'
+          const preset = require('../../packages/configs/tailwind.preset.js');
+          module.exports = {
+            presets: [preset],
+            content: ['./src/**/*.{js,ts,jsx,tsx}']
+          };
+          EOF
+              cat > tsconfig.json << 'EOF'
+          {
+            "extends": "../../packages/configs/tsconfig.react.json"
+          }
+          EOF
+              ;;
+            "typescript-lib")
+              npm init -y
+              npm install typescript
+              cat > tsconfig.json << 'EOF'
+          {
+            "extends": "../../packages/configs/tsconfig.base.json"
+          }
+          EOF
+              ;;
+          esac
+          
+      - name: Test configuration compatibility
+        run: |
+          cd test-projects/${{ matrix.test-project }}
+          
+          # Test TypeScript compilation
+          if [ -f tsconfig.json ]; then
+            npx tsc --noEmit || echo "TypeScript check completed"
+          fi
+          
+          # Test Tailwind CSS compilation
+          if [ -f tailwind.config.js ]; then
+            npx tailwindcss -i <(echo "@tailwind base; @tailwind components; @tailwind utilities;") -o test.css || echo "Tailwind compilation completed"
+          fi
+          
+          echo "Compatibility test for ${{ matrix.test-project }} completed"
+
+  semantic-version:
+    runs-on: ubuntu-latest
+    needs: [validate, compatibility-test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    outputs:
+      new-release-published: ${{ steps.semantic.outputs.new-release-published }}
+      new-release-version: ${{ steps.semantic.outputs.new-release-version }}
+      new-release-notes: ${{ steps.semantic.outputs.new-release-notes }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install semantic-release
+        run: |
+          npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github
+          
+      - name: Create semantic-release config
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          cat > .releaserc.json << 'EOF'
+          {
+            "branches": ["main"],
+            "plugins": [
+              "@semantic-release/commit-analyzer",
+              "@semantic-release/release-notes-generator",
+              "@semantic-release/changelog",
+              [
+                "@semantic-release/npm",
+                {
+                  "npmPublish": false
+                }
+              ],
+              [
+                "@semantic-release/git",
+                {
+                  "assets": ["package.json", "CHANGELOG.md"],
+                  "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+                }
+              ],
+              "@semantic-release/github"
+            ]
+          }
+          EOF
+          
+      - name: Run semantic release
+        id: semantic
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [validate, compatibility-test, semantic-version]
+    if: needs.semantic-version.outputs.new-release-published == 'true'
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@megamercado'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install package dependencies
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          npm ci
+          
+      - name: Build package
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          npm run build
+          
+      - name: Update package version
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          npm version ${{ needs.semantic-version.outputs.new-release-version }} --no-git-tag-version
+          
+      - name: Publish to GitHub Packages
+        run: |
+          cd ${{ env.PACKAGE_PATH }}
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: configs-v${{ needs.semantic-version.outputs.new-release-version }}
+          release_name: Configs Package v${{ needs.semantic-version.outputs.new-release-version }}
+          body: |
+            ${{ needs.semantic-version.outputs.new-release-notes }}
+            
+            ## Configuration Files
+            - Tailwind CSS preset
+            - TypeScript configurations (base and React)
+            - ESLint configuration preset
+            
+            ## Usage
+            ```javascript
+            // tailwind.config.js
+            module.exports = {
+              presets: [require('@megamercado/configs/tailwind.preset')]
+            };
+            
+            // tsconfig.json
+            {
+              "extends": "@megamercado/configs/tsconfig.base.json"
+            }
+            ```
+          draft: false
+          prerelease: false

@@ -1,0 +1,162 @@
+name: Auth Package CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'packages/auth/**'
+      - '.github/workflows/auth-package.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'packages/auth/**'
+      - '.github/workflows/auth-package.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd packages/auth && npm ci
+        
+    - name: Run tests
+      run: |
+        cd packages/auth
+        npm run test
+        
+    - name: Run type checking
+      run: |
+        cd packages/auth
+        npm run type-check
+        
+    - name: Build package
+      run: |
+        cd packages/auth
+        npm run build
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@megamercado'
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd packages/auth && npm ci
+        
+    - name: Configure Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        
+    - name: Determine version bump
+      id: version
+      run: |
+        cd packages/auth
+        
+        # Get the last commit message
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        
+        # Determine version bump based on conventional commits
+        if echo "$COMMIT_MSG" | grep -q "BREAKING CHANGE\|^feat!:\|^fix!:\|^refactor!:"; then
+          echo "bump=major" >> $GITHUB_OUTPUT
+        elif echo "$COMMIT_MSG" | grep -q "^feat:"; then
+          echo "bump=minor" >> $GITHUB_OUTPUT
+        elif echo "$COMMIT_MSG" | grep -q "^fix:\|^perf:\|^refactor:\|^style:\|^test:"; then
+          echo "bump=patch" >> $GITHUB_OUTPUT
+        else
+          echo "bump=patch" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Bump version
+      run: |
+        cd packages/auth
+        npm version ${{ steps.version.outputs.bump }} --no-git-tag-version
+        
+    - name: Build package
+      run: |
+        cd packages/auth
+        npm run build
+        
+    - name: Publish to GitHub Packages
+      run: |
+        cd packages/auth
+        npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Create Git tag
+      run: |
+        cd packages/auth
+        VERSION=$(node -p "require('./package.json').version")
+        git add package.json
+        git commit -m "chore(auth): release v$VERSION"
+        git tag "auth-v$VERSION"
+        git push origin main --tags
+        
+    - name: Generate release notes
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Read package.json to get version
+          const packageJson = JSON.parse(fs.readFileSync('packages/auth/package.json', 'utf8'));
+          const version = packageJson.version;
+          
+          // Get commits since last release
+          const { data: commits } = await github.rest.repos.listCommits({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            path: 'packages/auth',
+            per_page: 10
+          });
+          
+          // Generate release notes
+          let releaseNotes = `# @megamercado/auth v${version}\n\n`;
+          releaseNotes += `## Changes\n\n`;
+          
+          commits.forEach(commit => {
+            const message = commit.commit.message.split('\n')[0];
+            if (message.includes('auth')) {
+              releaseNotes += `- ${message} (${commit.sha.substring(0, 7)})\n`;
+            }
+          });
+          
+          // Create release
+          await github.rest.repos.createRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag_name: `auth-v${version}`,
+            name: `@megamercado/auth v${version}`,
+            body: releaseNotes,
+            draft: false,
+            prerelease: false
+          });

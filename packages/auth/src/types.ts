@@ -1,25 +1,46 @@
-import { Session, User } from 'next-auth';
+import { DefaultSession } from 'next-auth';
+import { JWT, DefaultJWT } from 'next-auth/jwt';
 
-export interface AuthUser extends User {
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      role: string;
+    } & DefaultSession['user'];
+  }
+
+  interface User {
+    id: string;
+    role: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT extends DefaultJWT {
+    id: string;
+    role: string;
+  }
+}
+
+// Export types for consumers
+export type AuthSession = {
+  user: {
+    id: string;
+    role: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+  expires: string;
+};
+
+export type AuthUser = {
   id: string;
   role: string;
-  name: string;
-  email: string;
-  image?: string;
-}
-
-export interface AuthSession extends Session {
-  user: AuthUser;
-}
-
-export interface AuthCallbacks {
-  signIn?: (params: { user: any; account: any; profile?: any }) => Promise<boolean>;
-  jwt?: (params: { token: any; user?: any; trigger?: string }) => Promise<any>;
-  session?: (params: { session: any; token: any }) => Promise<any>;
-}
-
-export interface AuthProviderConfig {
-  email?: boolean;
-  google?: boolean;
-  facebook?: boolean;
-}
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+};

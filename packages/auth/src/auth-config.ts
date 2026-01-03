@@ -4,6 +4,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import { z } from 'zod';
 import { connectDB, User, UserRole } from '@megamercado/api';
+import './types'; // Import type extensions
 
 // Simple logger interface for auth events
 interface AuthLogger {
@@ -200,7 +201,7 @@ export const authConfig: NextAuthConfig = {
     async jwt({ token, user, trigger }) {
       // Add user info to token on sign in
       if (user) {
-        token.id = user.id;
+        token.id = user.id || '';
         token.role = user.role;
         token.name = user.name;
         token.email = user.email;
