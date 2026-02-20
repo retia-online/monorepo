@@ -1,5 +1,5 @@
-// Import middleware factory from @megamercado/auth SDK
-import { createAuthMiddleware } from '@megamercado/auth';
+// Import middleware factory from @megamercado-vzla/auth SDK
+import { createAuthMiddleware } from '@megamercado-vzla/auth';
 
 // Create and export the middleware using the factory
 export default createAuthMiddleware();

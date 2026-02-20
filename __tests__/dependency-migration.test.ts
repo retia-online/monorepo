@@ -27,10 +27,10 @@ const APP_PACKAGES = [
 
 // Expected @megamercado packages that should replace @retia packages
 const EXPECTED_MEGAMERCADO_PACKAGES = [
-  '@megamercado/auth',
-  '@megamercado/api', 
-  '@megamercado/ui',
-  '@megamercado/configs'
+  '@megamercado-vzla/auth',
+  '@megamercado-vzla/api', 
+  '@megamercado-vzla/ui',
+  '@megamercado-vzla/configs'
 ];
 
 // Legacy @retia packages that should be removed
@@ -362,16 +362,16 @@ describe('Dependency Migration Property Tests', () => {
           
           if (appPath === 'apps/web') {
             // Web app needs auth, api, ui, and configs
-            expect(allDependencies['@megamercado/auth']).toBeDefined();
-            expect(allDependencies['@megamercado/api']).toBeDefined();
-            expect(allDependencies['@megamercado/ui']).toBeDefined();
-            expect(allDependencies['@megamercado/configs']).toBeDefined();
+            expect(allDependencies['@megamercado-vzla/auth']).toBeDefined();
+            expect(allDependencies['@megamercado-vzla/api']).toBeDefined();
+            expect(allDependencies['@megamercado-vzla/ui']).toBeDefined();
+            expect(allDependencies['@megamercado-vzla/configs']).toBeDefined();
           }
           
           if (appPath === 'apps/mobile') {
             // Mobile app needs api and ui (auth is handled differently in mobile)
-            expect(allDependencies['@megamercado/api']).toBeDefined();
-            expect(allDependencies['@megamercado/ui']).toBeDefined();
+            expect(allDependencies['@megamercado-vzla/api']).toBeDefined();
+            expect(allDependencies['@megamercado-vzla/ui']).toBeDefined();
           }
         }
       ), { numRuns: 100 });

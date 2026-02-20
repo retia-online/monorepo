@@ -13,10 +13,10 @@ import fc from 'fast-check';
 
 // External SDK packages that should be available on GitHub Packages
 const EXTERNAL_SDK_PACKAGES = [
-  '@megamercado/auth',
-  '@megamercado/api', 
-  '@megamercado/ui',
-  '@megamercado/configs'
+  '@megamercado-vzla/auth',
+  '@megamercado-vzla/api', 
+  '@megamercado-vzla/ui',
+  '@megamercado-vzla/configs'
 ];
 
 // Utility functions for semantic versioning validation

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { connectDB, User } from '@megamercado/api';
+import { connectDB, User } from '@megamercado-vzla/api';
 
 export async function GET() {
     try {

@@ -74,10 +74,10 @@ describe('Comprehensive Migration Validation', () => {
         const webDeps = webPackageJson.dependencies || {};
         
         // Verify external SDK dependencies are present
-        expect(webDeps['@megamercado/auth']).toBeDefined();
-        expect(webDeps['@megamercado/api']).toBeDefined();
-        expect(webDeps['@megamercado/ui']).toBeDefined();
-        expect(webDeps['@megamercado/configs']).toBeDefined();
+        expect(webDeps['@megamercado-vzla/auth']).toBeDefined();
+        expect(webDeps['@megamercado-vzla/api']).toBeDefined();
+        expect(webDeps['@megamercado-vzla/ui']).toBeDefined();
+        expect(webDeps['@megamercado-vzla/configs']).toBeDefined();
         
         // Verify no local workspace dependencies remain
         Object.keys(webDeps).forEach(dep => {
@@ -94,8 +94,8 @@ describe('Comprehensive Migration Validation', () => {
         const mobileDeps = mobilePackageJson.dependencies || {};
         
         // Verify external SDK dependencies are present (mobile uses api and ui)
-        expect(mobileDeps['@megamercado/api']).toBeDefined();
-        expect(mobileDeps['@megamercado/ui']).toBeDefined();
+        expect(mobileDeps['@megamercado-vzla/api']).toBeDefined();
+        expect(mobileDeps['@megamercado-vzla/ui']).toBeDefined();
         
         // Verify no local workspace dependencies remain
         Object.keys(mobileDeps).forEach(dep => {
@@ -142,7 +142,7 @@ describe('Comprehensive Migration Validation', () => {
       if (existsSync(webSrcPath)) {
         checkImportsInDirectory(
           webSrcPath,
-          ['@megamercado/auth', '@megamercado/api', '@megamercado/ui', '@megamercado/configs'],
+          ['@megamercado-vzla/auth', '@megamercado-vzla/api', '@megamercado-vzla/ui', '@megamercado-vzla/configs'],
           ['@retia/', '../packages/', '../../packages/']
         );
       }
@@ -151,7 +151,7 @@ describe('Comprehensive Migration Validation', () => {
       if (existsSync(mobileSrcPath)) {
         checkImportsInDirectory(
           mobileSrcPath,
-          ['@megamercado/api', '@megamercado/ui'],
+          ['@megamercado-vzla/api', '@megamercado-vzla/ui'],
           ['@retia/', '../packages/', '../../packages/']
         );
       }

@@ -1,4 +1,4 @@
-import { connectDB, User, UserRole } from '@megamercado/api';
+import { connectDB, User, UserRole } from '@megamercado-vzla/api';
 import mongoose from 'mongoose';
 
 async function testRegistrationLogic() {

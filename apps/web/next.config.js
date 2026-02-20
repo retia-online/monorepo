@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    transpilePackages: ['@megamercado/auth', '@megamercado/api', '@megamercado/ui', '@megamercado/configs'],
+    transpilePackages: ['@megamercado-vzla/auth', '@megamercado-vzla/api', '@megamercado-vzla/ui', '@megamercado-vzla/configs'],
     serverExternalPackages: ['mongoose', 'pino', 'thread-stream'],
     turbopack: {
         root: '../../'

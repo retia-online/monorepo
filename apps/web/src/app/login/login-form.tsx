@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { Input, Button, Card } from '@megamercado/ui';
+import { Input, Button, Card } from '@megamercado-vzla/ui';
 import Link from 'next/link';
 
 interface LoginFormProps {

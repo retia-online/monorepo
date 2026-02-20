@@ -125,10 +125,10 @@ https://npm.pkg.github.com
 
 The GitHub Packages infrastructure is now ready for:
 
-1. **Task 2**: Extract and create @megamercado/auth SDK package
-2. **Task 3**: Extract and create @megamercado/api SDK package  
-3. **Task 4**: Extract and create @megamercado/ui SDK package
-4. **Task 5**: Extract and create @megamercado/configs SDK package
+1. **Task 2**: Extract and create @megamercado-vzla/auth SDK package
+2. **Task 3**: Extract and create @megamercado-vzla/api SDK package  
+3. **Task 4**: Extract and create @megamercado-vzla/ui SDK package
+4. **Task 5**: Extract and create @megamercado-vzla/configs SDK package
 
 ## 📋 Usage Instructions
 

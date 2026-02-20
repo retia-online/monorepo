@@ -1,18 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@megamercado/api';
-import { jwtVerify } from 'jose';
+import { connectDB, User } from '@megamercado-vzla/api';
+import { verifyMobileToken } from '@megamercado-vzla/auth';
 import { logAPI } from '@/lib/logger';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.NEXTAUTH_SECRET || 'fallback-secret');
-
-async function verifyToken(token: string) {
-    try {
-        const { payload } = await jwtVerify(token, JWT_SECRET);
-        return payload;
-    } catch (_error) {
-        return null;
-    }
-}
+const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fallback-secret';
 
 export async function GET(request: NextRequest) {
     const ip =
@@ -26,7 +17,7 @@ export async function GET(request: NextRequest) {
         }
 
         const token = authHeader.substring(7);
-        const payload = await verifyToken(token);
+        const payload = await verifyMobileToken(token, JWT_SECRET);
 
         if (!payload || !payload.id) {
             return NextResponse.json({ error: 'Token inválido' }, { status: 401 });

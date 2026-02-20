@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User, UserRole } from '@megamercado/api';
-import { registerSchema, sendWelcomeEmail, sendPendingApprovalEmail } from '@megamercado/api';
+import { connectDB, User, UserRole } from '@megamercado-vzla/api';
+import { registerSchema, sendWelcomeEmail, sendPendingApprovalEmail } from '@megamercado-vzla/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';
 import { SignJWT } from 'jose';

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@megamercado/api';
-import { loginSchema } from '@megamercado/api';
+import { connectDB, User } from '@megamercado-vzla/api';
+import { loginSchema } from '@megamercado-vzla/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';
-import { SignJWT } from 'jose';
+import { generateMobileToken } from '@megamercado-vzla/auth';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.NEXTAUTH_SECRET || 'fallback-secret');
+const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fallback-secret';
 
 export async function POST(request: NextRequest) {
     const ip =
@@ -57,17 +57,16 @@ export async function POST(request: NextRequest) {
         // Log successful login
         logAuth.login(user.email, true);
 
-        // Create JWT token for mobile
-        const token = await new SignJWT({
-            id: user._id.toString(),
-            email: user.email,
-            name: user.name,
-            role: user.role,
-        })
-            .setProtectedHeader({ alg: 'HS256' })
-            .setIssuedAt()
-            .setExpirationTime('7d')
-            .sign(JWT_SECRET);
+        // Create JWT token for mobile using SDK
+        const token = await generateMobileToken(
+            {
+                id: user._id.toString(),
+                email: user.email,
+                name: user.name,
+                role: user.role,
+            },
+            JWT_SECRET
+        );
 
         return NextResponse.json({
             message: 'Login exitoso',

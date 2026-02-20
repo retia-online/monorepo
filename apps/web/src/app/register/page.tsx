@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Input, Button, Card, PasswordStrength, type PasswordRequirement } from '@megamercado/ui';
+import { Input, Button, Card, PasswordStrength, type PasswordRequirement } from '@megamercado-vzla/ui';
 import Link from 'next/link';
 
 // Check environment

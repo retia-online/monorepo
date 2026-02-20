@@ -12,10 +12,10 @@
         "clean-db:stats": "yarn workspace retia-monorepo clean-db:stats"
     },
     "dependencies": {
-        "@megamercado/auth": "^1.0.0",
-        "@megamercado/api": "^1.0.0",
-        "@megamercado/ui": "^1.0.0",
-        "@megamercado/configs": "^1.0.0",
+        "@megamercado-vzla/auth": "^1.0.0",
+        "@megamercado-vzla/api": "^1.0.0",
+        "@megamercado-vzla/ui": "^1.0.0",
+        "@megamercado-vzla/configs": "^1.0.0",
         "bcryptjs": "^3.0.3",
         "next": "^16.0.8",
         "next-auth": "^5.0.0-beta.4",

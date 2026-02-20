@@ -319,7 +319,7 @@ await secureStorage.removeToken();
 Todas las entradas se validan usando Zod (mismo que en el backend):
 
 ```typescript
-import { loginSchema } from '@megamercado/api';
+import { loginSchema } from '@megamercado-vzla/api';
 
 const validated = loginSchema.parse({ email, password });
 ```
@@ -370,13 +370,13 @@ EXPO_PUBLIC_API_URL=http://192.168.1.100:3000
 
 La app móvil reutiliza:
 
-- **@megamercado/api**: Servicios de API y validación
-- **@megamercado/ui**: Componentes UI compartidos (cuando sea compatible con React Native)
+- **@megamercado-vzla/api**: Servicios de API y validación
+- **@megamercado-vzla/ui**: Componentes UI compartidos (cuando sea compatible con React Native)
 
 ```typescript
 // Importar desde SDKs externos
-import { loginSchema, registerSchema } from '@megamercado/api';
-import type { User } from '@megamercado/api';
+import { loginSchema, registerSchema } from '@megamercado-vzla/api';
+import type { User } from '@megamercado-vzla/api';
 ```
 
 ## 🧪 Testing

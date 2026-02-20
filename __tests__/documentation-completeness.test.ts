@@ -16,26 +16,26 @@ describe('Documentation Completeness Property Tests', () => {
 
   // Mock SDK package structure for testing
   const mockSDKPackages = [
-    '@megamercado/auth',
-    '@megamercado/api', 
-    '@megamercado/ui',
-    '@megamercado/configs'
+    '@megamercado-vzla/auth',
+    '@megamercado-vzla/api', 
+    '@megamercado-vzla/ui',
+    '@megamercado-vzla/configs'
   ];
 
   const mockExportedFunctions = {
-    '@megamercado/auth': [
+    '@megamercado-vzla/auth': [
       'authConfig', 'handlers', 'auth', 'signIn', 'signOut', 
       'requireAuth', 'requireAdmin', 'redirectIfAuthenticated'
     ],
-    '@megamercado/api': [
+    '@megamercado-vzla/api': [
       'connectDB', 'User', 'Account', 'Session', 'getUserBackup', 
       'createUser', 'updateUser', 'sendEmail', 'hashPassword', 'comparePassword'
     ],
-    '@megamercado/ui': [
+    '@megamercado-vzla/ui': [
       'Button', 'Card', 'Input', 'PasswordStrength', 'LoginForm', 
       'Navbar', 'ProfileCard', 'BaseLayout', 'AuthLayout'
     ],
-    '@megamercado/configs': [
+    '@megamercado-vzla/configs': [
       'tailwindPreset', 'tsconfig', 'tsconfigReact', 'eslintConfig'
     ]
   };

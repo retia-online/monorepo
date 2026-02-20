@@ -165,7 +165,7 @@ describe('SDK Update and Compatibility Flow', () => {
           .filter(dep => dep.startsWith('@megamercado/'));
         
         // Verify all required SDKs are present for web app
-        const requiredWebSDKs = ['@megamercado/auth', '@megamercado/api', '@megamercado/ui', '@megamercado/configs'];
+        const requiredWebSDKs = ['@megamercado-vzla/auth', '@megamercado-vzla/api', '@megamercado-vzla/ui', '@megamercado-vzla/configs'];
         requiredWebSDKs.forEach(sdk => {
           expect(megamercadoPackages).toContain(sdk);
         });

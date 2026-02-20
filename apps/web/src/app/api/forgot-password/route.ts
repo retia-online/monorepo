@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@megamercado/api';
-import { resetPasswordSchema, sendPasswordResetEmail } from '@megamercado/api';
+import { connectDB, User } from '@megamercado-vzla/api';
+import { resetPasswordSchema, sendPasswordResetEmail } from '@megamercado-vzla/api';
 import crypto from 'crypto';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';

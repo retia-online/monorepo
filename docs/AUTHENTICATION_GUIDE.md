@@ -252,7 +252,7 @@ npm whoami --registry=https://npm.pkg.github.com
 curl -H "Authorization: token YOUR_TOKEN" https://api.github.com/user
 
 # Test package access
-npm view @megamercado/auth --registry=https://npm.pkg.github.com
+npm view @megamercado-vzla/auth --registry=https://npm.pkg.github.com
 ```
 
 ### Verbose Logging

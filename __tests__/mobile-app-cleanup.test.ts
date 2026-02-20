@@ -57,8 +57,8 @@ function hasMegamercadoImports(content: string): boolean {
 function hasValidMobileDependencies(packageJson: any): boolean {
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
   
-  // Should have @megamercado/api for validation schemas and utilities
-  const hasMegamercadoApi = dependencies['@megamercado/api'];
+  // Should have @megamercado-vzla/api for validation schemas and utilities
+  const hasMegamercadoApi = dependencies['@megamercado-vzla/api'];
   
   // Should not have workspace references
   const hasWorkspaceRefs = Object.keys(dependencies).some(dep => 
@@ -108,7 +108,7 @@ describe('Mobile App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should import validation schemas from @megamercado/api', () => {
+    it('should import validation schemas from @megamercado-vzla/api', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constantFrom(...MOBILE_SOURCE_FILES),
@@ -120,7 +120,7 @@ describe('Mobile App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For mobile source files that use validation, should import from @megamercado/api
+          // For mobile source files that use validation, should import from @megamercado-vzla/api
           if (content.includes('Schema') || content.includes('validate')) {
             expect(hasMegamercadoImports(content)).toBe(true);
             expect(content).toMatch(/@megamercado\/api/);
@@ -196,7 +196,7 @@ describe('Mobile App Cleanup Property Tests', () => {
             // Should have mobile-specific packages
             expect(dependencies['expo']).toBeDefined();
             expect(dependencies['react-native']).toBeDefined();
-            expect(dependencies['@megamercado/api']).toBeDefined();
+            expect(dependencies['@megamercado-vzla/api']).toBeDefined();
             
             // Should not have web-specific packages as main dependencies
             expect(dependencies['next']).toBeUndefined();

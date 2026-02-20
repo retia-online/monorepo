@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { connectDB, User } from '@megamercado/api';
+import { connectDB, User } from '@megamercado-vzla/api';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 

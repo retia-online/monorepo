@@ -12,7 +12,8 @@
     ]
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "resolutions": {
     "expo-constants": "18.0.12"
