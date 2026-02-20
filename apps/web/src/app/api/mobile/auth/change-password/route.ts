@@ -60,33 +60,50 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Verify current password
-        const isCurrentPasswordValid = await bcrypt.compare(
-            validatedData.currentPassword,
-            user.password
-        );
+        // Check if user has odoo integration
+        const isOdooEnabled = (process.env.AUTH_PROVIDERS || 'email').split(',').includes('odoo');
+        const odooUid = user.metadata?.odoo_uid;
 
-        if (!isCurrentPasswordValid) {
-            return NextResponse.json(
-                { error: 'La contraseña actual es incorrecta' },
-                { status: 400 }
+        if (isOdooEnabled && odooUid) {
+            try {
+                const { createOdooService } = await import('@megamercado-vzla/api');
+                const odoo = createOdooService();
+
+                // 1. Verify current password with Odoo
+                const odooAuth = await odoo.authenticate(user.email, validatedData.currentPassword);
+                if (!odooAuth) {
+                    return NextResponse.json(
+                        { error: 'La contraseña actual es incorrecta en Odoo' },
+                        { status: 400 }
+                    );
+                }
+
+                // 2. Update password in Odoo
+                await odoo.updatePassword(odooUid, validatedData.newPassword);
+            } catch (odooError) {
+                logAPI.error('POST', '/api/mobile/auth/change-password', odooError as Error, ip);
+                return NextResponse.json(
+                    { error: 'Error al actualizar contraseña en Odoo' },
+                    { status: 500 }
+                );
+            }
+        } else {
+            // Standard flow for local-only users
+            // Verify current password
+            const isCurrentPasswordValid = await bcrypt.compare(
+                validatedData.currentPassword,
+                user.password || ''
             );
+
+            if (!isCurrentPasswordValid) {
+                return NextResponse.json(
+                    { error: 'La contraseña actual es incorrecta' },
+                    { status: 400 }
+                );
+            }
         }
 
-        // Check if new password is different
-        const isSamePassword = await bcrypt.compare(
-            validatedData.newPassword,
-            user.password
-        );
-
-        if (isSamePassword) {
-            return NextResponse.json(
-                { error: 'La nueva contraseña debe ser diferente a la actual' },
-                { status: 400 }
-            );
-        }
-
-        // Hash new password
+        // Hash new password and update local DB (always update local too for consistency)
         const saltRounds = 12;
         const hashedNewPassword = await bcrypt.hash(validatedData.newPassword, saltRounds);
 

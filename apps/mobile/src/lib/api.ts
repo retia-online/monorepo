@@ -36,10 +36,10 @@ async function handleUnauthorized() {
 }
 
 export const api = {
-    async login(email: string, password: string) {
+    async login(email: string, password: string, provider?: string) {
         try {
             // Validate input
-            const validated = loginSchema.parse({ email, password });
+            const validated = loginSchema.parse({ email, password, provider });
 
             // Use mobile-specific login endpoint
             const response = await fetch(`${API_URL}/api/mobile/auth/login`, {

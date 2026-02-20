@@ -30,6 +30,7 @@ export interface IUser extends Document {
     invitedBy?: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
+    metadata?: Record<string, any>;
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -101,6 +102,10 @@ const userSchema = new Schema<IUser>(
             type: Schema.Types.ObjectId,
             ref: 'User',
             default: null,
+        },
+        metadata: {
+            type: Schema.Types.Mixed,
+            default: {},
         },
     },
     {

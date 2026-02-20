@@ -20,27 +20,68 @@ export async function POST(request: NextRequest) {
 
     try {
         const body = await request.json();
+        console.log('--- MOBILE LOGIN ATTEMPT ---');
+        console.log('Body:', JSON.stringify({ ...body, password: '***' }));
 
         // Validate input
         const validated = loginSchema.parse(body);
+        console.log('Validated Provider:', validated.provider);
 
         // Connect to database
         await connectDB();
 
-        // Find user with password field
-        const user = await User.findOne({ email: validated.email }).select('+password');
+        let user;
 
-        if (!user || !user.password) {
-            logAuth.login(validated.email, false);
-            return NextResponse.json({ error: 'El email o la contraseña son incorrectos' }, { status: 401 });
-        }
+        if (validated.provider === 'odoo') {
+            const { createOdooService } = await import('@megamercado-vzla/api');
+            const odoo = createOdooService();
+            const odooUser = await odoo.authenticate(validated.email, validated.password);
 
-        // Verify password
-        const isValid = await user.comparePassword(validated.password);
+            if (!odooUser) {
+                logAuth.login(validated.email, false);
+                return NextResponse.json({ error: 'Credenciales de Odoo incorrectas' }, { status: 401 });
+            }
 
-        if (!isValid) {
-            logAuth.login(validated.email, false);
-            return NextResponse.json({ error: 'El email o la contraseña son incorrectos' }, { status: 401 });
+            // Find or create local user linked to Odoo
+            user = await User.findOne({ email: odooUser.email });
+
+            if (!user) {
+                user = await User.create({
+                    name: odooUser.name,
+                    email: odooUser.email,
+                    role: odooUser.isAdmin ? 'ADMIN' : 'USER',
+                    approved: true, // Auto-approved if coming from Odoo
+                    metadata: {
+                        odoo_uid: odooUser.uid,
+                        odoo_company_id: odooUser.company_id,
+                    }
+                });
+            } else {
+                // Update role and metadata from Odoo
+                user.role = odooUser.isAdmin ? 'ADMIN' : 'USER';
+                user.metadata = {
+                    ...user.metadata,
+                    odoo_uid: odooUser.uid,
+                    odoo_company_id: odooUser.company_id,
+                };
+                await user.save();
+            }
+        } else {
+            // Standard Email/Password Login
+            user = await User.findOne({ email: validated.email }).select('+password');
+
+            if (!user || !user.password) {
+                logAuth.login(validated.email, false);
+                return NextResponse.json({ error: 'El email o la contraseña son incorrectos' }, { status: 401 });
+            }
+
+            // Verify password
+            const isValid = await user.comparePassword(validated.password);
+
+            if (!isValid) {
+                logAuth.login(validated.email, false);
+                return NextResponse.json({ error: 'El email o la contraseña son incorrectos' }, { status: 401 });
+            }
         }
 
         // Check if user is approved (for whitelist mode)

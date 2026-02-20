@@ -4,7 +4,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "expo start",
+    "start": "lsof -i :8081 -t | xargs kill -9 2>/dev/null || true && expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -13,7 +13,8 @@
     "type-check": "tsc --noEmit",
     "clean-db": "yarn workspace retia-monorepo clean-db",
     "clean-db:force": "yarn workspace retia-monorepo clean-db:force",
-    "clean-db:stats": "yarn workspace retia-monorepo clean-db:stats"
+    "clean-db:stats": "yarn workspace retia-monorepo clean-db:stats",
+    "dev:all": "yarn workspace retia-monorepo dev:all"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.9.0",

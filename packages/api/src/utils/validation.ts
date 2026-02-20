@@ -30,8 +30,9 @@ export const nameSchema = z
     .max(50, 'Name must be less than 50 characters');
 
 export const loginSchema = z.object({
-    email: emailSchema,
+    email: z.string().min(1, 'Email/Username is required'),
     password: passwordSchema,
+    provider: z.string().optional(),
 });
 
 export const registerSchema = z.object({
@@ -80,12 +81,12 @@ export function getPasswordRequirements() {
         requireSpecialChar: isProduction,
         requirements: isProduction
             ? [
-                  'Mínimo 8 caracteres',
-                  'Al menos una letra mayúscula',
-                  'Al menos una letra minúscula',
-                  'Al menos un número',
-                  'Al menos un carácter especial (!@#$%^&*)',
-              ]
+                'Mínimo 8 caracteres',
+                'Al menos una letra mayúscula',
+                'Al menos una letra minúscula',
+                'Al menos un número',
+                'Al menos un carácter especial (!@#$%^&*)',
+            ]
             : ['Mínimo 6 caracteres'],
     };
 }

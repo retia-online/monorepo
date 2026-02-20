@@ -32,6 +32,8 @@
     "clean-db": "ts-node --project scripts/tsconfig.json scripts/database/clean-database.ts",
     "clean-db:force": "ts-node --project scripts/tsconfig.json scripts/database/clean-database.ts --force",
     "clean-db:stats": "ts-node --project scripts/tsconfig.json scripts/database/clean-database.ts --stats",
+    "sync-odoo-users": "ts-node --project scripts/tsconfig.json scripts/database/sync-odoo-users.ts",
+    "dev:all": "./scripts/dev-all.sh",
     "sync-assets": "node scripts/sync-assets.js"
   },
   "devDependencies": {

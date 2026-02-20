@@ -58,7 +58,8 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
         }
 
         try {
-            await login({ email, password });
+            const provider = authConfig.allowsOdoo && !authConfig.allowsEmail ? 'odoo' : undefined;
+            await login({ email, password, provider });
         } catch (err) {
             const errorMessage = getErrorMessage(err);
             setError(errorMessage);
@@ -87,18 +88,18 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
                 ) : null}
 
                 <View style={styles.form}>
-                    {authConfig.allowsEmail && (
+                    {(authConfig.allowsEmail || authConfig.allowsOdoo) && (
                         <>
                             <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Email</Text>
+                                <Text style={styles.label}>{authConfig.allowsOdoo && !authConfig.allowsEmail ? "Usuario/Email Odoo" : "Email"}</Text>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder="tu@email.com"
+                                    placeholder={authConfig.allowsOdoo && !authConfig.allowsEmail ? "Usuario o email" : "tu@email.com"}
                                     placeholderTextColor="#999"
                                     value={email}
                                     onChangeText={setEmail}
                                     editable={!isLoading}
-                                    keyboardType="email-address"
+                                    keyboardType={authConfig.allowsOdoo && !authConfig.allowsEmail ? "default" : "email-address"}
                                     autoCapitalize="none"
                                 />
                             </View>

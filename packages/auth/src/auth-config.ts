@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import { z } from 'zod';
-import { connectDB, User, UserRole } from '@megamercado-vzla/api';
+import { connectDB, User, UserRole, createOdooService } from '@megamercado-vzla/api';
 import './types'; // Import type extensions
 
 // Simple logger interface for auth events
@@ -150,6 +150,80 @@ if (
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+    })
+  );
+}
+
+// Odoo (Credentials-based)
+if (enabledProviders.includes('odoo')) {
+  providers.push(
+    CredentialsProvider({
+      id: 'odoo',
+      name: 'Odoo',
+      credentials: {
+        email: { label: 'Email/Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            return null;
+          }
+
+          const odoo = createOdooService();
+          const odooUser = await odoo.authenticate(
+            credentials.email as string,
+            credentials.password as string
+          );
+
+          if (!odooUser) {
+            logAuth.login(credentials.email as string, false);
+            return null;
+          }
+
+          // Connect to MongoDB to sync user
+          await connectDB();
+
+          // Find or create local user linked to Odoo
+          let user = await User.findOne({ email: odooUser.email });
+
+          if (!user) {
+            user = await User.create({
+              name: odooUser.name,
+              email: odooUser.email,
+              role: odooUser.isAdmin ? UserRole.ADMIN : UserRole.USER,
+              approved: true, // Auto-approved if coming from Odoo
+              image: null,
+              metadata: {
+                odoo_uid: odooUser.uid,
+                odoo_company_id: odooUser.company_id,
+              }
+            });
+          } else {
+            // Update role and metadata from Odoo
+            user.role = odooUser.isAdmin ? UserRole.ADMIN : UserRole.USER;
+            user.metadata = {
+              ...user.metadata,
+              odoo_uid: odooUser.uid,
+              odoo_company_id: odooUser.company_id,
+            };
+            await user.save();
+          }
+
+          logAuth.login(user.email, true);
+
+          return {
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            image: user.image,
+          };
+        } catch (error) {
+          logger.error({ event: 'auth.odoo_error', error }, 'Odoo Auth Error');
+          return null;
+        }
+      },
     })
   );
 }

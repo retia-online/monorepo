@@ -3,13 +3,14 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "dev": "next dev -H 0.0.0.0 -p 9001",
+        "dev": "lsof -i :9001 -t | xargs kill -9 2>/dev/null || true && next dev -H 0.0.0.0 -p 9001",
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
         "clean-db": "yarn workspace retia-monorepo clean-db",
         "clean-db:force": "yarn workspace retia-monorepo clean-db:force",
-        "clean-db:stats": "yarn workspace retia-monorepo clean-db:stats"
+        "clean-db:stats": "yarn workspace retia-monorepo clean-db:stats",
+        "dev:all": "yarn workspace retia-monorepo dev:all"
     },
     "dependencies": {
         "@megamercado-vzla/auth": "^1.0.0",

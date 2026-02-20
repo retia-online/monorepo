@@ -8,6 +8,32 @@ Ejecutar **web y mobile en paralelo** sin conflictos de puertos.
 
 ## 📊 Configuración de Puertos
 
+## 🛠 Comandos Manuales (Paso a Paso)
+
+Si prefieres ejecutar cada servicio por separado:
+
+1. **Limpiar Base de Datos**:
+yarn clean-db:force
+2. **Sincronizar Usuarios Odoo**: (importa usuarios y roles desde Odoo)
+yarn sync-odoo-users
+3. **App iOS**: 
+yarn workspace @megamercado/mobile ios
+4. **App Android**: 
+yarn workspace @megamercado/mobile android
+
+   * *Si no detecta el emulador, inícialo manualmente:* `~/Library/Android/sdk/emulator/emulator -avd Pixel_8_Pro`
+
+> **Tip**: Puedes ejecutar iOS y Android simultáneamente en pestañas separadas. Compartirán el mismo servidor de Metro automáticamente.
+
+## ⚡️ Modo Rápido (Recomendado)
+
+Si estás en macOS, puedes ejecutar todo el entorno (limpieza de DB + Web + iOS + Android) con un solo comando. Este script abrirá pestañas separadas en tu terminal automáticamente:
+
+```bash
+# Ejecutar DESDE LA RAÍZ del proyecto
+yarn dev:all
+```
+
 ### Recomendado
 
 | App | Tipo | Puerto | URL | Comando |
@@ -88,7 +114,21 @@ MONGODB_URI=mongodb://127.0.0.1:27017/?directConnection=true
 ```bash
 # Backend API URL (debe apuntar a la web)
 EXPO_PUBLIC_API_URL=http://localhost:3000
+
+# Odoo URL (si se usa AUTH_PROVIDERS=odoo)
+EXPO_PUBLIC_ODOO_URL=https://your-odoo-url.com
 ```
+
+## 🏢 Configuración de Odoo
+
+Si has activado `AUTH_PROVIDERS=odoo`, asegúrate de configurar las siguientes variables en `apps/web/.env.local`:
+
+```bash
+ODOO_URL=https://tu-instancia.odoo.com
+ODOO_DB=tu-base-de-datos
+```
+
+Esto permitirá que la aplicación autentique usuarios directamente contra Odoo y sincronice sus datos básicos (nombre, email, uid) en la base de datos local.
 
 ## 📱 Abrir Mobile en Simulador
 
@@ -229,6 +269,21 @@ brew services list | grep mongodb
 brew services start mongodb-community
 ```
 
+### 🧹 Limpieza de Base de Datos
+
+Si necesitas resetear completamente la base de datos para empezar de cero:
+
+```bash
+# Ver estadísticas antes de limpiar
+yarn clean-db --stats
+
+# Limpiar todas las colecciones (ADVERTENCIA: Acción irreversible)
+yarn clean-db --force
+
+# Limpiar colecciones específicas
+yarn clean-db --collections users,sessions
+```
+
 ## 📊 Monitoreo
 
 ### Ver logs del backend
@@ -282,6 +337,9 @@ cd apps/mobile && yarn start
 
 # Terminal 3: MongoDB (opcional)
 brew services start mongodb-community
+
+# Limpieza de Base de Datos (opcional)
+yarn clean-db --force
 
 # Abrir mobile en iOS
 # Presiona 'i' en terminal 2
