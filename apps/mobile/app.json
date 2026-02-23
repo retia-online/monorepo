@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Retia Auth",
-    "slug": "retia-auth",
+    "name": "MegaMercado App",
+    "slug": "megamercado-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -13,13 +13,13 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.retia.auth"
+      "bundleIdentifier": "com.megamercado.app"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "package": "com.retia.auth",
+      "package": "com.megamercado.app",
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
@@ -32,6 +32,6 @@
       "expo-secure-store",
       "expo-web-browser"
     ],
-    "scheme": "retia"
+    "scheme": "megamercado"
   }
 }

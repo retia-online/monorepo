@@ -20,7 +20,7 @@ Para web y móvil integrados con usuarios compartidos:
 ## Paso 1: Instalar Dependencias (1 min)
 
 ```bash
-cd /Users/lo/Code/retia/monorepo
+cd /Users/lo/Code/megamercado/monorepo
 yarn install
 ```
 

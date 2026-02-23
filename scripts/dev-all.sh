@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# retia-dev-all.sh
+# megamercado-dev-all.sh
 # 0. Asegurar que estamos en la raíz del monorepo
 cd "$(dirname "$0")/.."
 
@@ -31,18 +31,18 @@ EOF
 
 # 2. Lanzar Web
 echo "🌐 2. Lanzando Web App (Port 9001)..."
-open_tab "Retia-Web" "yarn workspace @megamercado/web dev -p 9001"
+open_tab "MegaMercado-Web" "yarn workspace @megamercado/web dev -p 9001"
 
 # Esperar un poco para que el backend esté listo
 sleep 3
 
 # 3. Lanzar iOS
 echo "🍎 3. Lanzando iOS Simulator..."
-open_tab "Retia-iOS" "yarn workspace @megamercado/mobile ios"
+open_tab "MegaMercado-iOS" "yarn workspace @megamercado/mobile ios"
 
 # 4. Lanzar Android
 echo "🤖 4. Lanzando Android Emulator..."
-open_tab "Retia-Android" "yarn workspace @megamercado/mobile android"
+open_tab "MegaMercado-Android" "yarn workspace @megamercado/mobile android"
 
 echo "------------------------------------------"
 echo "✅ Todos los servicios están arrancando en pestañas separadas."

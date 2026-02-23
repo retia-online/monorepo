@@ -1,6 +1,6 @@
-# Getting Started with Retia Mobile App
+# Getting Started with MegaMercado Mobile App
 
-Guía para empezar con la app móvil Retia.
+Guía para empezar con la app móvil MegaMercado.
 
 ## 🚀 Quick Start (5 minutos)
 

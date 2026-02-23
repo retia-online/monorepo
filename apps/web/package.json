@@ -7,10 +7,10 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "clean-db": "yarn workspace retia-monorepo clean-db",
-        "clean-db:force": "yarn workspace retia-monorepo clean-db:force",
-        "clean-db:stats": "yarn workspace retia-monorepo clean-db:stats",
-        "dev:all": "yarn workspace retia-monorepo dev:all"
+        "clean-db": "yarn workspace megamercado-monorepo clean-db",
+        "clean-db:force": "yarn workspace megamercado-monorepo clean-db:force",
+        "clean-db:stats": "yarn workspace megamercado-monorepo clean-db:stats",
+        "dev:all": "yarn workspace megamercado-monorepo dev:all"
     },
     "dependencies": {
         "@megamercado-vzla/auth": "^1.0.0",

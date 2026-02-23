@@ -315,10 +315,10 @@ vercel --prod
 
 ```bash
 # Build
-docker build -t retia-web .
+docker build -t megamercado-web .
 
 # Run
-docker run -p 3000:3000 --env-file .env.local retia-web
+docker run -p 3000:3000 --env-file .env.local megamercado-web
 ```
 
 #### Build Manual

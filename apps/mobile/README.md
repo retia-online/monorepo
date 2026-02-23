@@ -1,6 +1,6 @@
-# 📱 Retia Mobile App - Expo
+# 📱 MegaMercado Mobile App - Expo
 
-Aplicación móvil nativa (iOS/Android) construida con Expo y React Native que se conecta al sistema de autenticación Retia.
+Aplicación móvil nativa (iOS/Android) construida con Expo y React Native que se conecta al sistema de autenticación MegaMercado.
 
 ## 🚀 Características
 
@@ -9,7 +9,7 @@ Aplicación móvil nativa (iOS/Android) construida con Expo y React Native que s
 - ✅ OAuth con Google y Facebook
 - ✅ Pantalla de perfil de usuario
 - ✅ Almacenamiento seguro de tokens (Keychain/Keystore)
-- ✅ Sincronización con backend Retia
+- ✅ Sincronización con backend MegaMercado
 - ✅ Soporte para iOS y Android
 - ✅ Manejo de sesiones expiradas
 - ✅ Interfaz responsive y moderna
@@ -44,7 +44,7 @@ EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
 EXPO_PUBLIC_FACEBOOK_APP_ID=your-facebook-app-id
 
 # Configuración
-EXPO_PUBLIC_APP_NAME=Retia Auth
+EXPO_PUBLIC_APP_NAME=MegaMercado Auth
 ```
 
 ### 3. Iniciar el Servidor de Desarrollo (1 min)
@@ -113,7 +113,7 @@ EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
 EXPO_PUBLIC_FACEBOOK_APP_ID=your-facebook-app-id
 
 # Configuración
-EXPO_PUBLIC_APP_NAME=Retia Auth
+EXPO_PUBLIC_APP_NAME=MegaMercado Auth
 
 # Theme colors (hex format)
 EXPO_PUBLIC_PRIMARY_COLOR=#6366f1

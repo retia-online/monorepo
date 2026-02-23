@@ -307,8 +307,8 @@ yarn web
 
 La app móvil comparte:
 
-- **@retia/types**: Tipos TypeScript
-- **@retia/utils**: Validación (Zod), helpers
-- **@retia/database**: Tipos de modelos (solo tipos, no conexión)
+- **@megamercado/types**: Tipos TypeScript
+- **@megamercado/utils**: Validación (Zod), helpers
+- **@megamercado/database**: Tipos de modelos (solo tipos, no conexión)
 
 Esto asegura consistencia entre web y móvil.

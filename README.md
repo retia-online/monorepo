@@ -1,4 +1,4 @@
-# Retia Monorepo - Sistema de Autenticación
+# MegaMercado Monorepo - Sistema de Autenticación
 
 Monorepo con aplicaciones web y móvil que comparten un sistema de autenticación unificado.
 

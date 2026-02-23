@@ -1,5 +1,5 @@
 {
-  "name": "retia-monorepo",
+  "name": "megamercado-monorepo",
   "version": "1.0.0",
   "private": true,
   "lint-staged": {

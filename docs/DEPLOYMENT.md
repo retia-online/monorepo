@@ -115,7 +115,7 @@ vercel login
 #### 3. Desplegar desde el directorio de la app
 
 ```bash
-cd /Users/lo/Code/retia/monorepo/apps/web
+cd /Users/lo/Code/megamercado/monorepo/apps/web
 vercel
 ```
 
@@ -179,7 +179,7 @@ vercel --prod
 #### 1. Push a Git (GitHub/GitLab/Bitbucket)
 
 ```bash
-cd /Users/lo/Code/retia/monorepo
+cd /Users/lo/Code/megamercado/monorepo
 git init
 git add .
 git commit -m "Initial commit: Auth system"

@@ -1,4 +1,4 @@
-# Development Setup - Retia Monorepo
+# Development Setup - MegaMercado Monorepo
 
 Guía para configurar el entorno de desarrollo con ambas apps (web y mobile) corriendo simultáneamente.
 

@@ -23,7 +23,7 @@ Abre `apps/web/.env.local` y configura tus valores:
 
 ```env
 # Requerido
-MONGODB_URI=mongodb://localhost:27017/retia
+MONGODB_URI=mongodb://localhost:27017/megamercado
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=tu-secreto-de-al-menos-32-caracteres
 
@@ -270,7 +270,7 @@ Crea un archivo `.env.test` para testing:
 
 ```env
 NODE_ENV=test
-MONGODB_URI=mongodb://localhost:27017/retia-test
+MONGODB_URI=mongodb://localhost:27017/megamercado-test
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=test-secret-at-least-32-characters-long
 AUTH_PROVIDERS=email
