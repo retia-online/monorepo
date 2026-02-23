@@ -5,7 +5,7 @@
 cd "$(dirname "$0")/.."
 
 echo "------------------------------------------"
-echo "🚀 INICIANDO ENTORNO RETIA (TODO-EN-UNO)"
+echo "🚀 INICIANDO ENTORNO MEGAMERCADO (TODO-EN-UNO)"
 echo "------------------------------------------"
 
 # 1. Limpiar base de datos
