@@ -1,5 +1,5 @@
 {
-    "name": "@retia/database",
+    "name": "@megamercado-vzla/database",
     "version": "1.0.0",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",

@@ -1,5 +1,5 @@
 {
-    "name": "@retia/utils",
+    "name": "@megamercado-vzla/utils",
     "version": "1.0.0",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
