@@ -16,7 +16,9 @@
     "packages/*"
   ],
   "resolutions": {
-    "expo-constants": "18.0.12"
+    "expo-constants": "18.0.12",
+    "react": "19.2.1",
+    "react-dom": "19.2.1"
   },
   "scripts": {
     "dev": "yarn workspace @megamercado/web dev",
