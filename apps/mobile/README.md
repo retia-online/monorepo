@@ -1,6 +1,6 @@
-# 📱 MegaMercado Mobile App - Expo
+# 📱 Monorepo Mobile App - Expo
 
-Aplicación móvil nativa (iOS/Android) construida con Expo y React Native que se conecta al sistema de autenticación MegaMercado.
+Aplicación móvil nativa (iOS/Android) construida con Expo y React Native que se conecta al sistema de autenticación Monorepo.
 
 ## 🚀 Características
 
@@ -9,7 +9,7 @@ Aplicación móvil nativa (iOS/Android) construida con Expo y React Native que s
 - ✅ OAuth con Google y Facebook
 - ✅ Pantalla de perfil de usuario
 - ✅ Almacenamiento seguro de tokens (Keychain/Keystore)
-- ✅ Sincronización con backend MegaMercado
+- ✅ Sincronización con backend Monorepo
 - ✅ Soporte para iOS y Android
 - ✅ Manejo de sesiones expiradas
 - ✅ Interfaz responsive y moderna
@@ -44,7 +44,7 @@ EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
 EXPO_PUBLIC_FACEBOOK_APP_ID=your-facebook-app-id
 
 # Configuración
-EXPO_PUBLIC_APP_NAME=MegaMercado Auth
+EXPO_PUBLIC_APP_NAME=Monorepo Auth
 ```
 
 ### 3. Iniciar el Servidor de Desarrollo (1 min)
@@ -113,7 +113,7 @@ EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
 EXPO_PUBLIC_FACEBOOK_APP_ID=your-facebook-app-id
 
 # Configuración
-EXPO_PUBLIC_APP_NAME=MegaMercado Auth
+EXPO_PUBLIC_APP_NAME=Monorepo Auth
 
 # Theme colors (hex format)
 EXPO_PUBLIC_PRIMARY_COLOR=#6366f1
@@ -132,7 +132,7 @@ EXPO_PUBLIC_FONT_FAMILY=Manrope
 yarn start
 
 # O desde la raíz
-yarn workspace @megamercado/mobile start
+yarn workspace @monorepo/mobile start
 ```
 
 Esto abrirá el Expo CLI con opciones para:
@@ -319,7 +319,7 @@ await secureStorage.removeToken();
 Todas las entradas se validan usando Zod (mismo que en el backend):
 
 ```typescript
-import { loginSchema } from '@megamercado-vzla/api';
+import { loginSchema } from '@monorepo-vzla/api';
 
 const validated = loginSchema.parse({ email, password });
 ```
@@ -370,13 +370,13 @@ EXPO_PUBLIC_API_URL=http://192.168.1.100:3000
 
 La app móvil reutiliza:
 
-- **@megamercado-vzla/api**: Servicios de API y validación
-- **@megamercado-vzla/ui**: Componentes UI compartidos (cuando sea compatible con React Native)
+- **@monorepo-vzla/api**: Servicios de API y validación
+- **@monorepo-vzla/ui**: Componentes UI compartidos (cuando sea compatible con React Native)
 
 ```typescript
 // Importar desde SDKs externos
-import { loginSchema, registerSchema } from '@megamercado-vzla/api';
-import type { User } from '@megamercado-vzla/api';
+import { loginSchema, registerSchema } from '@monorepo-vzla/api';
+import type { User } from '@monorepo-vzla/api';
 ```
 
 ## 🧪 Testing

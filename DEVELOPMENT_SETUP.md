@@ -95,7 +95,7 @@ NEXTAUTH_URL=http://TU_IP_LOCAL:9001        # Ej: http://192.168.1.100:9001
 NEXTAUTH_SECRET=<mínimo 32 caracteres>
 AUTH_MODE=required
 AUTH_PROVIDERS=email
-INSTANCE=Megamercado
+INSTANCE=Monorepo
 ```
 
 ### `apps/mobile/.env.local`

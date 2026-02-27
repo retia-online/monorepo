@@ -5,7 +5,7 @@ para crear una nueva aplicación. Define con precisión qué archivos **deben mo
 **pueden modificarse opcionalmente** y cuáles **nunca deben tocarse**.
 
 > **Regla de oro:** Si un cambio pertenece a la lógica o infraestructura compartida, va al
-> monorepo origen (`megamercado-vzla`). Si es específico de tu aplicación, va en tu fork.
+> monorepo origen (`monorepo-vzla`). Si es específico de tu aplicación, va en tu fork.
 
 ---
 
@@ -167,7 +167,7 @@ apps/mobile/src/components/ → Añade nuevos componentes móviles
 ## 4. Archivos que NUNCA debes modificar en tu fork
 
 > ⛔ Estos archivos forman el núcleo del monorepo. Si necesitas cambiarlos,
-> el cambio debe ir al **monorepo origen** (`megamercado-vzla`) y sincronizarse
+> el cambio debe ir al **monorepo origen** (`monorepo-vzla`) y sincronizarse
 > a todos los forks mediante el espejo.
 
 ### 4.1 Paquetes SDK (`packages/`)
@@ -211,7 +211,7 @@ eslint.config.js      → ESLint config base
 ### 4.4 Scripts de Administración
 
 ```
-scripts/rename-retia.js           → Script de migración (ya ejecutado)
+scripts/rename-monorepo.js           → Script de migración (ya ejecutado)
 scripts/setup-github-packages.sh  → Configuración del registry
 scripts/database/                 → Scripts de BD compartidos
 ```
@@ -222,14 +222,14 @@ scripts/database/                 → Scripts de BD compartidos
 
 ```bash
 # 1. Fork del repo en GitHub (UI de GitHub)
-#    megamercado-vzla/monorepo → tu-org/tu-app
+#    monorepo-vzla/monorepo → tu-org/tu-app
 
 # 2. Clonar tu fork localmente
 git clone git@github.com:tu-org/tu-app.git
 cd tu-app
 
 # 3. Agregar el origen como upstream para recibir actualizaciones
-git remote add upstream git@github.com:megamercado-vzla/monorepo.git
+git remote add upstream git@github.com:monorepo-vzla/monorepo.git
 
 # 4. Instalar dependencias
 yarn install
@@ -260,7 +260,7 @@ node scripts/sync-assets.js  # Sincroniza automáticamente los 3 dirs
 
 ## 6. Recibir actualizaciones del monorepo origen
 
-Cuando `megamercado-vzla` publique mejoras a los SDKs o fixes de seguridad:
+Cuando `monorepo-vzla` publique mejoras a los SDKs o fixes de seguridad:
 
 ```bash
 # Traer los cambios del origen
@@ -277,7 +277,7 @@ yarn install
 > Los paquetes SDK se actualizan automáticamente vía GitHub Package Registry.
 > Si se publicó una nueva versión, actualiza en tu package.json:
 > ```bash
-> yarn upgrade @megamercado-vzla/auth @megamercado-vzla/api
+> yarn upgrade @monorepo-vzla/auth @monorepo-vzla/api
 > ```
 
 ---

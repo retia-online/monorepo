@@ -1,11 +1,11 @@
-# @megamercado-vzla/api
+# @monorepo-vzla/api
 
-API services and database models for the MegaMercado platform.
+API services and database models for the Monorepo platform.
 
 ## Installation
 
 ```bash
-npm install @megamercado-vzla/api
+npm install @monorepo-vzla/api
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @megamercado-vzla/api
 ### Database Connection
 
 ```typescript
-import { connectDB } from '@megamercado-vzla/api';
+import { connectDB } from '@monorepo-vzla/api';
 
 await connectDB();
 ```
@@ -21,7 +21,7 @@ await connectDB();
 ### Models
 
 ```typescript
-import { User, Account, Session } from '@megamercado-vzla/api';
+import { User, Account, Session } from '@monorepo-vzla/api';
 
 // Create a new user
 const user = new User({
@@ -36,7 +36,7 @@ await user.save();
 ### Services
 
 ```typescript
-import { getUserBackup, sendEmail } from '@megamercado-vzla/api';
+import { getUserBackup, sendEmail } from '@monorepo-vzla/api';
 
 // Get user backup data
 const backup = await getUserBackup(userId);

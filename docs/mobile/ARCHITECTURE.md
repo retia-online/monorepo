@@ -307,8 +307,8 @@ yarn web
 
 La app móvil comparte:
 
-- **@megamercado/types**: Tipos TypeScript
-- **@megamercado/utils**: Validación (Zod), helpers
-- **@megamercado/database**: Tipos de modelos (solo tipos, no conexión)
+- **@monorepo/types**: Tipos TypeScript
+- **@monorepo/utils**: Validación (Zod), helpers
+- **@monorepo/database**: Tipos de modelos (solo tipos, no conexión)
 
 Esto asegura consistencia entre web y móvil.

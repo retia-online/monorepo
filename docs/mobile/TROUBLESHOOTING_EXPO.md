@@ -90,7 +90,7 @@ yarn install
 yarn start
 ```
 
-## Error: "Cannot find module '@megamercado/types'"
+## Error: "Cannot find module '@monorepo/types'"
 
 ### Causa
 Las dependencias del monorepo no están instaladas.

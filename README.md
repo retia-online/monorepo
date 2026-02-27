@@ -1,4 +1,4 @@
-# MegaMercado Monorepo - Sistema de Autenticación
+# Monorepo Monorepo - Sistema de Autenticación
 
 Monorepo con aplicaciones web y móvil que comparten un sistema de autenticación unificado.
 
@@ -131,14 +131,14 @@ yarn lint                 # Linting de todas las apps
 yarn clean                # Limpiar node_modules
 
 # Web App (apps/web)
-yarn workspace @megamercado/web dev      # Desarrollo
-yarn workspace @megamercado/web build    # Build
-yarn workspace @megamercado/web start    # Producción
+yarn workspace @monorepo/web dev      # Desarrollo
+yarn workspace @monorepo/web build    # Build
+yarn workspace @monorepo/web start    # Producción
 
 # Mobile App (apps/mobile)
-yarn workspace @megamercado/mobile start # Desarrollo
-yarn workspace @megamercado/mobile ios   # iOS
-yarn workspace @megamercado/mobile android # Android
+yarn workspace @monorepo/mobile start # Desarrollo
+yarn workspace @monorepo/mobile ios   # iOS
+yarn workspace @monorepo/mobile android # Android
 ```
 
 ## 🐛 Troubleshooting

@@ -1,6 +1,6 @@
 # GitHub Packages Authentication Guide
 
-This guide provides step-by-step instructions for setting up authentication with GitHub Packages for the @megamercado SDK packages.
+This guide provides step-by-step instructions for setting up authentication with GitHub Packages for the @monorepo SDK packages.
 
 ## Overview
 
@@ -52,7 +52,7 @@ GitHub Packages requires authentication for both publishing and consuming privat
 
 2. **Edit .npmrc with your token**:
    ```
-   @megamercado:registry=https://npm.pkg.github.com
+   @monorepo:registry=https://npm.pkg.github.com
    //npm.pkg.github.com/:_authToken=ghp_your_actual_token_here
    ```
 
@@ -65,7 +65,7 @@ GitHub Packages requires authentication for both publishing and consuming privat
 
 1. **Login with npm CLI**:
    ```bash
-   npm login --scope=@megamercado --registry=https://npm.pkg.github.com
+   npm login --scope=@monorepo --registry=https://npm.pkg.github.com
    ```
 
 2. **Enter credentials when prompted**:
@@ -83,7 +83,7 @@ GitHub Packages requires authentication for both publishing and consuming privat
 
 2. **Create .npmrc dynamically**:
    ```bash
-   echo "@megamercado:registry=${NPM_REGISTRY}" > .npmrc
+   echo "@monorepo:registry=${NPM_REGISTRY}" > .npmrc
    echo "//${NPM_REGISTRY#https://}/:_authToken=${NPM_TOKEN}" >> .npmrc
    ```
 
@@ -99,7 +99,7 @@ GitHub Actions provides automatic authentication through the `GITHUB_TOKEN`:
   with:
     node-version: '18'
     registry-url: 'https://npm.pkg.github.com'
-    scope: '@megamercado'
+    scope: '@monorepo'
 
 - name: Publish package
   run: npm publish
@@ -117,7 +117,7 @@ For other CI/CD systems, use repository secrets:
 
 2. **Configure in CI/CD pipeline**:
    ```bash
-   echo "@megamercado:registry=https://npm.pkg.github.com" >> .npmrc
+   echo "@monorepo:registry=https://npm.pkg.github.com" >> .npmrc
    echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> .npmrc
    npm install
    ```
@@ -128,7 +128,7 @@ For other CI/CD systems, use repository secrets:
 
 1. **Create apps/web/.npmrc**:
    ```
-   @megamercado:registry=https://npm.pkg.github.com
+   @monorepo:registry=https://npm.pkg.github.com
    //npm.pkg.github.com/:_authToken=ghp_your_token_here
    ```
 
@@ -141,7 +141,7 @@ For other CI/CD systems, use repository secrets:
 
 1. **Create apps/mobile/.npmrc**:
    ```
-   @megamercado:registry=https://npm.pkg.github.com
+   @monorepo:registry=https://npm.pkg.github.com
    //npm.pkg.github.com/:_authToken=ghp_your_token_here
    ```
 
@@ -156,7 +156,7 @@ For other CI/CD systems, use repository secrets:
 
 ```dockerfile
 ARG GITHUB_TOKEN
-RUN echo "@megamercado:registry=https://npm.pkg.github.com" >> .npmrc && \
+RUN echo "@monorepo:registry=https://npm.pkg.github.com" >> .npmrc && \
     echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> .npmrc && \
     npm install && \
     rm .npmrc
@@ -193,7 +193,7 @@ For teams, consider using organization-level tokens:
 
 2. **Team .npmrc template**:
    ```
-   @megamercado:registry=https://npm.pkg.github.com
+   @monorepo:registry=https://npm.pkg.github.com
    //npm.pkg.github.com/:_authToken=${TEAM_GITHUB_TOKEN}
    ```
 
@@ -211,7 +211,7 @@ Configure different access levels:
 
 #### 401 Unauthorized
 ```
-npm ERR! 401 Unauthorized - GET https://npm.pkg.github.com/@megamercado/package-name
+npm ERR! 401 Unauthorized - GET https://npm.pkg.github.com/@monorepo/package-name
 ```
 
 **Solutions**:
@@ -221,7 +221,7 @@ npm ERR! 401 Unauthorized - GET https://npm.pkg.github.com/@megamercado/package-
 
 #### 403 Forbidden
 ```
-npm ERR! 403 Forbidden - PUT https://npm.pkg.github.com/@megamercado/package-name
+npm ERR! 403 Forbidden - PUT https://npm.pkg.github.com/@monorepo/package-name
 ```
 
 **Solutions**:
@@ -231,7 +231,7 @@ npm ERR! 403 Forbidden - PUT https://npm.pkg.github.com/@megamercado/package-nam
 
 #### 404 Not Found
 ```
-npm ERR! 404 Not Found - GET https://npm.pkg.github.com/@megamercado/package-name
+npm ERR! 404 Not Found - GET https://npm.pkg.github.com/@monorepo/package-name
 ```
 
 **Solutions**:
@@ -252,7 +252,7 @@ npm whoami --registry=https://npm.pkg.github.com
 curl -H "Authorization: token YOUR_TOKEN" https://api.github.com/user
 
 # Test package access
-npm view @megamercado-vzla/auth --registry=https://npm.pkg.github.com
+npm view @monorepo-vzla/auth --registry=https://npm.pkg.github.com
 ```
 
 ### Verbose Logging
@@ -317,7 +317,7 @@ setup_npmrc() {
     fi
     
     cat > .npmrc << EOF
-@megamercado:registry=https://npm.pkg.github.com
+@monorepo:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 EOF
     
@@ -340,14 +340,14 @@ EOF
 
 2. **Update .npmrc**:
    ```
-   @megamercado:registry=https://npm.pkg.github.com
+   @monorepo:registry=https://npm.pkg.github.com
    ```
 
 ### From Private Registry
 
 1. **Export existing packages**:
    ```bash
-   npm pack @megamercado/package-name
+   npm pack @monorepo/package-name
    ```
 
 2. **Republish to GitHub Packages**:

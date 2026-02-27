@@ -183,7 +183,7 @@ Copia el resultado y pégalo en `NEXTAUTH_SECRET` en tu `.env.local`.
 yarn dev
 ```
 
-Esto ejecuta `yarn workspace @megamercado/web dev`, iniciando Next.js en puerto 3000.
+Esto ejecuta `yarn workspace @monorepo/web dev`, iniciando Next.js en puerto 3000.
 
 ### O Directamente desde apps/web
 
@@ -348,7 +348,7 @@ Reinicia el servidor para ver los cambios.
 
 1. Instala el provider de NextAuth:
    ```bash
-   yarn workspace @megamercado/web add next-auth
+   yarn workspace @monorepo/web add next-auth
    ```
 
 2. Edita `apps/web/src/lib/auth.ts`:
@@ -393,11 +393,11 @@ yarn install              # Reinstala todo desde cero
 
 ## Troubleshooting Común
 
-### Error: "Cannot find module '@megamercado/...'"
+### Error: "Cannot find module '@monorepo/...'"
 
 **Solución**:
 ```bash
-cd /Users/lo/Code/megamercado/monorepo
+cd /Users/lo/Code/monorepo/monorepo
 yarn install
 ```
 

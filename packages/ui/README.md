@@ -1,17 +1,17 @@
-# @megamercado-vzla/ui
+# @monorepo-vzla/ui
 
-UI components and layouts for MegaMercado applications.
+UI components and layouts for Monorepo applications.
 
 ## Installation
 
 ```bash
-npm install @megamercado-vzla/ui
+npm install @monorepo-vzla/ui
 ```
 
 ## Usage
 
 ```tsx
-import { Button, Card, Input, PasswordStrength } from '@megamercado-vzla/ui';
+import { Button, Card, Input, PasswordStrength } from '@monorepo-vzla/ui';
 
 function App() {
     return (

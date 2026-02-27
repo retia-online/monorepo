@@ -1,11 +1,11 @@
-# @megamercado-vzla/configs
+# @monorepo-vzla/configs
 
-Shared configuration presets for MegaMercado applications.
+Shared configuration presets for Monorepo applications.
 
 ## Installation
 
 ```bash
-npm install @megamercado-vzla/configs
+npm install @monorepo-vzla/configs
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install @megamercado-vzla/configs
 ```javascript
 // tailwind.config.js
 module.exports = {
-  presets: [require('@megamercado-vzla/configs/tailwind.preset')],
+  presets: [require('@monorepo-vzla/configs/tailwind.preset')],
   content: [
     // your content paths
   ],
@@ -28,7 +28,7 @@ module.exports = {
 ```json
 // tsconfig.json
 {
-  "extends": "@megamercado-vzla/configs/tsconfig.base.json",
+  "extends": "@monorepo-vzla/configs/tsconfig.base.json",
   "compilerOptions": {
     // your additional options
   }
@@ -40,7 +40,7 @@ For React projects:
 ```json
 // tsconfig.json
 {
-  "extends": "@megamercado-vzla/configs/tsconfig.react.json",
+  "extends": "@monorepo-vzla/configs/tsconfig.react.json",
   "compilerOptions": {
     // your additional options
   }
@@ -51,17 +51,17 @@ For React projects:
 
 ```javascript
 // eslint.config.js
-const megamercadoConfig = require('@megamercado-vzla/configs/eslint.config');
+const monorepoConfig = require('@monorepo-vzla/configs/eslint.config');
 
 module.exports = [
-  ...megamercadoConfig,
+  ...monorepoConfig,
   // your additional configurations
 ];
 ```
 
 ## Available Configurations
 
-- `tailwind.preset.js` - Tailwind CSS preset with MegaMercado theme
+- `tailwind.preset.js` - Tailwind CSS preset with Monorepo theme
 - `tsconfig.base.json` - Base TypeScript configuration
 - `tsconfig.react.json` - React-specific TypeScript configuration
 - `eslint.config.js` - ESLint configuration preset

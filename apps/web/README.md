@@ -315,10 +315,10 @@ vercel --prod
 
 ```bash
 # Build
-docker build -t megamercado-web .
+docker build -t monorepo-web .
 
 # Run
-docker run -p 3000:3000 --env-file .env.local megamercado-web
+docker run -p 3000:3000 --env-file .env.local monorepo-web
 ```
 
 #### Build Manual

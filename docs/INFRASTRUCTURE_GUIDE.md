@@ -7,13 +7,13 @@
 ## 🗺️ Visión General de la Arquitectura
 
 ```
-github.com/megamercado-vzla/monorepo  ← Repositorio BASE (este repo)
+github.com/monorepo-vzla/monorepo  ← Repositorio BASE (este repo)
          │
          ├── packages/          ← Paquetes compartidos (SDK interno)
-         │   ├── @megamercado-vzla/api   (DB, modelos, Odoo, email)
-         │   ├── @megamercado-vzla/auth  (NextAuth, JWT móvil)
-         │   ├── @megamercado-vzla/ui    (componentes React)
-         │   └── @megamercado-vzla/configs (ESLint, Tailwind, TS)
+         │   ├── @monorepo-vzla/api   (DB, modelos, Odoo, email)
+         │   ├── @monorepo-vzla/auth  (NextAuth, JWT móvil)
+         │   ├── @monorepo-vzla/ui    (componentes React)
+         │   └── @monorepo-vzla/configs (ESLint, Tailwind, TS)
          │
          ├── apps/web/          ← Frontend web (Next.js) — personalizable por empresa
          └── apps/mobile/       ← App móvil (Expo RN) — personalizable por empresa
@@ -34,10 +34,10 @@ El **monorepo base** es el núcleo que evoluciona con nuevas funcionalidades gen
 
 | Paquete | Responsabilidad | Quién lo usa |
 |---------|----------------|--------------|
-| `@megamercado-vzla/api` | Conexión DB, modelos User/Account, OdooService, EmailService | Web backend, scripts |
-| `@megamercado-vzla/auth` | Configuración NextAuth, JWT móvil, middleware de rutas | Web app |
-| `@megamercado-vzla/ui` | Componentes React reutilizables (Button, Card, LoginForm, Navbar) | Web app |
-| `@megamercado-vzla/configs` | Configuraciones base de ESLint, Tailwind, TypeScript | Todos los paquetes y apps |
+| `@monorepo-vzla/api` | Conexión DB, modelos User/Account, OdooService, EmailService | Web backend, scripts |
+| `@monorepo-vzla/auth` | Configuración NextAuth, JWT móvil, middleware de rutas | Web app |
+| `@monorepo-vzla/ui` | Componentes React reutilizables (Button, Card, LoginForm, Navbar) | Web app |
+| `@monorepo-vzla/configs` | Configuraciones base de ESLint, Tailwind, TypeScript | Todos los paquetes y apps |
 
 ---
 
@@ -48,14 +48,14 @@ El **monorepo base** es el núcleo que evoluciona con nuevas funcionalidades gen
 Desde GitHub, haz un **Fork** del repositorio base:
 
 ```
-github.com/megamercado-vzla/monorepo → Fork → github.com/tu-org/empresa-nombre
+github.com/monorepo-vzla/monorepo → Fork → github.com/tu-org/empresa-nombre
 ```
 
 O si prefieres por terminal (crea un repo vacío en GitHub primero):
 
 ```bash
 # Clona el base
-git clone git@github.com:megamercado-vzla/monorepo.git empresa-nombre
+git clone git@github.com:monorepo-vzla/monorepo.git empresa-nombre
 cd empresa-nombre
 
 # Cambia el remote origin al nuevo repo de la empresa
@@ -76,9 +76,9 @@ yarn install
 ### Paso 3 — Construir los paquetes internos
 
 ```bash
-yarn workspace @megamercado-vzla/api build
-yarn workspace @megamercado-vzla/auth build
-yarn workspace @megamercado-vzla/ui build
+yarn workspace @monorepo-vzla/api build
+yarn workspace @monorepo-vzla/auth build
+yarn workspace @monorepo-vzla/ui build
 ```
 
 ### Paso 4 — Configurar variables de entorno
@@ -230,10 +230,10 @@ O manualmente en terminales separadas:
 yarn dev
 
 # Terminal 2: App iOS
-yarn workspace @megamercado/mobile ios
+yarn workspace @monorepo/mobile ios
 
 # Terminal 3: App Android (emulador debe estar abierto)
-yarn workspace @megamercado/mobile android
+yarn workspace @monorepo/mobile android
 ```
 
 ---
@@ -253,10 +253,10 @@ yarn workspace @megamercado/mobile android
 git clone git@github.com:tu-org/empresa-nombre.git
 cd empresa-nombre
 yarn install
-yarn workspace @megamercado-vzla/api build
-yarn workspace @megamercado-vzla/auth build
-yarn workspace @megamercado/web build
-yarn workspace @megamercado/web start   # o usa PM2
+yarn workspace @monorepo-vzla/api build
+yarn workspace @monorepo-vzla/auth build
+yarn workspace @monorepo/web build
+yarn workspace @monorepo/web start   # o usa PM2
 ```
 
 ### App Móvil (Expo)
@@ -312,7 +312,7 @@ eas build --platform ios
 [ ] 7. Configurar Odoo: ODOO_URL, ODOO_DB, ODOO_ADMIN_UID, ODOO_ADMIN_PASSWORD
 [ ] 8. yarn sync-odoo-users — verificar que importa usuarios
 [ ] 9. yarn dev — verificar que el backend arranca sin errores
-[ ] 10. yarn workspace @megamercado/mobile ios — verificar login en móvil
+[ ] 10. yarn workspace @monorepo/mobile ios — verificar login en móvil
 [ ] 11. git commit + git push al repo de la empresa
 [ ] 12. Configurar despliegue en Vercel / servidor
 ```

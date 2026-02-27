@@ -10,7 +10,7 @@ Necesitas crear un nuevo endpoint en `apps/web/src/app/api/auth/oauth/callback/r
 
 ```typescript
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User, UserRole } from '@megamercado/database';
+import { connectDB, User, UserRole } from '@monorepo/database';
 import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
@@ -136,10 +136,10 @@ FACEBOOK_CLIENT_SECRET=your-facebook-app-secret
 
 ```bash
 # Asegúrate de que el backend esté corriendo
-yarn workspace @megamercado/web dev
+yarn workspace @monorepo/web dev
 
 # En otra terminal, inicia la app móvil
-yarn workspace @megamercado/mobile start
+yarn workspace @monorepo/mobile start
 
 # Selecciona 'i' para iOS o 'a' para Android
 ```
@@ -166,7 +166,7 @@ yarn workspace @megamercado/mobile start
 
 ### Deep linking no funciona
 
-- En iOS: Verifica que el scheme `megamercado://` esté configurado en `app.json`
+- En iOS: Verifica que el scheme `monorepo://` esté configurado en `app.json`
 - En Android: Verifica que el intent filter esté configurado en `AndroidManifest.xml`
 - Usa `AuthSession.getRedirectUrl()` para obtener la URL correcta
 

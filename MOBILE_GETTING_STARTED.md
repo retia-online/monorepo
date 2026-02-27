@@ -1,6 +1,6 @@
-# Getting Started with MegaMercado Mobile App
+# Getting Started with Monorepo Mobile App
 
-Guía para empezar con la app móvil MegaMercado.
+Guía para empezar con la app móvil Monorepo.
 
 ## 🚀 Quick Start (5 minutos)
 
@@ -55,7 +55,7 @@ Asegúrate de que el backend esté corriendo:
 
 ```bash
 # En otra terminal
-yarn workspace @megamercado/web dev
+yarn workspace @monorepo/web dev
 ```
 
 ## 📚 Documentación
