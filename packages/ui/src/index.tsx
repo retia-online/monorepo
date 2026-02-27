@@ -1,3 +1,5 @@
+'use client';
+
 // Base Components
 export * from './components';
 
