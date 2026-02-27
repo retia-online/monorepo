@@ -20,7 +20,7 @@ export default function ProfilePage() {
     const router = useRouter();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [formData, setFormData] = useState({
-        name: ''
+        name: '',
     });
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -31,7 +31,10 @@ export default function ProfilePage() {
     if (!session) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName="monorepo" />
+                <Navbar
+                    showAuthButtons={true}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
                         <h1 className="text-2xl font-bold text-gray-900 mb-4">
@@ -76,9 +79,9 @@ export default function ProfilePage() {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
         // Limpiar mensajes cuando el usuario empiece a escribir
         if (error) setError('');
@@ -87,7 +90,7 @@ export default function ProfilePage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!formData.name.trim()) {
             setError('El nombre es requerido');
             return;
@@ -126,7 +129,10 @@ export default function ProfilePage() {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName="monorepo" />
+                <Navbar
+                    showAuthButtons={true}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
@@ -140,15 +146,14 @@ export default function ProfilePage() {
     if (!profile) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName="monorepo" />
+                <Navbar
+                    showAuthButtons={true}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
-                        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                            Error
-                        </h1>
-                        <p className="text-gray-600 mb-6">
-                            No se pudo cargar tu perfil.
-                        </p>
+                        <h1 className="text-2xl font-bold text-gray-900 mb-4">Error</h1>
+                        <p className="text-gray-600 mb-6">No se pudo cargar tu perfil.</p>
                         <a
                             href="/"
                             className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
@@ -163,8 +168,11 @@ export default function ProfilePage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-            <Navbar showAuthButtons={true} instanceName="monorepo" />
-            
+            <Navbar
+                showAuthButtons={true}
+                instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+            />
+
             <main className="max-w-4xl mx-auto px-4 py-8">
                 <div className="bg-white rounded-lg shadow-md">
                     {/* Header */}
@@ -180,8 +188,16 @@ export default function ProfilePage() {
                             <div className="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
                                 <div className="flex">
                                     <div className="flex-shrink-0">
-                                        <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                        <svg
+                                            className="h-5 w-5 text-red-400"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                clipRule="evenodd"
+                                            />
                                         </svg>
                                     </div>
                                     <div className="ml-3">
@@ -195,8 +211,16 @@ export default function ProfilePage() {
                             <div className="mb-6 bg-green-50 border border-green-200 rounded-md p-4">
                                 <div className="flex">
                                     <div className="flex-shrink-0">
-                                        <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        <svg
+                                            className="h-5 w-5 text-green-400"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clipRule="evenodd"
+                                            />
                                         </svg>
                                     </div>
                                     <div className="ml-3">
@@ -218,8 +242,18 @@ export default function ProfilePage() {
                                         className="rounded-full border-4 border-gray-200"
                                     />
                                     <button className="absolute bottom-0 right-0 bg-primary text-white rounded-full p-2 hover:bg-primary/90 transition-colors">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        <svg
+                                            className="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                            />
                                         </svg>
                                     </button>
                                 </div>
@@ -231,7 +265,10 @@ export default function ProfilePage() {
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                                            <label
+                                                htmlFor="name"
+                                                className="block text-sm font-medium text-gray-700 mb-2"
+                                            >
                                                 Nombre Completo
                                             </label>
                                             <input
@@ -246,7 +283,10 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                                            <label
+                                                htmlFor="email"
+                                                className="block text-sm font-medium text-gray-700 mb-2"
+                                            >
                                                 Correo Electrónico
                                             </label>
                                             <input
@@ -264,28 +304,40 @@ export default function ProfilePage() {
                                     </div>
 
                                     <div>
-                                        <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label
+                                            htmlFor="role"
+                                            className="block text-sm font-medium text-gray-700 mb-2"
+                                        >
                                             Rol
                                         </label>
                                         <div className="flex items-center">
-                                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                                profile.role === 'ADMIN' 
-                                                    ? 'bg-yellow-100 text-yellow-800' 
-                                                    : 'bg-blue-100 text-blue-800'
-                                            }`}>
-                                                {profile.role === 'ADMIN' ? '👑 Administrador' : '👤 Usuario'}
+                                            <span
+                                                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                                    profile.role === 'ADMIN'
+                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                        : 'bg-blue-100 text-blue-800'
+                                                }`}
+                                            >
+                                                {profile.role === 'ADMIN'
+                                                    ? '👑 Administrador'
+                                                    : '👤 Usuario'}
                                             </span>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label htmlFor="created" className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label
+                                            htmlFor="created"
+                                            className="block text-sm font-medium text-gray-700 mb-2"
+                                        >
                                             Miembro desde
                                         </label>
                                         <input
                                             type="text"
                                             id="created"
-                                            value={new Date(profile.createdAt).toLocaleDateString('es-ES')}
+                                            value={new Date(profile.createdAt).toLocaleDateString(
+                                                'es-ES'
+                                            )}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 cursor-not-allowed"
                                             disabled
                                         />

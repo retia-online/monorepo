@@ -11,12 +11,12 @@ export default function ChangePasswordPage() {
     const [formData, setFormData] = useState({
         currentPassword: '',
         newPassword: '',
-        confirmPassword: ''
+        confirmPassword: '',
     });
     const [showPasswords, setShowPasswords] = useState({
         current: false,
         new: false,
-        confirm: false
+        confirm: false,
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function ChangePasswordPage() {
             try {
                 const response = await fetch('/api/user/can-change-password');
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     setCanChangePassword(data.canChangePassword);
                 } else {
@@ -56,7 +56,10 @@ export default function ChangePasswordPage() {
     if (!session) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName="monorepo" />
+                <Navbar
+                    showAuthButtons={true}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
                         <h1 className="text-2xl font-bold text-gray-900 mb-4">
@@ -81,7 +84,10 @@ export default function ChangePasswordPage() {
     if (checkingPermission) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName="monorepo" />
+                <Navbar
+                    showAuthButtons={true}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
@@ -96,20 +102,34 @@ export default function ChangePasswordPage() {
     if (canChangePassword === false) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName="monorepo" />
+                <Navbar
+                    showAuthButtons={true}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
                         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
                             <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-yellow-100 rounded-full">
-                                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                <svg
+                                    className="w-6 h-6 text-yellow-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                                    />
                                 </svg>
                             </div>
                             <h1 className="text-xl font-bold text-yellow-900 mb-2">
                                 No Puedes Cambiar Contraseña
                             </h1>
                             <p className="text-yellow-700 mb-4">
-                                Tu cuenta fue registrada usando OAuth (Google/Facebook). No tienes una contraseña tradicional que cambiar.
+                                Tu cuenta fue registrada usando OAuth (Google/Facebook). No tienes
+                                una contraseña tradicional que cambiar.
                             </p>
                             <a
                                 href="/profile"
@@ -126,23 +146,23 @@ export default function ChangePasswordPage() {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
         // Limpiar error cuando el usuario empiece a escribir
         if (errors[name]) {
-            setErrors(prev => ({
+            setErrors((prev) => ({
                 ...prev,
-                [name]: ''
+                [name]: '',
             }));
         }
     };
 
     const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
-        setShowPasswords(prev => ({
+        setShowPasswords((prev) => ({
             ...prev,
-            [field]: !prev[field]
+            [field]: !prev[field],
         }));
     };
 
@@ -176,7 +196,7 @@ export default function ChangePasswordPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         if (!validateForm()) {
             return;
         }
@@ -186,7 +206,7 @@ export default function ChangePasswordPage() {
 
         try {
             console.log('🔐 Submitting password change request...');
-            
+
             const response = await fetch('/api/change-password', {
                 method: 'POST',
                 headers: {
@@ -207,7 +227,7 @@ export default function ChangePasswordPage() {
                 setFormData({
                     currentPassword: '',
                     newPassword: '',
-                    confirmPassword: ''
+                    confirmPassword: '',
                 });
                 // Redirigir después de 2 segundos
                 setTimeout(() => {
@@ -227,13 +247,26 @@ export default function ChangePasswordPage() {
     if (success) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName="monorepo" />
+                <Navbar
+                    showAuthButtons={true}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
                         <div className="bg-green-50 border border-green-200 rounded-lg p-6">
                             <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-green-100 rounded-full">
-                                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                <svg
+                                    className="w-6 h-6 text-green-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 13l4 4L19 7"
+                                    />
                                 </svg>
                             </div>
                             <h1 className="text-xl font-bold text-green-900 mb-2">
@@ -242,9 +275,7 @@ export default function ChangePasswordPage() {
                             <p className="text-green-700 mb-4">
                                 Tu contraseña ha sido actualizada exitosamente.
                             </p>
-                            <p className="text-sm text-green-600">
-                                Redirigiendo a tu perfil...
-                            </p>
+                            <p className="text-sm text-green-600">Redirigiendo a tu perfil...</p>
                         </div>
                     </div>
                 </main>
@@ -254,26 +285,43 @@ export default function ChangePasswordPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-            <Navbar showAuthButtons={true} instanceName="monorepo" />
-            
+            <Navbar
+                showAuthButtons={true}
+                instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+            />
+
             <main className="max-w-2xl mx-auto px-4 py-8">
                 <div className="bg-white rounded-lg shadow-md">
                     {/* Header */}
                     <div className="px-6 py-4 border-b border-gray-200">
                         <h1 className="text-2xl font-bold text-gray-900">Cambiar Contraseña</h1>
-                        <p className="text-gray-600">Actualiza tu contraseña para mantener tu cuenta segura</p>
+                        <p className="text-gray-600">
+                            Actualiza tu contraseña para mantener tu cuenta segura
+                        </p>
                     </div>
 
                     {/* Form */}
                     <div className="p-6">
-                        <form key="change-password-form" onSubmit={handleSubmit} className="space-y-6">
+                        <form
+                            key="change-password-form"
+                            onSubmit={handleSubmit}
+                            className="space-y-6"
+                        >
                             {/* Error general */}
                             {errors.submit && (
                                 <div className="bg-red-50 border border-red-200 rounded-md p-4">
                                     <div className="flex">
                                         <div className="flex-shrink-0">
-                                            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                            <svg
+                                                className="h-5 w-5 text-red-400"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                    clipRule="evenodd"
+                                                />
                                             </svg>
                                         </div>
                                         <div className="ml-3">
@@ -285,7 +333,10 @@ export default function ChangePasswordPage() {
 
                             {/* Contraseña actual */}
                             <div>
-                                <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label
+                                    htmlFor="currentPassword"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
                                     Contraseña Actual
                                 </label>
                                 <div className="relative">
@@ -296,7 +347,9 @@ export default function ChangePasswordPage() {
                                         value={formData.currentPassword}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
-                                            errors.currentPassword ? 'border-red-300' : 'border-gray-300'
+                                            errors.currentPassword
+                                                ? 'border-red-300'
+                                                : 'border-gray-300'
                                         }`}
                                         placeholder="Ingresa tu contraseña actual"
                                     />
@@ -306,25 +359,55 @@ export default function ChangePasswordPage() {
                                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                                     >
                                         {showPasswords.current ? (
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                                            <svg
+                                                className="h-5 w-5 text-gray-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                                                />
                                             </svg>
                                         ) : (
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            <svg
+                                                className="h-5 w-5 text-gray-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                />
                                             </svg>
                                         )}
                                     </button>
                                 </div>
                                 {errors.currentPassword && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.currentPassword}</p>
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {errors.currentPassword}
+                                    </p>
                                 )}
                             </div>
 
                             {/* Nueva contraseña */}
                             <div>
-                                <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label
+                                    htmlFor="newPassword"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
                                     Nueva Contraseña
                                 </label>
                                 <div className="relative">
@@ -335,7 +418,9 @@ export default function ChangePasswordPage() {
                                         value={formData.newPassword}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
-                                            errors.newPassword ? 'border-red-300' : 'border-gray-300'
+                                            errors.newPassword
+                                                ? 'border-red-300'
+                                                : 'border-gray-300'
                                         }`}
                                         placeholder="Ingresa tu nueva contraseña"
                                     />
@@ -345,28 +430,56 @@ export default function ChangePasswordPage() {
                                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                                     >
                                         {showPasswords.new ? (
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                                            <svg
+                                                className="h-5 w-5 text-gray-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                                                />
                                             </svg>
                                         ) : (
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            <svg
+                                                className="h-5 w-5 text-gray-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                />
                                             </svg>
                                         )}
                                     </button>
                                 </div>
                                 {errors.newPassword && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.newPassword}</p>
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {errors.newPassword}
+                                    </p>
                                 )}
-                                <p className="mt-1 text-sm text-gray-500">
-                                    Mínimo 6 caracteres
-                                </p>
+                                <p className="mt-1 text-sm text-gray-500">Mínimo 6 caracteres</p>
                             </div>
 
                             {/* Confirmar contraseña */}
                             <div>
-                                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label
+                                    htmlFor="confirmPassword"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
                                     Confirmar Nueva Contraseña
                                 </label>
                                 <div className="relative">
@@ -377,7 +490,9 @@ export default function ChangePasswordPage() {
                                         value={formData.confirmPassword}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
-                                            errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
+                                            errors.confirmPassword
+                                                ? 'border-red-300'
+                                                : 'border-gray-300'
                                         }`}
                                         placeholder="Confirma tu nueva contraseña"
                                     />
@@ -387,19 +502,46 @@ export default function ChangePasswordPage() {
                                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                                     >
                                         {showPasswords.confirm ? (
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                                            <svg
+                                                className="h-5 w-5 text-gray-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                                                />
                                             </svg>
                                         ) : (
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            <svg
+                                                className="h-5 w-5 text-gray-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                />
                                             </svg>
                                         )}
                                     </button>
                                 </div>
                                 {errors.confirmPassword && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {errors.confirmPassword}
+                                    </p>
                                 )}
                             </div>
 

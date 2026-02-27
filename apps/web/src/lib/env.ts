@@ -11,6 +11,7 @@ const envSchema = z
 
         // Instance Configuration
         INSTANCE: z.string().default('App'),
+        COMPANY: z.string().default('Megamercado'),
 
         // Database
         MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
@@ -23,7 +24,9 @@ const envSchema = z
         AUTH_PROVIDERS: z.string().default('email'),
 
         // Auth Mode
-        AUTH_MODE: z.enum(['required', 'disabled', 'optional', 'whitelist', 'invite-only']).default('required'),
+        AUTH_MODE: z
+            .enum(['required', 'disabled', 'optional', 'whitelist', 'invite-only'])
+            .default('required'),
 
         // Google OAuth (optional)
         GOOGLE_CLIENT_ID: z.string().optional(),
