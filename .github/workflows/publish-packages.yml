@@ -13,9 +13,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    strategy:
-      matrix:
-        package: [auth, api, ui, configs]
+
     steps:
       - uses: actions/checkout@v4
 
@@ -28,47 +26,63 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build package
+      # ── Build en orden de dependencias ────────────────────────────────────
+      # configs y api primero (sin dependencias internas)
+      # auth y ui después (dependen de api)
+      - name: Build packages (en orden)
         run: |
-          cd packages/${{ matrix.package }}
-          yarn build
+          yarn workspace @megamercado-vzla/configs build
+          yarn workspace @megamercado-vzla/api build
+          yarn workspace @megamercado-vzla/ui build
+          yarn workspace @megamercado-vzla/auth build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ── Publicación 1: @megamercado-vzla ──────────────────────────────────
       - name: Publish → @megamercado-vzla
         run: |
-          cd packages/${{ matrix.package }}
-          npm publish || echo "⚠️  Ya publicado o falló (megamercado-vzla)"
+          for pkg in configs api ui auth; do
+            echo "📦 Publicando @megamercado-vzla/$pkg ..."
+            cd packages/$pkg
+            npm publish || echo "⚠️  Ya publicado o falló ($pkg)"
+            cd ../..
+          done
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ── Publicación 2: @retia-latam ───────────────────────────────────────
       - name: Publish → @retia-latam
         run: |
-          cd packages/${{ matrix.package }}
+          for pkg in configs api ui auth; do
+            echo "📦 Publicando @retia-latam/$pkg ..."
+            cd packages/$pkg
 
-          # Renombra el scope temporalmente en una copia del package.json
-          node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            pkg.name = pkg.name.replace('@megamercado-vzla', '@retia-latam');
-            pkg.publishConfig = {
-              registry: 'https://npm.pkg.github.com',
-              '@retia-latam:registry': 'https://npm.pkg.github.com'
-            };
-            // Reemplaza también las dependencias internas si las hay
-            for (const dep of ['dependencies', 'devDependencies', 'peerDependencies']) {
-              if (pkg[dep]) {
-                const updated = {};
-                for (const [k, v] of Object.entries(pkg[dep])) {
-                  updated[k.replace('@megamercado-vzla', '@retia-latam')] = v;
+            # Renombra el scope temporalmente
+            node -e "
+              const fs = require('fs');
+              const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+              pkg.name = pkg.name.replace('@megamercado-vzla', '@retia-latam');
+              pkg.publishConfig = {
+                registry: 'https://npm.pkg.github.com',
+                '@retia-latam:registry': 'https://npm.pkg.github.com'
+              };
+              for (const dep of ['dependencies', 'devDependencies', 'peerDependencies']) {
+                if (pkg[dep]) {
+                  const updated = {};
+                  for (const [k, v] of Object.entries(pkg[dep])) {
+                    updated[k.replace('@megamercado-vzla', '@retia-latam')] = v;
+                  }
+                  pkg[dep] = updated;
                 }
-                pkg[dep] = updated;
               }
-            }
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-          "
+              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+            "
 
-          npm publish || echo "⚠️  Ya publicado o falló (retia-latam)"
+            npm publish || echo "⚠️  Ya publicado o falló ($pkg)"
+            cd ../..
+          done
         env:
           NODE_AUTH_TOKEN: ${{ secrets.RETIA_LATAM_TOKEN }}
