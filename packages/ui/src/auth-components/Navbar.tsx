@@ -34,13 +34,13 @@ export function Navbar({
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex items-center">
-                        <a href="/" className="flex items-center">
+                        <a href="/" className="flex items-center gap-3">
                             <img
                                 src={logoSrc}
                                 alt="Logo"
                                 width={40}
                                 height={40}
-                                className="mr-3"
+                                className="rounded-md object-contain"
                             />
                             <span className="text-xl font-bold text-gray-900">
                                 {instanceName}
