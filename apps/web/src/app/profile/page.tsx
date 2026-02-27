@@ -33,7 +33,7 @@ export default function ProfilePage() {
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
                 <Navbar
                     showAuthButtons={true}
-                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
                 />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
@@ -131,7 +131,7 @@ export default function ProfilePage() {
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
                 <Navbar
                     showAuthButtons={true}
-                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
                 />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="text-center">
@@ -148,7 +148,7 @@ export default function ProfilePage() {
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
                 <Navbar
                     showAuthButtons={true}
-                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
                 />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
@@ -170,7 +170,7 @@ export default function ProfilePage() {
         <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
             <Navbar
                 showAuthButtons={true}
-                instanceName={process.env.NEXT_PUBLIC_COMPANY || 'Megamercado'}
+                instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
             />
 
             <main className="max-w-4xl mx-auto px-4 py-8">
@@ -312,11 +312,10 @@ export default function ProfilePage() {
                                         </label>
                                         <div className="flex items-center">
                                             <span
-                                                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                                    profile.role === 'ADMIN'
+                                                className={`px-3 py-1 rounded-full text-sm font-medium ${profile.role === 'ADMIN'
                                                         ? 'bg-yellow-100 text-yellow-800'
                                                         : 'bg-blue-100 text-blue-800'
-                                                }`}
+                                                    }`}
                                             >
                                                 {profile.role === 'ADMIN'
                                                     ? '👑 Administrador'

@@ -11,7 +11,7 @@ const envSchema = z
 
         // Instance Configuration
         INSTANCE: z.string().default('App'),
-        COMPANY: z.string().default('Megamercado'),
+        COMPANY: z.string().default('App'),
 
         // Database
         MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
