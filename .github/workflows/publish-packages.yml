@@ -18,23 +18,57 @@ jobs:
         package: [auth, api, ui, configs]
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@megamercado-vzla'
-          
+
       - name: Install dependencies
         run: yarn install
-        
-      - name: Build and Publish
+
+      - name: Build package
         run: |
           cd packages/${{ matrix.package }}
-          # Check if version exists before publishing (optional but recommended)
-          # For now, just attempt to build and publish
           yarn build
-          npm publish || echo "Package already published or failed"
+
+      # ── Publicación 1: @megamercado-vzla ──────────────────────────────────
+      - name: Publish → @megamercado-vzla
+        run: |
+          cd packages/${{ matrix.package }}
+          npm publish || echo "⚠️  Ya publicado o falló (megamercado-vzla)"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Publicación 2: @retia-latam ───────────────────────────────────────
+      - name: Publish → @retia-latam
+        run: |
+          cd packages/${{ matrix.package }}
+
+          # Renombra el scope temporalmente en una copia del package.json
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.name = pkg.name.replace('@megamercado-vzla', '@retia-latam');
+            pkg.publishConfig = {
+              registry: 'https://npm.pkg.github.com',
+              '@retia-latam:registry': 'https://npm.pkg.github.com'
+            };
+            // Reemplaza también las dependencias internas si las hay
+            for (const dep of ['dependencies', 'devDependencies', 'peerDependencies']) {
+              if (pkg[dep]) {
+                const updated = {};
+                for (const [k, v] of Object.entries(pkg[dep])) {
+                  updated[k.replace('@megamercado-vzla', '@retia-latam')] = v;
+                }
+                pkg[dep] = updated;
+              }
+            }
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+
+          npm publish || echo "⚠️  Ya publicado o falló (retia-latam)"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.RETIA_LATAM_TOKEN }}
