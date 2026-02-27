@@ -84,3 +84,4 @@ The following environment variables are required:
 - `hashPassword(password)` - Hash a password
 - `comparePassword(password, hash)` - Compare password with hash
 - `connectDB()` - Connect to MongoDB database
+
