@@ -1,7 +1,10 @@
-# Development Setup — MegaMercado Monorepo
+# Development Setup
 
 Guía para levantar el entorno de desarrollo completo.
 Abre **4 terminales separadas** y sigue el orden exacto.
+
+> Los comandos usan rutas relativas (`cd apps/...`) para que funcionen
+> en cualquier fork independientemente del nombre del proyecto.
 
 ---
 
@@ -37,8 +40,8 @@ brew services list | grep mongodb
 ## Terminal 2 — App Web (Next.js)
 
 ```bash
-cd /ruta/al/monorepo
-yarn workspace @megamercado/web dev
+cd apps/web
+yarn dev
 ```
 
 La app estará disponible en **http://localhost:9001**
@@ -57,8 +60,8 @@ Espera hasta ver:
 ## Terminal 3 — App Mobile Android
 
 ```bash
-cd /ruta/al/monorepo
-yarn workspace @megamercado/mobile android
+cd apps/mobile
+yarn android
 ```
 
 Si el emulador no arranca automáticamente, inícialo manualmente primero:
@@ -72,8 +75,8 @@ Y luego vuelve a ejecutar el comando de arriba.
 ## Terminal 4 — App Mobile iOS
 
 ```bash
-cd /ruta/al/monorepo
-yarn workspace @megamercado/mobile ios
+cd apps/mobile
+yarn ios
 ```
 
 > iOS y Android comparten el mismo servidor Metro (Terminal 3).
