@@ -14,7 +14,7 @@ export default async function HomePage() {
     if (env.AUTH_MODE === 'disabled') {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={false} instanceName={env.COMPANY} />
+                <Navbar showAuthButtons={false} instanceName={env.INSTANCE} />
 
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-4xl w-full mx-auto text-center">
@@ -135,7 +135,7 @@ export default async function HomePage() {
     if (env.AUTH_MODE === 'optional') {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName={env.COMPANY} />
+                <Navbar showAuthButtons={true} instanceName={env.INSTANCE} />
 
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-4xl w-full mx-auto text-center">
@@ -271,7 +271,7 @@ export default async function HomePage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-            <Navbar showAuthButtons={true} instanceName={env.COMPANY} />
+            <Navbar showAuthButtons={true} instanceName={env.INSTANCE} />
 
             <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                 <div className="max-w-4xl w-full mx-auto text-center">

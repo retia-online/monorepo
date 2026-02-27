@@ -53,8 +53,7 @@ Estos son los archivos de configuración específicos de cada aplicación.
 
 ```env
 # Identidad de la aplicación
-COMPANY=NombreDeTuEmpresa          # Nombre que aparece en la UI
-INSTANCE=nombre-instancia          # Identificador técnico único
+INSTANCE=NombreDeTuEmpresa          # Nombre que aparece en la UI y sistema
 
 # Base de datos (CRÍTICO)
 MONGODB_URI=mongodb://...          # Tu propia base de datos

@@ -58,7 +58,7 @@ export default function ChangePasswordPage() {
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
                 <Navbar
                     showAuthButtons={true}
-                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
+                    instanceName={process.env.NEXT_PUBLIC_INSTANCE || 'App'}
                 />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
@@ -86,7 +86,7 @@ export default function ChangePasswordPage() {
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
                 <Navbar
                     showAuthButtons={true}
-                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
+                    instanceName={process.env.NEXT_PUBLIC_INSTANCE || 'App'}
                 />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
@@ -104,7 +104,7 @@ export default function ChangePasswordPage() {
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
                 <Navbar
                     showAuthButtons={true}
-                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
+                    instanceName={process.env.NEXT_PUBLIC_INSTANCE || 'App'}
                 />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
@@ -249,7 +249,7 @@ export default function ChangePasswordPage() {
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
                 <Navbar
                     showAuthButtons={true}
-                    instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
+                    instanceName={process.env.NEXT_PUBLIC_INSTANCE || 'App'}
                 />
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
                     <div className="max-w-md w-full mx-auto text-center">
@@ -287,7 +287,7 @@ export default function ChangePasswordPage() {
         <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
             <Navbar
                 showAuthButtons={true}
-                instanceName={process.env.NEXT_PUBLIC_COMPANY || 'App'}
+                instanceName={process.env.NEXT_PUBLIC_INSTANCE || 'App'}
             />
 
             <main className="max-w-2xl mx-auto px-4 py-8">
@@ -347,8 +347,8 @@ export default function ChangePasswordPage() {
                                         value={formData.currentPassword}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${errors.currentPassword
-                                                ? 'border-red-300'
-                                                : 'border-gray-300'
+                                            ? 'border-red-300'
+                                            : 'border-gray-300'
                                             }`}
                                         placeholder="Ingresa tu contraseña actual"
                                     />
@@ -417,8 +417,8 @@ export default function ChangePasswordPage() {
                                         value={formData.newPassword}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${errors.newPassword
-                                                ? 'border-red-300'
-                                                : 'border-gray-300'
+                                            ? 'border-red-300'
+                                            : 'border-gray-300'
                                             }`}
                                         placeholder="Ingresa tu nueva contraseña"
                                     />
@@ -488,8 +488,8 @@ export default function ChangePasswordPage() {
                                         value={formData.confirmPassword}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${errors.confirmPassword
-                                                ? 'border-red-300'
-                                                : 'border-gray-300'
+                                            ? 'border-red-300'
+                                            : 'border-gray-300'
                                             }`}
                                         placeholder="Confirma tu nueva contraseña"
                                     />
