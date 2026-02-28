@@ -50,8 +50,8 @@ Aplicación móvil nativa para iOS y Android con autenticación integrada.
 ```bash
 cd apps/web
 yarn install
-cp .env.template .env.local
-# Editar .env.local con tu configuración
+cp .env.template .env.development
+# Editar .env.development con tu configuración
 yarn dev
 # → http://localhost:9001
 ```
@@ -60,8 +60,8 @@ yarn dev
 ```bash
 cd apps/mobile
 yarn install
-cp .env.example .env.local
-# Editar .env.local con tu configuración
+cp .env.example .env.development
+# Editar .env.development con tu configuración
 yarn start
 # → Escanea QR con Expo Go
 ```
@@ -72,8 +72,8 @@ yarn start
 yarn install
 
 # 2. Configurar variables
-cp apps/web/.env.template apps/web/.env.local
-cp apps/mobile/.env.example apps/mobile/.env.local
+cp apps/web/.env.template apps/web/.env.development
+cp apps/mobile/.env.example apps/mobile/.env.development
 
 # 3. Iniciar ambas apps
 cd apps/web && yarn dev &

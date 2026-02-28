@@ -83,19 +83,19 @@ yarn workspace @monorepo-vzla/ui build
 
 ### Paso 4 — Configurar variables de entorno
 
-Crea los archivos de entorno de la empresa (los archivos `.env.local` **nunca** van al repositorio):
+Crea los archivos de entorno de la empresa (los archivos `.env.development` **nunca** van al repositorio):
 
 ```bash
 # Para el backend web
-cp apps/web/.env.template apps/web/.env.local
+cp apps/web/.env.template apps/web/.env.development
 
 # Para la app móvil
-cp apps/mobile/.env.template apps/mobile/.env.local
+cp apps/mobile/.env.template apps/mobile/.env.development
 ```
 
 Luego edita cada archivo con los valores de la empresa:
 
-**`apps/web/.env.local`** — Variables críticas a configurar:
+**`apps/web/.env.development`** — Variables críticas a configurar:
 ```bash
 INSTANCE=empresa-nombre          # Identificador de la empresa
 MONGODB_URI=mongodb://...        # Base de datos de esta empresa (diferente por empresa)
@@ -112,7 +112,7 @@ NEXT_PUBLIC_PRIMARY_COLOR=#FF5733    # Color primario de la empresa
 NEXT_PUBLIC_FONT_FAMILY=Inter
 ```
 
-**`apps/mobile/.env.local`** — Variables críticas a configurar:
+**`apps/mobile/.env.development`** — Variables críticas a configurar:
 ```bash
 EXPO_PUBLIC_API_URL=https://app.empresa.com  # URL del backend en producción
 EXPO_PUBLIC_AUTH_METHODS=odoo
@@ -244,7 +244,7 @@ yarn workspace @monorepo/mobile android
 
 **Opción A: Vercel** (recomendado)
 1. Conecta el repo de la empresa a Vercel
-2. Configura las variables de entorno en el panel de Vercel (las mismas del `.env.local`), usando los valores de producción
+2. Configura las variables de entorno en el panel de Vercel (las mismas del `.env.development`), usando los valores de producción
 3. Vercel despliega automáticamente en cada push a `main`
 
 **Opción B: Servidor propio (VPS)**
@@ -287,10 +287,10 @@ eas build --platform ios
 
 ## 🔐 Gestión de Secretos
 
-**Regla estricta**: Ningún archivo `.env.local` ni `.env.prod` debe ir al repositorio de Git.
+**Regla estricta**: Ningún archivo `.env.development` ni `.env.prod` debe ir al repositorio de Git.
 
 ### En desarrollo
-- Cada desarrollador tiene su propio `.env.local` en sus carpetas locales
+- Cada desarrollador tiene su propio `.env.development` en sus carpetas locales
 - Los `.env.template` sí van al repo, con valores de ejemplo (sin datos reales)
 
 ### En producción
@@ -307,8 +307,8 @@ eas build --platform ios
 [ ] 2. Cambiar remote origin al repo de la empresa
 [ ] 3. yarn install
 [ ] 4. Builds de paquetes: api, auth, ui
-[ ] 5. Crear apps/web/.env.local con datos de la empresa
-[ ] 6. Crear apps/mobile/.env.local con IP/URL del backend
+[ ] 5. Crear apps/web/.env.development con datos de la empresa
+[ ] 6. Crear apps/mobile/.env.development con IP/URL del backend
 [ ] 7. Configurar Odoo: ODOO_URL, ODOO_DB, ODOO_ADMIN_UID, ODOO_ADMIN_PASSWORD
 [ ] 8. yarn sync-odoo-users — verificar que importa usuarios
 [ ] 9. yarn dev — verificar que el backend arranca sin errores
@@ -323,8 +323,8 @@ eas build --platform ios
 
 | Elemento | ¿Cambia por empresa? | Dónde se configura |
 |----------|---------------------|-------------------|
-| Base de datos (MongoDB) | ✅ Sí | `MONGODB_URI` en `.env.local` |
-| Instancia de Odoo | ✅ Sí | `ODOO_URL`, `ODOO_DB` en `.env.local` |
+| Base de datos (MongoDB) | ✅ Sí | `MONGODB_URI` en `.env.development` |
+| Instancia de Odoo | ✅ Sí | `ODOO_URL`, `ODOO_DB` en `.env.development` |
 | Colores y fuentes | ✅ Sí | `NEXT_PUBLIC_PRIMARY_COLOR`, etc. |
 | Usuarios y roles | ✅ Sí | Se sincroniza desde Odoo |
 | Modos de auth | ✅ Sí | `AUTH_PROVIDERS`, `AUTH_MODE` |
@@ -341,7 +341,7 @@ eas build --platform ios
 monorepo/
 ├── apps/
 │   ├── web/
-│   │   ├── .env.local              ← ⚠️ NO commitear (por empresa)
+│   │   ├── .env.development              ← ⚠️ NO commitear (por empresa)
 │   │   ├── src/app/
 │   │   │   ├── login/              ← Base: no modificar
 │   │   │   ├── register/           ← Base: no modificar
@@ -350,7 +350,7 @@ monorepo/
 │   │   └── next.config.ts
 │   │
 │   └── mobile/
-│       ├── .env.local              ← ⚠️ NO commitear (por empresa)
+│       ├── .env.development              ← ⚠️ NO commitear (por empresa)
 │       ├── src/screens/             ← Base: Login, Home, Profile
 │       └── src/screens/[empresa]/  ← ✅ Aquí van las pantallas de la empresa
 │

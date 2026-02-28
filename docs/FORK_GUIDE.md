@@ -42,11 +42,11 @@ Estos son los archivos de configuración específicos de cada aplicación.
 
 | Archivo | Propósito | Qué cambiar |
 |---|---|---|
-| `.env.local` | Variables locales (NO commitear) | Todos los valores |
+| `.env.development` | Variables locales (NO commitear) | Todos los valores |
 | `.env.prod` | Variables de producción (NO commitear) | Todos los valores |
-| `apps/web/.env.local` | Variables locales de la web | Todos los valores |
+| `apps/web/.env.development` | Variables locales de la web | Todos los valores |
 | `apps/web/.env.template` | Plantilla documentada | Actualizar ejemplos si añades vars |
-| `apps/mobile/.env.local` | Variables locales del móvil | Todos los valores |
+| `apps/mobile/.env.development` | Variables locales del móvil | Todos los valores |
 | `apps/mobile/.env.template` | Plantilla documentada | Actualizar ejemplos si añades vars |
 
 **Variables clave a personalizar:**
@@ -235,10 +235,10 @@ git remote add upstream git@github.com:monorepo-vzla/monorepo.git
 yarn install
 
 # 5. Configurar variables de entorno
-cp .env.local.example .env.local       # o copiar el .env.template
-cp apps/web/.env.template apps/web/.env.local
-cp apps/mobile/.env.template apps/mobile/.env.local
-# Editar los archivos .env.local con tus valores reales
+cp .env.development.example .env.development       # o copiar el .env.template
+cp apps/web/.env.template apps/web/.env.development
+cp apps/mobile/.env.template apps/mobile/.env.development
+# Editar los archivos .env.development con tus valores reales
 
 # 6. Reemplazar assets de branding
 # Sobreescribir los SVG/PNG en:

@@ -8,8 +8,8 @@ El modo de autenticación se configura mediante la variable de entorno `AUTH_MOD
 
 | Variable | App | Ubicación |
 |----------|-----|-----------|
-| `AUTH_MODE` | Web | `apps/web/.env.local` |
-| `EXPO_PUBLIC_AUTH_MODE` | Mobile | `apps/mobile/.env.local` |
+| `AUTH_MODE` | Web | `apps/web/.env.development` |
+| `EXPO_PUBLIC_AUTH_MODE` | Mobile | `apps/mobile/.env.development` |
 
 > **Importante:** Ambos valores deben estar sincronizados para una experiencia consistente.
 

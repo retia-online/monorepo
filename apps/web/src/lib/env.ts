@@ -140,7 +140,7 @@ export function validateEnv(): Env {
 
             console.error('');
             console.error(
-                'Please check your .env.local file and ensure all required variables are set correctly.'
+                'Please check your .env.development file and ensure all required variables are set correctly.'
             );
             console.error('');
 

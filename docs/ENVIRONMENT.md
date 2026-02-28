@@ -14,12 +14,12 @@ El proyecto utiliza **Zod** para validar todas las variables de entorno al inici
 ### 1. Copiar el Template
 
 ```bash
-cp apps/web/.env.example apps/web/.env.local
+cp apps/web/.env.example apps/web/.env.development
 ```
 
 ### 2. Editar Variables
 
-Abre `apps/web/.env.local` y configura tus valores:
+Abre `apps/web/.env.development` y configura tus valores:
 
 ```env
 # Requerido
@@ -129,7 +129,7 @@ Si hay errores en las variables de entorno, verás un mensaje como:
   • NEXTAUTH_SECRET: String must contain at least 32 character(s)
   • GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required when Google is enabled in AUTH_PROVIDERS
 
-Please check your .env.local file and ensure all required variables are set correctly.
+Please check your .env.development file and ensure all required variables are set correctly.
 ```
 
 ### Comportamiento
@@ -173,7 +173,7 @@ if (isSMTPConfigured()) {
 
 ```bash
 # ✅ Correcto - en .gitignore
-.env.local
+.env.development
 .env.production
 
 # ❌ Incorrecto - nunca commitear
@@ -183,7 +183,7 @@ if (isSMTPConfigured()) {
 ### 2. Diferentes Secretos por Entorno
 
 ```env
-# .env.local (desarrollo)
+# .env.development (desarrollo)
 NEXTAUTH_SECRET=dev-secret-at-least-32-chars-long
 
 # .env.production (producción)
@@ -238,7 +238,7 @@ openssl rand -base64 32
 
 **Causa**: Falta la variable o está vacía.
 
-**Solución**: Agrega la URI en `.env.local`:
+**Solución**: Agrega la URI en `.env.development`:
 ```env
 MONGODB_URI=mongodb://localhost:27017/mydb
 ```

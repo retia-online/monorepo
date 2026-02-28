@@ -20,7 +20,7 @@ Font:       Manrope  (Tipografía moderna)
 
 ### Configuración
 
-Las variables de diseño se definen en `.env.local`:
+Las variables de diseño se definen en `.env.development`:
 
 ```bash
 NEXT_PUBLIC_PRIMARY_COLOR=#6366f1
@@ -92,7 +92,7 @@ Las variables están disponibles globalmente:
 
 ### Configuración
 
-Las variables de diseño se definen en `.env.local`:
+Las variables de diseño se definen en `.env.development`:
 
 ```bash
 EXPO_PUBLIC_PRIMARY_COLOR=#6366f1
@@ -200,7 +200,7 @@ NEXT_PUBLIC_TEXT_COLOR=#f1f5f9
 
 ### App Web
 ```bash
-# 1. Edita .env.local con los nuevos valores
+# 1. Edita .env.development con los nuevos valores
 # 2. Reinicia el servidor de desarrollo
 cd apps/web
 yarn dev
@@ -208,7 +208,7 @@ yarn dev
 
 ### App Mobile
 ```bash
-# 1. Edita .env.local con los nuevos valores
+# 1. Edita .env.development con los nuevos valores
 # 2. Reinicia Expo
 cd apps/mobile
 npx expo start -c
@@ -228,7 +228,7 @@ npx expo start -c
 
 ## 🎯 Buenas Prácticas
 
-1. ✅ Define todos los colores en `.env.local`
+1. ✅ Define todos los colores en `.env.development`
 2. ✅ Usa las clases de Tailwind (web) o envConfig (mobile) en lugar de hardcodear colores
 3. ✅ Mantén la paleta consistente entre web y mobile
 4. ✅ Prueba la legibilidad del texto en los colores de fondo elegidos

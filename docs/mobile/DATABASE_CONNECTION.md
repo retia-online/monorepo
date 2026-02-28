@@ -187,7 +187,7 @@ Mobile App <--HTTP--> Backend API <--TCP--> MongoDB
 
 ## 🔑 Variables de Entorno
 
-### Mobile App (.env.local)
+### Mobile App (.env.development)
 
 ```bash
 # Solo necesita la URL del backend
@@ -199,7 +199,7 @@ EXPO_PUBLIC_API_URL=http://localhost:3000
 # - API keys secretos
 ```
 
-### Backend App (.env.local)
+### Backend App (.env.development)
 
 ```bash
 # El backend SÍ necesita credenciales
@@ -232,7 +232,7 @@ yarn start
 # Obtén IP del backend
 ifconfig | grep "inet "
 
-# Actualiza .env.local en mobile
+# Actualiza .env.development en mobile
 EXPO_PUBLIC_API_URL=http://192.168.1.100:3000
 
 # Escanea QR en Expo Go

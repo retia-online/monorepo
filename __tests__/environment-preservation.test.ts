@@ -98,10 +98,10 @@ describe('Environment Variable Preservation Property Tests', () => {
       fc.assert(fc.property(
         fc.constantFrom(...APPLICATIONS),
         (appPath) => {
-          const envPath = path.join(appPath, '.env.local');
+          const envPath = path.join(appPath, '.env.development');
           
           if (!fileExists(envPath)) {
-            // Skip test if .env.local doesn't exist
+            // Skip test if .env.development doesn't exist
             return true;
           }
           
@@ -119,7 +119,7 @@ describe('Environment Variable Preservation Property Tests', () => {
       fc.assert(fc.property(
         fc.constantFrom(...APPLICATIONS),
         (appPath) => {
-          const envPath = path.join(appPath, '.env.local');
+          const envPath = path.join(appPath, '.env.development');
           
           if (!fileExists(envPath)) {
             return true;
@@ -150,7 +150,7 @@ describe('Environment Variable Preservation Property Tests', () => {
       fc.assert(fc.property(
         fc.constantFrom(...APPLICATIONS),
         (appPath) => {
-          const envPath = path.join(appPath, '.env.local');
+          const envPath = path.join(appPath, '.env.development');
           
           if (!fileExists(envPath)) {
             return true;
@@ -182,8 +182,8 @@ describe('Environment Variable Preservation Property Tests', () => {
       fc.assert(fc.property(
         fc.constant(['apps/web', 'apps/mobile']),
         (appPaths) => {
-          const webEnvPath = path.join('apps/web', '.env.local');
-          const mobileEnvPath = path.join('apps/mobile', '.env.local');
+          const webEnvPath = path.join('apps/web', '.env.development');
+          const mobileEnvPath = path.join('apps/mobile', '.env.development');
           
           if (!fileExists(webEnvPath) || !fileExists(mobileEnvPath)) {
             return true;
@@ -211,7 +211,7 @@ describe('Environment Variable Preservation Property Tests', () => {
       fc.assert(fc.property(
         fc.constantFrom(...APPLICATIONS),
         (appPath) => {
-          const envPath = path.join(appPath, '.env.local');
+          const envPath = path.join(appPath, '.env.development');
           
           if (!fileExists(envPath)) {
             return true;
@@ -237,7 +237,7 @@ describe('Environment Variable Preservation Property Tests', () => {
       fc.assert(fc.property(
         fc.constant('apps/web'),
         (appPath) => {
-          const envPath = path.join(appPath, '.env.local');
+          const envPath = path.join(appPath, '.env.development');
           
           if (!fileExists(envPath)) {
             return true;
@@ -266,7 +266,7 @@ describe('Environment Variable Preservation Property Tests', () => {
       fc.assert(fc.property(
         fc.constant('apps/mobile'),
         (appPath) => {
-          const envPath = path.join(appPath, '.env.local');
+          const envPath = path.join(appPath, '.env.development');
           
           if (!fileExists(envPath)) {
             return true;

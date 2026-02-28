@@ -28,12 +28,12 @@ yarn install
 
 ```bash
 # Copiar todos los templates
-cp .env.template .env.local
-cp apps/web/.env.template apps/web/.env.local  
-cp apps/mobile/.env.example apps/mobile/.env.local
+cp .env.template .env.development
+cp apps/web/.env.template apps/web/.env.development  
+cp apps/mobile/.env.example apps/mobile/.env.development
 ```
 
-**Configuración mínima** (editar `.env.local`):
+**Configuración mínima** (editar `.env.development`):
 
 ```bash
 # Base de datos
@@ -82,7 +82,7 @@ yarn start
 ## 🎨 Personalización Rápida (Opcional)
 
 ### Colores del Tema
-Edita `.env.local`:
+Edita `.env.development`:
 
 ```bash
 PRIMARY_COLOR=#6366f1        # Púrpura
@@ -90,7 +90,7 @@ SECONDARY_COLOR=#ec4899      # Rosa
 ```
 
 ### Configuración Móvil
-Edita `apps/mobile/.env.local`:
+Edita `apps/mobile/.env.development`:
 
 ```bash
 # Modo de autenticación

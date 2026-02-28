@@ -146,8 +146,8 @@ emulator -avd <name> -wipe-data
 # 1. Backend está corriendo
 curl http://localhost:3000
 
-# 2. .env.local tiene URL correcta
-cat .env.local | grep EXPO_PUBLIC_API_URL
+# 2. .env.development tiene URL correcta
+cat .env.development | grep EXPO_PUBLIC_API_URL
 
 # 3. En dispositivo físico, usar IP local
 EXPO_PUBLIC_API_URL=http://192.168.1.100:3000

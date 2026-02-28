@@ -77,13 +77,13 @@ export async function POST(request: NextRequest) {
    - `https://tu-dominio.com` (producción)
 7. Copia el Client ID y Client Secret
 
-#### En tu `.env.local` (apps/mobile):
+#### En tu `.env.development` (apps/mobile):
 
 ```bash
 EXPO_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
 ```
 
-#### En tu `.env.local` (apps/web):
+#### En tu `.env.development` (apps/web):
 
 ```bash
 GOOGLE_CLIENT_ID=your-google-client-id
@@ -104,13 +104,13 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
      - `http://localhost:3000` (desarrollo)
      - `https://tu-dominio.com` (producción)
 
-#### En tu `.env.local` (apps/mobile):
+#### En tu `.env.development` (apps/mobile):
 
 ```bash
 EXPO_PUBLIC_FACEBOOK_APP_ID=your-facebook-app-id
 ```
 
-#### En tu `.env.local` (apps/web):
+#### En tu `.env.development` (apps/web):
 
 ```bash
 FACEBOOK_CLIENT_ID=your-facebook-app-id

@@ -10,12 +10,12 @@ import * as path from 'path';
 import { createOdooService, User, UserRole } from '@megamercado-vzla/api';
 
 // Load environment variables
-dotenv.config({ path: path.resolve(process.cwd(), 'apps/web/.env.local') });
+dotenv.config({ path: path.resolve(process.cwd(), 'apps/web/.env.development') });
 
 async function syncOdooUsers() {
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
-        throw new Error('MONGODB_URI not found in apps/web/.env.local');
+        throw new Error('MONGODB_URI not found in apps/web/.env.development');
     }
 
     try {
@@ -31,7 +31,7 @@ async function syncOdooUsers() {
         const adminPassword = process.env.ODOO_ADMIN_PASSWORD || '';
 
         if (!adminPassword) {
-            throw new Error('ODOO_ADMIN_PASSWORD not found in apps/web/.env.local');
+            throw new Error('ODOO_ADMIN_PASSWORD not found in apps/web/.env.development');
         }
 
         console.log('🔍 Fetching users from Odoo...');

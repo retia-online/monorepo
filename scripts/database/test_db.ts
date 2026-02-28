@@ -58,17 +58,17 @@ async function runTests() {
         console.log('⚠️ No se encontró .env.production ni env.production');
     }
 
-    // 2. Probar Local (.env.local)
-    const localEnvPath = path.resolve(rootDir, '.env.local');
+    // 2. Probar Local (.env.development)
+    const localEnvPath = path.resolve(rootDir, '.env.development');
     if (fs.existsSync(localEnvPath)) {
         const localConfig = dotenv.parse(fs.readFileSync(localEnvPath));
         if (localConfig.MONGODB_URI) {
             await testConnectionStep('LOCAL', localConfig.MONGODB_URI);
         } else {
-            console.log('⚠️ .env.local encontrado pero falta MONGODB_URI');
+            console.log('⚠️ .env.development encontrado pero falta MONGODB_URI');
         }
     } else {
-        console.log('⚠️ No se encontró .env.local');
+        console.log('⚠️ No se encontró .env.development');
     }
 }
 

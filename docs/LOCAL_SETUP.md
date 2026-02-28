@@ -82,12 +82,12 @@ Esto instalará todas las dependencias de todos los packages y apps.
 #### 3.1 Copiar Template
 
 ```bash
-cp .env.local.template .env.local
+cp .env.development.template .env.development
 ```
 
-#### 3.2 Editar .env.local
+#### 3.2 Editar .env.development
 
-Abre `.env.local` y configura los valores:
+Abre `.env.development` y configura los valores:
 
 ```bash
 # MongoDB - Conexión local
@@ -109,7 +109,7 @@ AUTH_PROVIDERS=email,google
 openssl rand -base64 32
 ```
 
-Copia el resultado y pégalo en `NEXTAUTH_SECRET` en tu `.env.local`.
+Copia el resultado y pégalo en `NEXTAUTH_SECRET` en tu `.env.development`.
 
 ### 4. Configurar OAuth (Opcional pero Recomendado)
 
@@ -129,7 +129,7 @@ Copia el resultado y pégalo en `NEXTAUTH_SECRET` en tu `.env.local`.
      ```
      http://localhost:3000/api/auth/callback/google
      ```
-6. Copia Client ID y Client Secret a `.env.local`
+6. Copia Client ID y Client Secret a `.env.development`
 
 #### Facebook OAuth - Desarrollo Local
 
@@ -143,7 +143,7 @@ Copia el resultado y pégalo en `NEXTAUTH_SECRET` en tu `.env.local`.
      ```
      http://localhost:3000/api/auth/callback/facebook
      ```
-6. Copia App ID y App Secret a `.env.local`
+6. Copia App ID y App Secret a `.env.development`
 
 ### 5. Configurar Email (Para Recuperación de Contraseña)
 
@@ -152,7 +152,7 @@ Copia el resultado y pégalo en `NEXTAUTH_SECRET` en tu `.env.local`.
 1. Ve a tu cuenta de Google
 2. Security → 2-Step Verification (actívalo si no lo está)
 3. App passwords → Genera una contraseña para "Mail"
-4. En `.env.local`:
+4. En `.env.development`:
    ```
    SMTP_HOST=smtp.gmail.com
    SMTP_PORT=587
@@ -167,7 +167,7 @@ Copia el resultado y pégalo en `NEXTAUTH_SECRET` en tu `.env.local`.
 1. Crea cuenta gratis en [mailtrap.io](https://mailtrap.io)
 2. Ve a Email Testing → Inboxes → [tu inbox]
 3. Copia las credenciales SMTP
-4. En `.env.local`:
+4. En `.env.development`:
    ```
    SMTP_HOST=sandbox.smtp.mailtrap.io
    SMTP_PORT=2525
@@ -215,8 +215,8 @@ monorepo/
 │   ├── utils/                 # Funciones de utilidad
 │   └── ui/                    # Componentes React compartidos
 │
-├── .env.local                 # Variables de entorno (NO commitear)
-├── .env.local.template        # Template de ejemplo
+├── .env.development                 # Variables de entorno (NO commitear)
+├── .env.development.template        # Template de ejemplo
 └── package.json               # Root workspace config
 ```
 
@@ -333,7 +333,7 @@ Crea `.vscode/launch.json`:
 
 ### Cambiar Colores del Tema
 
-Edita `.env.local`:
+Edita `.env.development`:
 
 ```bash
 PRIMARY_COLOR=#6366f1        # Indigo
@@ -366,7 +366,7 @@ Reinicia el servidor para ver los cambios.
    }
    ```
 
-3. Añade las variables en `.env.local`:
+3. Añade las variables en `.env.development`:
    ```
    AUTH_PROVIDERS=email,google,github
    GITHUB_ID=tu-github-client-id
@@ -422,7 +422,7 @@ brew services list | grep mongodb
 # Si no está corriendo:
 brew services start mongodb-community
 
-# Verificar connection string en .env.local
+# Verificar connection string en .env.development
 ```
 
 ### Hot reload no funciona
@@ -440,8 +440,8 @@ brew services start mongodb-community
 
 ### Variables de Entorno
 
-- ✅ Nunca commitees `.env.local`
-- ✅ Mantén `.env.local.template` actualizado
+- ✅ Nunca commitees `.env.development`
+- ✅ Mantén `.env.development.template` actualizado
 - ✅ Usa diferentes secrets para dev y prod
 
 ### Git Workflow

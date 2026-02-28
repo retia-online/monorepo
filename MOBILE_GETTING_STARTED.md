@@ -12,7 +12,7 @@ cd apps/mobile
 yarn install
 
 # 3. Copia el archivo de configuración
-cp .env.example .env.local
+cp .env.example .env.development
 
 # 4. Inicia el servidor
 yarn start
@@ -34,7 +34,7 @@ yarn android # Para Android
 
 ### Variables de Entorno
 
-Edita `apps/mobile/.env.local`:
+Edita `apps/mobile/.env.development`:
 
 ```bash
 # Backend API (requerido)

@@ -88,7 +88,7 @@ yarn ios
 
 Antes de iniciar, asegúrate de tener estos archivos configurados:
 
-### `apps/web/.env.local`
+### `apps/web/.env.development`
 ```env
 MONGODB_URI=mongodb://127.0.0.1:27017/monorepo
 NEXTAUTH_URL=http://TU_IP_LOCAL:9001        # Ej: http://192.168.1.100:9001
@@ -98,7 +98,7 @@ AUTH_PROVIDERS=email
 INSTANCE=Monorepo
 ```
 
-### `apps/mobile/.env.local`
+### `apps/mobile/.env.development`
 ```env
 EXPO_PUBLIC_API_URL=http://TU_IP_LOCAL:9001  # Misma IP que NEXTAUTH_URL
 EXPO_PUBLIC_AUTH_MODE=required

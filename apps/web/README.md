@@ -25,10 +25,10 @@ yarn install
 
 ```bash
 # Copiar template
-cp .env.template .env.local
+cp .env.template .env.development
 ```
 
-**Editar `.env.local`** con configuración mínima:
+**Editar `.env.development`** con configuración mínima:
 
 ```bash
 # Base de datos (REQUIRED)
@@ -87,10 +87,10 @@ yarn install
 ### 2. Configurar Variables de Entorno
 
 ```bash
-cp .env.template .env.local
+cp .env.template .env.development
 ```
 
-Edita `.env.local` con tu configuración:
+Edita `.env.development` con tu configuración:
 
 ```bash
 # Base de datos (REQUIRED)
@@ -187,14 +187,14 @@ FACEBOOK_CLIENT_SECRET=tu-app-secret
 2. Crea un proyecto → Habilita Google+ API
 3. Credentials → Create OAuth 2.0 Client ID
 4. Authorized redirect URIs: `http://localhost:9001/api/auth/callback/google`
-5. Copia Client ID y Client Secret a `.env.local`
+5. Copia Client ID y Client Secret a `.env.development`
 
 #### Facebook OAuth
 1. Ve a [Facebook Developers](https://developers.facebook.com)
 2. Crea una app → Añade producto "Facebook Login"
 3. Settings → Basic: copia App ID y App Secret
 4. Valid OAuth Redirect URIs: `http://localhost:9001/api/auth/callback/facebook`
-5. Copia App ID y App Secret a `.env.local`
+5. Copia App ID y App Secret a `.env.development`
 
 ## 👤 Sistema de Usuarios
 
@@ -233,10 +233,10 @@ POST /api/register               # Registro (compartido)
 Asegúrate de que las credenciales OAuth sean las mismas:
 
 ```bash
-# Web (.env.local)
+# Web (.env.development)
 GOOGLE_CLIENT_ID=tu-client-id
 
-# Mobile (apps/mobile/.env.local)
+# Mobile (apps/mobile/.env.development)
 EXPO_PUBLIC_GOOGLE_CLIENT_ID=tu-client-id  # ← Mismo valor
 ```
 
@@ -244,7 +244,7 @@ EXPO_PUBLIC_GOOGLE_CLIENT_ID=tu-client-id  # ← Mismo valor
 
 ### Colores del Tema
 
-Edita `.env.local`:
+Edita `.env.development`:
 
 ```bash
 PRIMARY_COLOR=#3b82f6      # Azul
@@ -307,7 +307,7 @@ vercel --prod
 
 **Variables de entorno en Vercel**:
 1. Project Settings → Environment Variables
-2. Agrega todas las variables de `.env.local`
+2. Agrega todas las variables de `.env.development`
 3. Cambia `NEXTAUTH_URL` a tu dominio de producción
 4. Usa `MONGODB_URI` de MongoDB Atlas
 
@@ -318,7 +318,7 @@ vercel --prod
 docker build -t monorepo-web .
 
 # Run
-docker run -p 3000:3000 --env-file .env.local monorepo-web
+docker run -p 3000:3000 --env-file .env.development monorepo-web
 ```
 
 #### Build Manual
@@ -376,7 +376,7 @@ MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/monorepo
 # Generar nuevo secret
 openssl rand -base64 32
 
-# Agregar a .env.local
+# Agregar a .env.development
 NEXTAUTH_SECRET=el-secret-generado
 ```
 

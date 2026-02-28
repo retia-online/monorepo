@@ -139,7 +139,7 @@ yarn clean-db --collections users,sessions --confirm
 - Asegúrate de tener **backups** si los datos son importantes
 
 ### 🔒 Seguridad
-- El script usa las credenciales de `.env.local`
+- El script usa las credenciales de `.env.development`
 - Verifica que estés conectado a la base de datos correcta
 - En producción, usa este script con **extrema precaución**
 
@@ -150,7 +150,7 @@ yarn clean-db --collections users,sessions --confirm
 
 ## 🔧 Configuración
 
-El script lee la configuración de `.env.local`:
+El script lee la configuración de `.env.development`:
 
 ```bash
 # Requerido
@@ -164,11 +164,11 @@ MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/monorepo
 
 ### Error: "MONGODB_URI no está definido"
 ```bash
-# Verificar que existe .env.local
-ls -la .env.local
+# Verificar que existe .env.development
+ls -la .env.development
 
 # Verificar contenido
-grep MONGODB_URI .env.local
+grep MONGODB_URI .env.development
 ```
 
 ### Error: "No se pudo conectar"

@@ -28,9 +28,9 @@ yarn install
 
 ```bash
 # Copiar template
-cp .env.example .env.local
+cp .env.example .env.development
 
-# Editar .env.local con configuración mínima
+# Editar .env.development con configuración mínima
 ```
 
 **Variables requeridas:**
@@ -96,10 +96,10 @@ yarn install
 
 ```bash
 # Copiar template
-cp .env.example .env.local
+cp .env.example .env.development
 
-# Editar .env.local con tus valores
-nano .env.local
+# Editar .env.development con tus valores
+nano .env.development
 ```
 
 **Variables requeridas:**
@@ -362,7 +362,7 @@ Si ejecutas la app en un dispositivo físico:
 # Obtén tu IP local
 ifconfig | grep "inet " | grep -v 127.0.0.1
 
-# Usa esa IP en .env.local
+# Usa esa IP en .env.development
 EXPO_PUBLIC_API_URL=http://192.168.1.100:3000
 ```
 
@@ -448,7 +448,7 @@ npx expo start --clear
 
 ### OAuth no funciona
 
-- Verifica que los Client IDs estén configurados en `.env.local`
+- Verifica que los Client IDs estén configurados en `.env.development`
 - Asegúrate de que el backend tenga el endpoint `/api/auth/oauth/callback`
 - Revisa los logs en la consola del navegador
 

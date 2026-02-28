@@ -6,11 +6,11 @@
 describe('Mobile App Environment Configuration', () => {
   
   describe('Environment Files Exist', () => {
-    it('should have .env.local file with required variables', () => {
+    it('should have .env.development file with required variables', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       expect(fs.existsSync(envPath)).toBe(true);
       
       const envContent = fs.readFileSync(envPath, 'utf8');
@@ -74,11 +74,11 @@ describe('Mobile App Environment Configuration', () => {
   });
 
   describe('API Configuration', () => {
-    it('should have API_URL configured in .env.local', () => {
+    it('should have API_URL configured in .env.development', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Extract API URL value
@@ -92,7 +92,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Mobile should NOT have direct database access
@@ -107,7 +107,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Check mobile auth configuration
@@ -125,7 +125,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Check OAuth configuration (should be present even if not enabled)
@@ -139,7 +139,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Check theme colors
@@ -153,7 +153,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
@@ -175,7 +175,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       const instanceMatch = envContent.match(/EXPO_PUBLIC_INSTANCE=(.+)/);
@@ -187,7 +187,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Main screen message should be present
@@ -198,7 +198,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Count EXPO_PUBLIC_ variables
@@ -213,7 +213,7 @@ describe('Mobile App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/mobile/.env.local');
+      const envPath = path.join(process.cwd(), 'apps/mobile/.env.development');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       const nodeEnvMatch = envContent.match(/NODE_ENV=(.+)/);

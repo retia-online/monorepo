@@ -16,16 +16,16 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 // Cargar variables de entorno
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env.development') });
 
 /**
- * Conectar a MongoDB usando la configuración del .env.local
+ * Conectar a MongoDB usando la configuración del .env.development
  */
 async function connectToMongoDB() {
   const mongoUri = process.env.MONGODB_URI;
   
   if (!mongoUri) {
-    throw new Error('MONGODB_URI no está definido en .env.local');
+    throw new Error('MONGODB_URI no está definido en .env.development');
   }
 
   await mongoose.connect(mongoUri);
@@ -247,8 +247,8 @@ async function main() {
   
   // Verificar que existe MONGODB_URI
   if (!process.env.MONGODB_URI) {
-    console.error('❌ Error: MONGODB_URI no está definido en .env.local');
-    console.log('   Asegúrate de tener un archivo .env.local con:');
+    console.error('❌ Error: MONGODB_URI no está definido en .env.development');
+    console.log('   Asegúrate de tener un archivo .env.development con:');
     console.log('   MONGODB_URI=mongodb://127.0.0.1:27017/monorepo');
     process.exit(1);
   }
