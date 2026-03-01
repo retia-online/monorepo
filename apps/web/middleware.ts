@@ -4,11 +4,16 @@ import { getToken } from 'next-auth/jwt';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Get session token directly avoiding mongoose in edge runtime
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET || 'fallback-secret'
-  });
+  let token = null;
+  try {
+    // Get session token directly avoiding mongoose in edge runtime
+    token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET || 'fallback-secret'
+    });
+  } catch (error) {
+    console.error('Middleware getToken error:', error);
+  }
 
   const isAuthenticated = !!token;
   const isAdmin = token?.role === 'ADMIN';
