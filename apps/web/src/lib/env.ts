@@ -46,10 +46,10 @@ const envSchema = z
         LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).optional(),
 
         // Design Configuration
-        NEXT_PUBLIC_PRIMARY_COLOR: z.string().optional().default('#6366f1'),
-        NEXT_PUBLIC_SECONDARY_COLOR: z.string().optional().default('#ec4899'),
-        NEXT_PUBLIC_BACKGROUND_COLOR: z.string().optional().default('#f8fafc'),
-        NEXT_PUBLIC_TEXT_COLOR: z.string().optional().default('#1e293b'),
+        NEXT_PUBLIC_PRIMARY_COLOR: z.string().optional().default('6366f1'),
+        NEXT_PUBLIC_SECONDARY_COLOR: z.string().optional().default('ec4899'),
+        NEXT_PUBLIC_BACKGROUND_COLOR: z.string().optional().default('f8fafc'),
+        NEXT_PUBLIC_TEXT_COLOR: z.string().optional().default('1e293b'),
         NEXT_PUBLIC_FONT_FAMILY: z.string().optional().default('Manrope'),
     })
     .refine(

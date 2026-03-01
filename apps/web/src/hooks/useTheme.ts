@@ -7,12 +7,13 @@ import { useMemo } from 'react';
  */
 export function useTheme() {
     const theme = useMemo(() => {
+        const withHash = (c?: string, d = '') => c ? (c.startsWith('#') ? c : `#${c}`) : d;
         return {
             colors: {
-                primary: process.env.NEXT_PUBLIC_PRIMARY_COLOR || '#6366f1',
-                secondary: process.env.NEXT_PUBLIC_SECONDARY_COLOR || '#ec4899',
-                background: process.env.NEXT_PUBLIC_BACKGROUND_COLOR || '#f8fafc',
-                text: process.env.NEXT_PUBLIC_TEXT_COLOR || '#1e293b',
+                primary: withHash(process.env.NEXT_PUBLIC_PRIMARY_COLOR, '#6366f1'),
+                secondary: withHash(process.env.NEXT_PUBLIC_SECONDARY_COLOR, '#ec4899'),
+                background: withHash(process.env.NEXT_PUBLIC_BACKGROUND_COLOR, '#f8fafc'),
+                text: withHash(process.env.NEXT_PUBLIC_TEXT_COLOR, '#1e293b'),
             },
             font: {
                 family: process.env.NEXT_PUBLIC_FONT_FAMILY || 'Manrope',
@@ -27,10 +28,11 @@ export function useTheme() {
  * Función para generar estilos CSS dinámicos
  */
 export function getThemeStyles() {
-    const primaryColor = process.env.NEXT_PUBLIC_PRIMARY_COLOR || '#6366f1';
-    const secondaryColor = process.env.NEXT_PUBLIC_SECONDARY_COLOR || '#ec4899';
-    const backgroundColor = process.env.NEXT_PUBLIC_BACKGROUND_COLOR || '#f8fafc';
-    const textColor = process.env.NEXT_PUBLIC_TEXT_COLOR || '#1e293b';
+    const withHash = (c?: string, d = '') => c ? (c.startsWith('#') ? c : `#${c}`) : d;
+    const primaryColor = withHash(process.env.NEXT_PUBLIC_PRIMARY_COLOR, '#6366f1');
+    const secondaryColor = withHash(process.env.NEXT_PUBLIC_SECONDARY_COLOR, '#ec4899');
+    const backgroundColor = withHash(process.env.NEXT_PUBLIC_BACKGROUND_COLOR, '#f8fafc');
+    const textColor = withHash(process.env.NEXT_PUBLIC_TEXT_COLOR, '#1e293b');
     const fontFamily = process.env.NEXT_PUBLIC_FONT_FAMILY || 'Manrope';
 
     return {

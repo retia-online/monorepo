@@ -26,12 +26,14 @@ interface EnvConfig {
  * Validate and get environment configuration
  */
 export function getEnvConfig(): EnvConfig {
+    const withHash = (c?: string, d = '') => c ? (c.startsWith('#') ? c : `#${c}`) : d;
+
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
     const appName = process.env.EXPO_PUBLIC_INSTANCE || 'monorepo';
-    const primaryColor = process.env.EXPO_PUBLIC_PRIMARY_COLOR || '#6366f1';
-    const secondaryColor = process.env.EXPO_PUBLIC_SECONDARY_COLOR || '#ec4899';
-    const backgroundColor = process.env.EXPO_PUBLIC_BACKGROUND_COLOR || '#f8fafc';
-    const textColor = process.env.EXPO_PUBLIC_TEXT_COLOR || '#1e293b';
+    const primaryColor = withHash(process.env.EXPO_PUBLIC_PRIMARY_COLOR, '#6366f1');
+    const secondaryColor = withHash(process.env.EXPO_PUBLIC_SECONDARY_COLOR, '#ec4899');
+    const backgroundColor = withHash(process.env.EXPO_PUBLIC_BACKGROUND_COLOR, '#f8fafc');
+    const textColor = withHash(process.env.EXPO_PUBLIC_TEXT_COLOR, '#1e293b');
     const fontFamily = process.env.EXPO_PUBLIC_FONT_FAMILY || 'Manrope';
     const nodeEnv = process.env.NODE_ENV || 'development';
     const googleClientId = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || null;
