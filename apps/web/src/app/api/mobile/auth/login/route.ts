@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@megamercado-vzla/api';
+import { connectDB, User, UserRole } from '@megamercado-vzla/api';
 import { loginSchema } from '@megamercado-vzla/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
                 user = await User.create({
                     name: odooUser.name,
                     email: odooUser.email,
-                    role: odooUser.isAdmin ? 'ADMIN' : 'USER',
+                    role: odooUser.isAdmin ? UserRole.ADMIN : UserRole.USER,
                     approved: true, // Auto-approved if coming from Odoo
                     metadata: {
                         odoo_uid: odooUser.uid,
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
                 });
             } else {
                 // Update role and metadata from Odoo
-                user.role = odooUser.isAdmin ? 'ADMIN' : 'USER';
+                user.role = odooUser.isAdmin ? UserRole.ADMIN : UserRole.USER;
                 user.metadata = {
                     ...user.metadata,
                     odoo_uid: odooUser.uid,
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
 
         // Check if user is approved (for whitelist mode)
         // ADMINs are always considered approved
-        if (user.role !== 'ADMIN' && !user.approved) {
+        if (user.role !== UserRole.ADMIN && !user.approved) {
             logger.warn({
                 event: 'auth.pending_approval',
                 email: user.email,

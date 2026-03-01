@@ -21,7 +21,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         });
 
         // Aplicar la fuente al body
-        document.body.style.fontFamily = styles['--font-family'] as string;
+        document.body.style.fontFamily = (styles as any)['--font-family'] as string;
     }, []);
 
     return <>{children}</>;

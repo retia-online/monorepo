@@ -8,7 +8,9 @@ import Link from 'next/link';
 // Check environment
 const isProduction = process.env.NODE_ENV === 'production';
 
-export default function ResetPasswordPage() {
+import { Suspense } from 'react';
+
+function ResetPasswordForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [token, setToken] = useState('');
@@ -202,5 +204,13 @@ export default function ResetPasswordPage() {
                 </Card>
             </div>
         </div>
+    );
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Cargando...</div>}>
+            <ResetPasswordForm />
+        </Suspense>
     );
 }
