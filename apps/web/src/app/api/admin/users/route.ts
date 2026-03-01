@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { connectDB, User } from '@megamercado-vzla/api';
 import { auth } from '@/lib/auth';
 import { logger } from '@/lib/logger';
@@ -7,7 +7,7 @@ import { logger } from '@/lib/logger';
  * GET /api/admin/users
  * Lista todos los usuarios (solo Admin)
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
     try {
         // Verificar autenticación y rol de admin
         const session = await auth();
