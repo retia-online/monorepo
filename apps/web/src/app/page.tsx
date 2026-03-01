@@ -17,12 +17,18 @@ export default async function HomePage() {
     }
 
     // Get session (may be null depending on AUTH_MODE)
+    // Keep requireAuth without try/catch so Next.js NEXT_REDIRECT works.
     let session = null;
-    try {
-        session = await requireAuth('/');
-    } catch (authErr) {
-        console.error('Auth verification failed (possibly due to DB):', authErr);
-        dbError = true;
+    if (!dbError) {
+        try {
+            session = await requireAuth('/');
+        } catch (authErr: any) {
+            if (authErr && authErr.digest && authErr.digest.startsWith('NEXT_REDIRECT')) {
+                throw authErr;
+            }
+            console.error('Auth verification failed (possibly due to DB):', authErr);
+            dbError = true;
+        }
     }
 
     const renderDbError = () => dbError ? (
