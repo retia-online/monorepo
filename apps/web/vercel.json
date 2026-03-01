@@ -1,7 +1,7 @@
 {
-    "buildCommand": "cd ../.. && yarn install && cd apps/web && yarn build",
+    "buildCommand": "cd ../.. && yarn workspaces run build",
     "framework": "nextjs",
-    "installCommand": "yarn install",
+    "installCommand": "cd ../.. && yarn install",
     "env": {
         "MONGODB_URI": "@mongodb_uri",
         "NEXTAUTH_URL": "@nextauth_url",
