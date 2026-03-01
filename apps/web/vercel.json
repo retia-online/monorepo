@@ -1,5 +1,5 @@
 {
-    "buildCommand": "cd ../.. && yarn workspaces run build",
+    "buildCommand": "cd ../.. && yarn run build",
     "framework": "nextjs",
     "installCommand": "cd ../.. && yarn install",
     "env": {
