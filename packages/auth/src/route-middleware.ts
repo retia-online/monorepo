@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from './auth-config';
+import { getToken } from 'next-auth/jwt';
 
 export interface AuthMiddlewareConfig {
   protectedRoutes?: string[];
@@ -26,10 +26,14 @@ export function createAuthMiddleware(config: AuthMiddlewareConfig = {}) {
   return async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     
-    // Get session
-    const session = await auth();
-    const isAuthenticated = !!session?.user;
-    const isAdmin = session?.user?.role === 'ADMIN';
+    // Get session token directly avoiding mongoose in edge runtime
+    const token = await getToken({ 
+        req: request, 
+        secret: process.env.NEXTAUTH_SECRET || 'fallback-secret' 
+    });
+    
+    const isAuthenticated = !!token;
+    const isAdmin = token?.role === 'ADMIN';
 
     // Check if route is public
     const isPublicRoute = publicRoutes.some(route => 
