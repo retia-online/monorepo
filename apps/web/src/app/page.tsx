@@ -302,7 +302,19 @@ export default async function HomePage() {
     }
 
     // If we get here, auth is required and user is authenticated
-    const user = session!.user;
+    const user = session?.user;
+
+    if (!user) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 flex flex-col">
+                <Navbar showAuthButtons={true} instanceName={env.INSTANCE} />
+                <div className="px-4">{renderDbError()}</div>
+                <div className="flex-1 flex items-center justify-center p-4">
+                    <p>No se pudo validar tu sesión debido a un problema con la base de datos.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
