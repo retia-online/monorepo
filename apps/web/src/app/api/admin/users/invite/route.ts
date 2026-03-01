@@ -58,12 +58,15 @@ export async function POST(request: NextRequest) {
             invitedBy: session.user.id as any,
         });
 
-        logger.info({
-            event: 'admin.user.invited',
-            userId: user._id.toString(),
-            email: user.email,
-            invitedBy: session.user.email,
-        }, 'Usuario invitado');
+        logger.info(
+            {
+                event: 'admin.user.invited',
+                userId: user._id.toString(),
+                email: user.email,
+                invitedBy: session.user.email,
+            },
+            'Usuario invitado'
+        );
 
         // Enviar email de invitación
         try {
@@ -111,11 +114,14 @@ export async function POST(request: NextRequest) {
 
             logger.info({ event: 'email.invite_sent', email }, 'Email de invitación enviado');
         } catch (emailError) {
-            logger.warn({
-                event: 'email.invite_failed',
-                email,
-                error: emailError instanceof Error ? emailError.message : 'Unknown error',
-            }, 'Error enviando email de invitación');
+            logger.warn(
+                {
+                    event: 'email.invite_failed',
+                    email,
+                    error: emailError instanceof Error ? emailError.message : 'Unknown error',
+                },
+                'Error enviando email de invitación'
+            );
         }
 
         return NextResponse.json({
@@ -127,14 +133,14 @@ export async function POST(request: NextRequest) {
             },
         });
     } catch (error) {
-        logger.error({
-            event: 'admin.user.invite_error',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        }, 'Error invitando usuario');
-
-        return NextResponse.json(
-            { error: 'Error al invitar al usuario' },
-            { status: 500 }
+        logger.error(
+            {
+                event: 'admin.user.invite_error',
+                error: error instanceof Error ? error.message : 'Unknown error',
+            },
+            'Error invitando usuario'
         );
+
+        return NextResponse.json({ error: 'Error al invitar al usuario' }, { status: 500 });
     }
 }

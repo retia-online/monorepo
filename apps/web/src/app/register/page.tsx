@@ -2,7 +2,13 @@
 
 import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Input, Button, Card, PasswordStrength, type PasswordRequirement } from '@megamercado-vzla/ui';
+import {
+    Input,
+    Button,
+    Card,
+    PasswordStrength,
+    type PasswordRequirement,
+} from '@megamercado-vzla/ui';
 import Link from 'next/link';
 
 // Check environment
@@ -177,10 +183,7 @@ function RegisterForm() {
                             required
                             fullWidth
                         />
-                        <PasswordStrength
-                            password={password}
-                            requirements={passwordRequirements}
-                        />
+                        <PasswordStrength password={password} requirements={passwordRequirements} />
                     </div>
 
                     <Input
@@ -229,4 +232,3 @@ export default function RegisterPage() {
         </div>
     );
 }
-

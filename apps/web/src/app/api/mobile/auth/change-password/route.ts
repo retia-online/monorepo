@@ -55,7 +55,9 @@ export async function POST(request: NextRequest) {
         // Check if user has password (not OAuth user)
         if (!user.password) {
             return NextResponse.json(
-                { error: 'Este usuario no tiene contraseña. Fue registrado usando OAuth (Google/Facebook).' },
+                {
+                    error: 'Este usuario no tiene contraseña. Fue registrado usando OAuth (Google/Facebook).',
+                },
                 { status: 400 }
             );
         }
@@ -117,7 +119,6 @@ export async function POST(request: NextRequest) {
             { message: 'Contraseña actualizada exitosamente' },
             { status: 200 }
         );
-
     } catch (error: unknown) {
         logAPI.error(
             'POST',
@@ -133,9 +134,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        return NextResponse.json(
-            { error: 'Error interno del servidor' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
     }
 }

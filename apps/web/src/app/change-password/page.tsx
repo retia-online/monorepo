@@ -346,10 +346,11 @@ export default function ChangePasswordPage() {
                                         name="currentPassword"
                                         value={formData.currentPassword}
                                         onChange={handleInputChange}
-                                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${errors.currentPassword
-                                            ? 'border-red-300'
-                                            : 'border-gray-300'
-                                            }`}
+                                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                                            errors.currentPassword
+                                                ? 'border-red-300'
+                                                : 'border-gray-300'
+                                        }`}
                                         placeholder="Ingresa tu contraseña actual"
                                     />
                                     <button
@@ -416,10 +417,11 @@ export default function ChangePasswordPage() {
                                         name="newPassword"
                                         value={formData.newPassword}
                                         onChange={handleInputChange}
-                                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${errors.newPassword
-                                            ? 'border-red-300'
-                                            : 'border-gray-300'
-                                            }`}
+                                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                                            errors.newPassword
+                                                ? 'border-red-300'
+                                                : 'border-gray-300'
+                                        }`}
                                         placeholder="Ingresa tu nueva contraseña"
                                     />
                                     <button
@@ -487,10 +489,11 @@ export default function ChangePasswordPage() {
                                         name="confirmPassword"
                                         value={formData.confirmPassword}
                                         onChange={handleInputChange}
-                                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${errors.confirmPassword
-                                            ? 'border-red-300'
-                                            : 'border-gray-300'
-                                            }`}
+                                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                                            errors.confirmPassword
+                                                ? 'border-red-300'
+                                                : 'border-gray-300'
+                                        }`}
                                         placeholder="Confirma tu nueva contraseña"
                                     />
                                     <button

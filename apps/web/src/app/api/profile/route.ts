@@ -12,10 +12,7 @@ export async function GET() {
         // Verificar autenticación
         const session = await auth();
         if (!session || !session.user?.email) {
-            return NextResponse.json(
-                { error: 'No autorizado' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
         }
 
         // Conectar a la base de datos
@@ -24,10 +21,7 @@ export async function GET() {
         // Buscar el usuario
         const user = await User.findOne({ email: session.user.email }).select('-password');
         if (!user) {
-            return NextResponse.json(
-                { error: 'Usuario no encontrado' },
-                { status: 404 }
-            );
+            return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
         }
 
         return NextResponse.json({
@@ -38,15 +32,11 @@ export async function GET() {
                 role: user.role,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
-            }
+            },
         });
-
     } catch (error) {
         console.error('Error fetching profile:', error);
-        return NextResponse.json(
-            { error: 'Error interno del servidor' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
     }
 }
 
@@ -55,10 +45,7 @@ export async function PUT(request: NextRequest) {
         // Verificar autenticación
         const session = await auth();
         if (!session || !session.user?.email) {
-            return NextResponse.json(
-                { error: 'No autorizado' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
         }
 
         // Validar datos de entrada
@@ -79,10 +66,7 @@ export async function PUT(request: NextRequest) {
         );
 
         if (!updatedUser) {
-            return NextResponse.json(
-                { error: 'Usuario no encontrado' },
-                { status: 404 }
-            );
+            return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
         }
 
         return NextResponse.json({
@@ -94,9 +78,8 @@ export async function PUT(request: NextRequest) {
                 role: updatedUser.role,
                 createdAt: updatedUser.createdAt,
                 updatedAt: updatedUser.updatedAt,
-            }
+            },
         });
-
     } catch (error) {
         console.error('Error updating profile:', error);
 
@@ -107,9 +90,6 @@ export async function PUT(request: NextRequest) {
             );
         }
 
-        return NextResponse.json(
-            { error: 'Error interno del servidor' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
     }
 }

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     try {
         const body = await request.json();
-        const { provider, code: _code, userInfo } = body;
+        const { provider, userInfo } = body;
 
         if (!provider || !userInfo || !userInfo.email) {
             return NextResponse.json({ error: 'Datos de OAuth inválidos' }, { status: 400 });

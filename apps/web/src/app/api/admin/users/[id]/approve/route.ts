@@ -8,10 +8,7 @@ import { sendEmail } from '@megamercado-vzla/api';
  * PATCH /api/admin/users/[id]/approve
  * Aprobar o desaprobar un usuario (solo Admin)
  */
-export async function PATCH(
-    request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     try {
         // Verificar autenticación y rol de admin
@@ -61,13 +58,16 @@ export async function PATCH(
 
         await user.save();
 
-        logger.info({
-            event: 'admin.user.approval_changed',
-            userId: user._id.toString(),
-            email: user.email,
-            approved,
-            changedBy: session.user.email,
-        }, `Usuario ${approved ? 'aprobado' : 'desaprobado'}`);
+        logger.info(
+            {
+                event: 'admin.user.approval_changed',
+                userId: user._id.toString(),
+                email: user.email,
+                approved,
+                changedBy: session.user.email,
+            },
+            `Usuario ${approved ? 'aprobado' : 'desaprobado'}`
+        );
 
         // Si se aprobó el usuario, enviar email de notificación
         if (approved && !wasApproved) {
@@ -110,16 +110,22 @@ export async function PATCH(
                     html: emailHtml,
                 });
 
-                logger.info({
-                    event: 'email.approval_sent',
-                    email: user.email,
-                }, 'Email de aprobación enviado');
+                logger.info(
+                    {
+                        event: 'email.approval_sent',
+                        email: user.email,
+                    },
+                    'Email de aprobación enviado'
+                );
             } catch (emailError) {
-                logger.warn({
-                    event: 'email.approval_failed',
-                    email: user.email,
-                    error: emailError instanceof Error ? emailError.message : 'Unknown error',
-                }, 'Error enviando email de aprobación');
+                logger.warn(
+                    {
+                        event: 'email.approval_failed',
+                        email: user.email,
+                        error: emailError instanceof Error ? emailError.message : 'Unknown error',
+                    },
+                    'Error enviando email de aprobación'
+                );
                 // No fallar la operación si el email no se envía
             }
         }
@@ -135,14 +141,14 @@ export async function PATCH(
             },
         });
     } catch (error) {
-        logger.error({
-            event: 'admin.user.approval_error',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        }, 'Error cambiando aprobación de usuario');
-
-        return NextResponse.json(
-            { error: 'Error al cambiar estado del usuario' },
-            { status: 500 }
+        logger.error(
+            {
+                event: 'admin.user.approval_error',
+                error: error instanceof Error ? error.message : 'Unknown error',
+            },
+            'Error cambiando aprobación de usuario'
         );
+
+        return NextResponse.json({ error: 'Error al cambiar estado del usuario' }, { status: 500 });
     }
 }

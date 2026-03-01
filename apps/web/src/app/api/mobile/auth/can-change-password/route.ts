@@ -47,11 +47,10 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             canChangePassword,
             isOAuthUser: !user.password,
-            message: canChangePassword 
-                ? 'El usuario puede cambiar su contraseña' 
-                : 'Usuario registrado con OAuth, no puede cambiar contraseña'
+            message: canChangePassword
+                ? 'El usuario puede cambiar su contraseña'
+                : 'Usuario registrado con OAuth, no puede cambiar contraseña',
         });
-
     } catch (error: unknown) {
         logAPI.error(
             'GET',
@@ -60,9 +59,6 @@ export async function GET(request: NextRequest) {
             ip
         );
 
-        return NextResponse.json(
-            { error: 'Error interno del servidor' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
     }
 }

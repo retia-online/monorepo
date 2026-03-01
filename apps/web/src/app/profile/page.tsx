@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { Navbar } from '@/components/Navbar';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 interface UserProfile {
     id: string;
@@ -17,7 +16,6 @@ interface UserProfile {
 
 export default function ProfilePage() {
     const { data: session } = useSession();
-    const router = useRouter();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [formData, setFormData] = useState({
         name: '',
@@ -313,8 +311,8 @@ export default function ProfilePage() {
                                         <div className="flex items-center">
                                             <span
                                                 className={`px-3 py-1 rounded-full text-sm font-medium ${profile.role === 'ADMIN'
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-blue-100 text-blue-800'
+                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                        : 'bg-blue-100 text-blue-800'
                                                     }`}
                                             >
                                                 {profile.role === 'ADMIN'

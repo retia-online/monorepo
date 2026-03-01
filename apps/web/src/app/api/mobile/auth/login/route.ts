@@ -39,7 +39,10 @@ export async function POST(request: NextRequest) {
 
             if (!odooUser) {
                 logAuth.login(validated.email, false);
-                return NextResponse.json({ error: 'Credenciales de Odoo incorrectas' }, { status: 401 });
+                return NextResponse.json(
+                    { error: 'Credenciales de Odoo incorrectas' },
+                    { status: 401 }
+                );
             }
 
             // Find or create local user linked to Odoo
@@ -54,7 +57,7 @@ export async function POST(request: NextRequest) {
                     metadata: {
                         odoo_uid: odooUser.uid,
                         odoo_company_id: odooUser.company_id,
-                    }
+                    },
                 });
             } else {
                 // Update role and metadata from Odoo
@@ -72,7 +75,10 @@ export async function POST(request: NextRequest) {
 
             if (!user || !user.password) {
                 logAuth.login(validated.email, false);
-                return NextResponse.json({ error: 'El email o la contraseña son incorrectos' }, { status: 401 });
+                return NextResponse.json(
+                    { error: 'El email o la contraseña son incorrectos' },
+                    { status: 401 }
+                );
             }
 
             // Verify password
@@ -80,19 +86,28 @@ export async function POST(request: NextRequest) {
 
             if (!isValid) {
                 logAuth.login(validated.email, false);
-                return NextResponse.json({ error: 'El email o la contraseña son incorrectos' }, { status: 401 });
+                return NextResponse.json(
+                    { error: 'El email o la contraseña son incorrectos' },
+                    { status: 401 }
+                );
             }
         }
 
         // Check if user is approved (for whitelist mode)
         // ADMINs are always considered approved
         if (user.role !== UserRole.ADMIN && !user.approved) {
-            logger.warn({
-                event: 'auth.pending_approval',
-                email: user.email,
-            }, 'User login attempt (mobile) - pending approval');
+            logger.warn(
+                {
+                    event: 'auth.pending_approval',
+                    email: user.email,
+                },
+                'User login attempt (mobile) - pending approval'
+            );
             logAuth.login(validated.email, false);
-            return NextResponse.json({ error: 'Tu cuenta está pendiente de aprobación' }, { status: 403 });
+            return NextResponse.json(
+                { error: 'Tu cuenta está pendiente de aprobación' },
+                { status: 403 }
+            );
         }
 
         // Log successful login

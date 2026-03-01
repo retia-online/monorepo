@@ -28,12 +28,13 @@ export default function LoginForm({ enabledProviders, showRegisterLink = true }:
         setLoading(true);
 
         try {
-            // Determine which provider to use. 
+            // Determine which provider to use.
             // If 'odoo' is in enabledProviders and 'email' is not, use 'odoo'.
             // If both are present, we default to 'credentials' for now or could add a toggle.
-            const provider = enabledProviders.includes('odoo') && !enabledProviders.includes('email')
-                ? 'odoo'
-                : 'credentials';
+            const provider =
+                enabledProviders.includes('odoo') && !enabledProviders.includes('email')
+                    ? 'odoo'
+                    : 'credentials';
 
             const result = await signIn(provider, {
                 email,
@@ -42,7 +43,11 @@ export default function LoginForm({ enabledProviders, showRegisterLink = true }:
             });
 
             if (result?.error) {
-                setError(provider === 'odoo' ? 'Credenciales de Odoo incorrectas' : 'Email o contraseña incorrectos');
+                setError(
+                    provider === 'odoo'
+                        ? 'Credenciales de Odoo incorrectas'
+                        : 'Email o contraseña incorrectos'
+                );
             } else {
                 router.push(callbackUrl);
                 router.refresh();
@@ -76,10 +81,16 @@ export default function LoginForm({ enabledProviders, showRegisterLink = true }:
             {(enabledProviders.includes('email') || enabledProviders.includes('odoo')) && (
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Input
-                        label={enabledProviders.includes('odoo') && !enabledProviders.includes('email') ? "Usuario/Email Odoo" : "Email"}
+                        label={
+                            enabledProviders.includes('odoo') && !enabledProviders.includes('email')
+                                ? 'Usuario/Email Odoo'
+                                : 'Email'
+                        }
                         type="text"
                         value={email}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setEmail(e.target.value)
+                        }
                         placeholder="tu@email.com"
                         required
                         fullWidth
@@ -89,7 +100,9 @@ export default function LoginForm({ enabledProviders, showRegisterLink = true }:
                         label="Contraseña"
                         type="password"
                         value={password}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setPassword(e.target.value)
+                        }
                         placeholder="••••••••"
                         required
                         fullWidth

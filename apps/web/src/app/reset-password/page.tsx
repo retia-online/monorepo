@@ -2,7 +2,13 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Input, Button, Card, PasswordStrength, type PasswordRequirement } from '@megamercado-vzla/ui';
+import {
+    Input,
+    Button,
+    Card,
+    PasswordStrength,
+    type PasswordRequirement,
+} from '@megamercado-vzla/ui';
 import Link from 'next/link';
 
 // Check environment
@@ -209,7 +215,11 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Cargando...</div>}>
+        <Suspense
+            fallback={
+                <div className="min-h-screen flex items-center justify-center">Cargando...</div>
+            }
+        >
             <ResetPasswordForm />
         </Suspense>
     );

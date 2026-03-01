@@ -7,7 +7,7 @@ import { logger } from '@/lib/logger';
  * GET /api/admin/users
  * Lista todos los usuarios (solo Admin)
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
     try {
         // Verificar autenticación y rol de admin
         const session = await auth();
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
             .sort({ createdAt: -1 });
 
         return NextResponse.json({
-            users: users.map(user => ({
+            users: users.map((user) => ({
                 id: user._id.toString(),
                 name: user.name,
                 email: user.email,
@@ -39,14 +39,14 @@ export async function GET(request: NextRequest) {
             })),
         });
     } catch (error) {
-        logger.error({
-            event: 'admin.users.list_error',
-            error: error instanceof Error ? error.message : 'Unknown error',
-        }, 'Error listando usuarios');
-
-        return NextResponse.json(
-            { error: 'Error al obtener usuarios' },
-            { status: 500 }
+        logger.error(
+            {
+                event: 'admin.users.list_error',
+                error: error instanceof Error ? error.message : 'Unknown error',
+            },
+            'Error listando usuarios'
         );
+
+        return NextResponse.json({ error: 'Error al obtener usuarios' }, { status: 500 });
     }
 }

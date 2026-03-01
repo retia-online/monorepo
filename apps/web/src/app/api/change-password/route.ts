@@ -19,10 +19,7 @@ export async function POST(request: NextRequest) {
 
         if (!session || !session.user?.email) {
             console.log('❌ No session or email');
-            return NextResponse.json(
-                { error: 'No autorizado' },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
         }
 
         // Validar datos de entrada
@@ -44,10 +41,7 @@ export async function POST(request: NextRequest) {
 
         if (!user) {
             console.log('❌ User not found in database');
-            return NextResponse.json(
-                { error: 'Usuario no encontrado' },
-                { status: 404 }
-            );
+            return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
         }
 
         console.log('🔐 User has password field:', !!user.password);
@@ -56,7 +50,9 @@ export async function POST(request: NextRequest) {
         if (!user.password) {
             console.log('❌ User has no password (OAuth user)');
             return NextResponse.json(
-                { error: 'Este usuario no tiene contraseña. Fue registrado usando OAuth (Google/Facebook).' },
+                {
+                    error: 'Este usuario no tiene contraseña. Fue registrado usando OAuth (Google/Facebook).',
+                },
                 { status: 400 }
             );
         }
@@ -109,10 +105,7 @@ export async function POST(request: NextRequest) {
 
         // Verificar que la nueva contraseña sea diferente
         console.log('🔍 Checking if new password is different...');
-        const isSamePassword = await bcrypt.compare(
-            validatedData.newPassword,
-            user.password
-        );
+        const isSamePassword = await bcrypt.compare(validatedData.newPassword, user.password);
         console.log('🔄 Is same password:', isSamePassword);
 
         if (isSamePassword) {
@@ -142,13 +135,12 @@ export async function POST(request: NextRequest) {
             { message: 'Contraseña actualizada exitosamente' },
             { status: 200 }
         );
-
     } catch (error) {
         console.error('❌ Error changing password:', error);
         console.error('Error details:', {
             name: error instanceof Error ? error.name : 'Unknown',
             message: error instanceof Error ? error.message : String(error),
-            stack: error instanceof Error ? error.stack : undefined
+            stack: error instanceof Error ? error.stack : undefined,
         });
 
         if (error instanceof z.ZodError) {
@@ -159,9 +151,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        return NextResponse.json(
-            { error: 'Error interno del servidor' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
     }
 }

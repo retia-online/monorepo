@@ -33,7 +33,9 @@ export async function POST(request: NextRequest) {
         const isFirstUserAtStart = userCount === 0;
 
         // Find user by email (could be a pre-created invitation)
-        const existingUser = await User.findOne({ email: validated.email }).select('+inviteToken +inviteExpires');
+        const existingUser = await User.findOne({ email: validated.email }).select(
+            '+inviteToken +inviteExpires'
+        );
 
         let user;
         let isInvitedFlow = false;
@@ -41,7 +43,10 @@ export async function POST(request: NextRequest) {
         // Handle Invite-only mode or Invitation usage
         if (invitationToken) {
             if (!existingUser || existingUser.inviteToken !== invitationToken) {
-                return NextResponse.json({ error: 'Token de invitación inválido' }, { status: 400 });
+                return NextResponse.json(
+                    { error: 'Token de invitación inválido' },
+                    { status: 400 }
+                );
             }
             if (existingUser.inviteExpires && existingUser.inviteExpires < new Date()) {
                 return NextResponse.json({ error: 'La invitación ha expirado' }, { status: 400 });
@@ -58,7 +63,10 @@ export async function POST(request: NextRequest) {
         } else {
             // If it's invite-only mode and NO token was provided, reject
             if (authMode === 'invite-only') {
-                return NextResponse.json({ error: 'El registro solo está permitido mediante invitación' }, { status: 403 });
+                return NextResponse.json(
+                    { error: 'El registro solo está permitido mediante invitación' },
+                    { status: 403 }
+                );
             }
 
             // Standard registration checks
@@ -76,7 +84,7 @@ export async function POST(request: NextRequest) {
             }
 
             // Determine approval status for standard flow
-            const needsApproval = (authMode === 'whitelist') && !isFirstUserAtStart;
+            const needsApproval = authMode === 'whitelist' && !isFirstUserAtStart;
 
             let odooUid: number | undefined;
             const enabledProviders = (process.env.AUTH_PROVIDERS || 'email').split(',');
@@ -85,13 +93,23 @@ export async function POST(request: NextRequest) {
                 try {
                     const { createOdooService } = await import('@megamercado-vzla/api');
                     const odoo = createOdooService();
-                    odooUid = await odoo.createUser(validated.name, validated.email, validated.password);
+                    odooUid = await odoo.createUser(
+                        validated.name,
+                        validated.email,
+                        validated.password
+                    );
                     logger.info({ email: validated.email, odooUid }, 'Created user in Odoo');
                 } catch (odooError) {
-                    logger.error({ error: odooError, email: validated.email }, 'Failed to create user in Odoo');
-                    return NextResponse.json({
-                        error: 'Error al sincronizar con Odoo. Por favor intenta más tarde.'
-                    }, { status: 500 });
+                    logger.error(
+                        { error: odooError, email: validated.email },
+                        'Failed to create user in Odoo'
+                    );
+                    return NextResponse.json(
+                        {
+                            error: 'Error al sincronizar con Odoo. Por favor intenta más tarde.',
+                        },
+                        { status: 500 }
+                    );
                 }
             }
 
@@ -102,9 +120,11 @@ export async function POST(request: NextRequest) {
                 password: validated.password,
                 role: isFirstUserAtStart ? UserRole.ADMIN : UserRole.USER,
                 approved: isFirstUserAtStart ? true : !needsApproval,
-                metadata: odooUid ? {
-                    odoo_uid: odooUid,
-                } : {},
+                metadata: odooUid
+                    ? {
+                          odoo_uid: odooUid,
+                      }
+                    : {},
             });
         }
 
@@ -113,7 +133,8 @@ export async function POST(request: NextRequest) {
 
         // Calculate if we need approval notification for the response
         // (Invited users NEVER need approval notification)
-        const needsApprovalNotification = (authMode === 'whitelist') && !isFirstUserAtStart && !isInvitedFlow;
+        const needsApprovalNotification =
+            authMode === 'whitelist' && !isFirstUserAtStart && !isInvitedFlow;
 
         // Send welcome email (optional, catch errors to not block registration)
         try {

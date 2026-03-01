@@ -1,24 +1,24 @@
 export interface ThemeConfig {
-  primaryColor: string;
-  secondaryColor: string;
-  backgroundColor: string;
-  textColor: string;
-  fontFamily: string;
+    primaryColor: string;
+    secondaryColor: string;
+    backgroundColor: string;
+    textColor: string;
+    fontFamily: string;
 }
 
 export function getThemeFromEnv(): ThemeConfig {
-  const withHash = (c?: string, d = '') => c ? (c.startsWith('#') ? c : `#${c}`) : d;
-  return {
-    primaryColor: withHash(process.env.NEXT_PUBLIC_PRIMARY_COLOR, '#6366f1'),
-    secondaryColor: withHash(process.env.NEXT_PUBLIC_SECONDARY_COLOR, '#ec4899'),
-    backgroundColor: withHash(process.env.NEXT_PUBLIC_BACKGROUND_COLOR, '#f8fafc'),
-    textColor: withHash(process.env.NEXT_PUBLIC_TEXT_COLOR, '#1e293b'),
-    fontFamily: process.env.NEXT_PUBLIC_FONT_FAMILY || 'Manrope',
-  };
+    const withHash = (c?: string, d = '') => (c ? (c.startsWith('#') ? c : `#${c}`) : d);
+    return {
+        primaryColor: withHash(process.env.NEXT_PUBLIC_PRIMARY_COLOR, '#6366f1'),
+        secondaryColor: withHash(process.env.NEXT_PUBLIC_SECONDARY_COLOR, '#ec4899'),
+        backgroundColor: withHash(process.env.NEXT_PUBLIC_BACKGROUND_COLOR, '#f8fafc'),
+        textColor: withHash(process.env.NEXT_PUBLIC_TEXT_COLOR, '#1e293b'),
+        fontFamily: process.env.NEXT_PUBLIC_FONT_FAMILY || 'Manrope',
+    };
 }
 
 export function generateThemeCSS(theme: ThemeConfig): string {
-  return `
+    return `
     :root {
       --color-primary: ${theme.primaryColor};
       --color-secondary: ${theme.secondaryColor};

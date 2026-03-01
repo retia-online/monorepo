@@ -6,7 +6,7 @@
 
 export async function register() {
     console.log('🚀 Application starting...');
-    
+
     // Temporarily disabled due to thread-stream issues
     // Only run on server
     // if (process.env.NEXT_RUNTIME === 'nodejs') {

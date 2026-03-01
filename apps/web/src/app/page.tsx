@@ -31,17 +31,35 @@ export default async function HomePage() {
         }
     }
 
-    const renderDbError = () => dbError ? (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md shadow-sm flex items-start gap-3 mt-4 mx-auto max-w-4xl" role="alert">
-            <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
-            </svg>
-            <div>
-                <strong className="font-semibold block text-left">Error de Base de Datos</strong>
-                <span className="block sm:inline text-sm mt-1 text-left text-red-600">No se pudo conectar a la base de datos de MongoDB. Verifica que la variable <code>MONGODB_URI</code> esté configurada correctamente en Vercel (Environments) y que la IP de Vercel tenga permisos en tu cluster.</span>
+    const renderDbError = () =>
+        dbError ? (
+            <div
+                className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md shadow-sm flex items-start gap-3 mt-4 mx-auto max-w-4xl"
+                role="alert"
+            >
+                <svg
+                    className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                        clipRule="evenodd"
+                    />
+                </svg>
+                <div>
+                    <strong className="font-semibold block text-left">
+                        Error de Base de Datos
+                    </strong>
+                    <span className="block sm:inline text-sm mt-1 text-left text-red-600">
+                        No se pudo conectar a la base de datos de MongoDB. Verifica que la variable{' '}
+                        <code>MONGODB_URI</code> esté configurada correctamente en Vercel
+                        (Environments) y que la IP de Vercel tenga permisos en tu cluster.
+                    </span>
+                </div>
             </div>
-        </div>
-    ) : null;
+        ) : null;
 
     // If auth is disabled, show a simple welcome page
     if (env.AUTH_MODE === 'disabled') {
