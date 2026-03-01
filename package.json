@@ -22,7 +22,7 @@
   },
   "scripts": {
     "dev": "yarn workspace @megamercado/web dev",
-    "build": "yarn workspace @megamercado/web build",
+    "build": "yarn workspaces run build",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint .",
