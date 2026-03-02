@@ -1,5 +1,5 @@
 {
     "buildCommand": "cd ../.. && yarn run build",
     "framework": "nextjs",
-    "installCommand": "cd ../.. && yarn install"
+    "installCommand": "cd ../.. && yarn install --production=false"
 }
