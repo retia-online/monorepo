@@ -1,0 +1,60 @@
+// NOTE: Before using this file, make sure you have created the following environment files
+// based on the local versions already present in this directory:
+//   - .env.development  (copy and configure from the existing .env.development)
+//   - .env.production   (copy and configure from the existing .env.production)
+// Then rename this file to package.json and run: yarn install
+{
+  "name": "@[YOUR_ORG]/mobile",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "lsof -i :8081 -t | xargs kill -9 2>/dev/null || true && expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit",
+    "build": "echo 'No build step for mobile app'",
+    "clean-db": "yarn workspace app clean-db",
+    "clean-db:force": "yarn workspace app clean-db:force",
+    "clean-db:stats": "yarn workspace app clean-db:stats",
+    "dev:all": "yarn workspace app dev:all"
+  },
+  "dependencies": {
+    "@react-navigation/bottom-tabs": "^7.9.0",
+    "@react-navigation/native": "^7.1.26",
+    "@react-navigation/native-stack": "^7.9.0",
+    "@react-navigation/stack": "^7.6.13",
+
+    // --- SDK Option A: megamercado-vzla (default) ---
+    "@megamercado-vzla/api": "^1.0.0",
+    "@megamercado-vzla/ui": "^1.0.0",
+
+    // --- SDK Option B: retia-global (alternative, replace Option A with these) ---
+    // "@retia-global/api": "^1.0.0",
+    // "@retia-global/ui": "^1.0.0",
+
+    "expo": "~54.0.30",
+    "expo-auth-session": "~7.0.10",
+    "expo-constants": "~18.0.12",
+    "expo-secure-store": "~15.0.8",
+    "expo-splash-screen": "~31.0.13",
+    "expo-status-bar": "~3.0.9",
+    "expo-web-browser": "~15.0.10",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-gesture-handler": "~2.28.0",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0",
+    "react-native-svg": "15.12.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.10",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "eslint": "^9.15.0",
+    "typescript": "~5.9.2"
+  }
+}

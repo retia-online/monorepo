@@ -11,6 +11,9 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# Package config (use package.json.template as reference)
+package.json
+
 # Node
 node_modules/
 .yarn/
