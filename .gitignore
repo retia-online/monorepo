@@ -54,7 +54,6 @@ next-env.d.ts
 .turbo
 .cache
 
-
-
 .npmrc
 .env*.local
+package.json
