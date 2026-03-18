@@ -1,0 +1,56 @@
+// NOTE: Before using this file, make sure you have created the following environment files
+// based on the local versions already present in this directory:
+//   - .env.development  (copy and configure from the existing .env.development)
+//   - .env.production   (copy and configure from the existing .env.production)
+// Then rename this file to package.json and run: yarn install
+{
+    "name": "@[YOUR_ORG]/web",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "lsof -i :9001 -t | xargs kill -9 2>/dev/null || true && next dev -H 0.0.0.0 -p 9001",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "clean-db": "yarn workspace app clean-db",
+        "clean-db:force": "yarn workspace app clean-db:force",
+        "clean-db:stats": "yarn workspace app clean-db:stats",
+        "dev:all": "yarn workspace app dev:all"
+    },
+    "dependencies": {
+        // --- SDK Option A: retia-global (default) ---
+        "@retia-global/auth": "^1.0.0",
+        "@retia-global/api": "^1.0.0",
+        "@retia-global/ui": "^1.0.0",
+        "@retia-global/configs": "^1.0.0",
+
+        // --- SDK Option B: megamercado-vzla (alternative, replace Option A with these) ---
+        // "@megamercado-vzla/auth": "^1.0.0",
+        // "@megamercado-vzla/api": "^1.0.0",
+        // "@megamercado-vzla/ui": "^1.0.0",
+        // "@megamercado-vzla/configs": "^1.0.0",
+
+        "bcryptjs": "^3.0.3",
+        "next": "^16.0.8",
+        "next-auth": "^5.0.0-beta.4",
+        "pino": "^10.1.0",
+        "pino-pretty": "^13.1.3",
+        "rate-limiter-flexible": "^9.0.0",
+        "react": "19.2.1",
+        "react-dom": "19.2.1",
+        "thread-stream": "^4.0.0",
+        "zod": "^3.22.4"
+    },
+    "devDependencies": {
+        "@types/bcryptjs": "^3.0.0",
+        "@types/node": "^20.10.5",
+        "@types/react": "^18.2.45",
+        "@types/react-dom": "^18.2.18",
+        "autoprefixer": "^10.4.16",
+        "eslint": "^8.56.0",
+        "eslint-config-next": "^16.0.8",
+        "postcss": "^8.4.32",
+        "tailwindcss": "^3.4.0",
+        "typescript": "^5.3.3"
+    }
+}

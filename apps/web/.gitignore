@@ -1,1 +1,4 @@
 .vercel
+
+# Package config (use package.json.template as reference)
+package.json
