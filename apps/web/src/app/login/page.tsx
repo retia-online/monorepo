@@ -1,6 +1,7 @@
 import LoginForm from './login-form';
 import { Suspense } from 'react';
 import { redirectIfAuthenticated } from '@/lib/route-protection';
+import Image from 'next/image';
 
 // Helper function to determine enabled providers on the server
 const getEnabledProviders = (): string[] => {
@@ -9,6 +10,7 @@ const getEnabledProviders = (): string[] => {
 
     const final: string[] = [];
     if (list.includes('email')) final.push('email');
+    if (list.includes('odoo')) final.push('odoo');
 
     // Only enable OAuth providers if they are in the list AND have secrets configured
     if (
@@ -42,6 +44,15 @@ export default async function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full">
                 <div className="text-center mb-8">
+                    <div className="mb-6">
+                        <Image
+                            src="/assets/images/branding/logo-rectangular.svg"
+                            alt="Logo"
+                            width={180}
+                            height={72}
+                            className="mx-auto"
+                        />
+                    </div>
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">Iniciar Sesión</h1>
                     <p className="text-gray-600">Ingresa a tu cuenta</p>
                 </div>

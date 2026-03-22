@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User, UserRole } from '@megamercado-vzla/api';
-import { registerSchema, sendWelcomeEmail, sendPendingApprovalEmail } from '@megamercado-vzla/api';
+import { connectDB, User, UserRole } from '@retia-global/api';
+import { registerSchema, sendWelcomeEmail, sendPendingApprovalEmail } from '@retia-global/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';
 import { SignJWT } from 'jose';
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
             if (enabledProviders.includes('odoo')) {
                 try {
-                    const { createOdooService } = await import('@megamercado-vzla/api');
+                    const { createOdooService } = await import('@retia-global/api');
                     const odoo = createOdooService();
                     odooUid = await odoo.createUser(
                         validated.name,

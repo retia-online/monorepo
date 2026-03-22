@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { connectDB, User } from '@megamercado-vzla/api';
+import { connectDB, User } from '@retia-global/api';
 
 export async function GET() {
     try {

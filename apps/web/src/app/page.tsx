@@ -3,7 +3,8 @@ import { requireAuth } from '@/lib/route-protection';
 import { getEnv } from '@/lib/env';
 import Image from 'next/image';
 import { Navbar } from '@/components/Navbar';
-import { connectDB } from '@megamercado-vzla/api';
+import { NavbarWrapper } from '@/components/NavbarWrapper';
+import { connectDB } from '@retia-global/api';
 
 export default async function HomePage() {
     const env = getEnv();
@@ -187,7 +188,7 @@ export default async function HomePage() {
     if (env.AUTH_MODE === 'optional') {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-                <Navbar showAuthButtons={true} instanceName={env.INSTANCE} />
+                <NavbarWrapper showAuthButtons={true} instanceName={env.INSTANCE} />
                 <div className="px-4">{renderDbError()}</div>
 
                 <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">
@@ -325,7 +326,7 @@ export default async function HomePage() {
     if (!user) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 flex flex-col">
-                <Navbar showAuthButtons={true} instanceName={env.INSTANCE} />
+                <NavbarWrapper showAuthButtons={true} instanceName={env.INSTANCE} />
                 <div className="px-4">{renderDbError()}</div>
                 <div className="flex-1 flex items-center justify-center p-4">
                     <p>No se pudo validar tu sesión debido a un problema con la base de datos.</p>
@@ -336,7 +337,7 @@ export default async function HomePage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-            <Navbar showAuthButtons={true} instanceName={env.INSTANCE} />
+            <NavbarWrapper showAuthButtons={true} instanceName={env.INSTANCE} />
             <div className="px-4">{renderDbError()}</div>
 
             <main className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4">

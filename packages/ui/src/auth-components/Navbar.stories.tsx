@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 export const NotAuthenticated: Story = {
     args: {
         showAuthButtons: true,
-        instanceName: 'MegaMercado',
+        instanceName: 'Retia',
         user: null,
         onLogout: () => console.log('Logout clicked'),
     },

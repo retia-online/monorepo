@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User, UserRole } from '@megamercado-vzla/api';
-import { loginSchema } from '@megamercado-vzla/api';
+import { connectDB, User, UserRole } from '@retia-global/api';
+import { loginSchema } from '@retia-global/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';
-import { generateMobileToken } from '@megamercado-vzla/auth';
+import { generateMobileToken } from '@retia-global/auth';
 
 const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fallback-secret';
 
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         let user;
 
         if (validated.provider === 'odoo') {
-            const { createOdooService } = await import('@megamercado-vzla/api');
+            const { createOdooService } = await import('@retia-global/api');
             const odoo = createOdooService();
             const odooUser = await odoo.authenticate(validated.email, validated.password);
 

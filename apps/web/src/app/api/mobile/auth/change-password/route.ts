@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@megamercado-vzla/api';
+import { connectDB, User } from '@retia-global/api';
 import { jwtVerify } from 'jose';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
         if (isOdooEnabled && odooUid) {
             try {
-                const { createOdooService } = await import('@megamercado-vzla/api');
+                const { createOdooService } = await import('@retia-global/api');
                 const odoo = createOdooService();
 
                 // 1. Verify current password with Odoo

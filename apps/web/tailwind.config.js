@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
-    presets: [require("@megamercado-vzla/configs/tailwind.preset")],
+    presets: [require('@retia-global/configs/tailwind.preset')],
     content: [
         './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
         './src/components/**/*.{js,ts,jsx,tsx,mdx}',

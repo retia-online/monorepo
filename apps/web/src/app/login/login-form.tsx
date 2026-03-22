@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { Input, Button, Card } from '@megamercado-vzla/ui';
+import { Input, Button, Card } from '@retia-global/ui';
 import Link from 'next/link';
 
 interface LoginFormProps {
@@ -83,7 +83,7 @@ export default function LoginForm({ enabledProviders, showRegisterLink = true }:
                     <Input
                         label={
                             enabledProviders.includes('odoo') && !enabledProviders.includes('email')
-                                ? 'Usuario/Email Odoo'
+                                ? 'Usuario'
                                 : 'Email'
                         }
                         type="text"

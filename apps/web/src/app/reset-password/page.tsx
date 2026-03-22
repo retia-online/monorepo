@@ -8,7 +8,7 @@ import {
     Card,
     PasswordStrength,
     type PasswordRequirement,
-} from '@megamercado-vzla/ui';
+} from '@retia-global/ui';
 import Link from 'next/link';
 
 // Check environment

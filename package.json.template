@@ -1,7 +1,8 @@
 {
-  "name": "megamercado-monorepo",
+  "name": "[YOUR_APP]",
   "version": "1.0.0",
   "private": true,
+  "org": "[YOUR_ORG]",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
       "eslint --fix --max-warnings=200",
@@ -21,10 +22,10 @@
     "react-dom": "19.2.1"
   },
   "scripts": {
-    "dev": "yarn workspace @megamercado/web dev",
+    "dev": "yarn workspace @[YOUR_ORG]/web dev",
     "build": "yarn build:packages && yarn build:web",
-    "build:packages": "yarn workspace @megamercado-vzla/types build && yarn workspace @megamercado-vzla/database build && yarn workspace @megamercado-vzla/api build && yarn workspace @megamercado-vzla/auth build && yarn workspace @megamercado-vzla/ui build && yarn workspace @megamercado-vzla/configs build && yarn workspace @megamercado-vzla/utils build",
-    "build:web": "yarn workspace @megamercado/web build",
+    "build:packages": "yarn workspace @[YOUR_ORG]/types build && yarn workspace @[YOUR_ORG]/database build && yarn workspace @[YOUR_ORG]/api build && yarn workspace @[YOUR_ORG]/auth build && yarn workspace @[YOUR_ORG]/ui build && yarn workspace @[YOUR_ORG]/configs build && yarn workspace @[YOUR_ORG]/utils build",
+    "build:web": "yarn workspace @[YOUR_ORG]/web build",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint .",
@@ -65,6 +66,6 @@
     "yarn": ">=1.22.0"
   },
   "dependencies": {
-    "@megamercado-vzla/api": "^1.0.1"
+    "@[YOUR_ORG]/api": "^1.0.1"
   }
 }

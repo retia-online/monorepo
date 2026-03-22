@@ -1,20 +1,22 @@
 {
-  "name": "@megamercado-vzla/api",
+  "name": "@retia-global/api",
   "version": "1.0.1",
   "description": "API services and database models for MegaMercado platform",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "default": "./src/index.ts"
     },
     "./shared": {
-      "types": "./dist/shared.d.ts",
-      "import": "./dist/shared.mjs",
-      "require": "./dist/shared.js"
+      "types": "./src/shared.ts",
+      "import": "./src/shared.ts",
+      "require": "./src/shared.ts",
+      "default": "./src/shared.ts"
     }
   },
   "files": [
@@ -29,7 +31,7 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "@megamercado-vzla:registry": "https://npm.pkg.github.com"
+    "@retia-global:registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",

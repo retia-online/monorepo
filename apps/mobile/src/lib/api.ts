@@ -1,4 +1,4 @@
-import { loginSchema, registerSchema } from '@megamercado-vzla/api/shared';
+import { loginSchema, registerSchema } from '@retia-global/api/shared';
 import { secureStorage } from './secure-storage';
 import { getApiUrl } from './env';
 

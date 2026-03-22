@@ -91,7 +91,7 @@ export function LoginScreen({ onNavigateToRegister }: LoginScreenProps) {
                     {(authConfig.allowsEmail || authConfig.allowsOdoo) && (
                         <>
                             <View style={styles.inputGroup}>
-                                <Text style={styles.label}>{authConfig.allowsOdoo && !authConfig.allowsEmail ? "Usuario/Email Odoo" : "Email"}</Text>
+                                <Text style={styles.label}>{authConfig.allowsOdoo && !authConfig.allowsEmail ? "Usuario" : "Email"}</Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder={authConfig.allowsOdoo && !authConfig.allowsEmail ? "Usuario o email" : "tu@email.com"}

@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import { z } from 'zod';
-import { connectDB, User, UserRole, createOdooService } from '@megamercado-vzla/api';
+import { connectDB, User, UserRole, createOdooService } from '@retia-global/api';
 import './types'; // Import type extensions
 
 // Simple logger interface for auth events
@@ -276,7 +276,7 @@ export const authConfig: NextAuthConfig = {
       // Add user info to token on sign in
       if (user) {
         token.id = user.id || '';
-        token.role = user.role;
+        token.role = user.role ?? '';
         token.name = user.name;
         token.email = user.email;
         token.picture = user.image;

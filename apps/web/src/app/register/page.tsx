@@ -8,8 +8,9 @@ import {
     Card,
     PasswordStrength,
     type PasswordRequirement,
-} from '@megamercado-vzla/ui';
+} from '@retia-global/ui';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Check environment
 const isProduction = process.env.NODE_ENV === 'production';
@@ -127,6 +128,15 @@ function RegisterForm() {
     return (
         <>
             <div className="text-center mb-8">
+                <div className="mb-6">
+                    <Image
+                        src="/assets/images/branding/logo-rectangular.svg"
+                        alt="Logo"
+                        width={180}
+                        height={72}
+                        className="mx-auto"
+                    />
+                </div>
                 <h1 className="text-4xl font-bold text-gray-900 mb-2">
                     {token ? 'Completa tu registro' : 'Crear Cuenta'}
                 </h1>

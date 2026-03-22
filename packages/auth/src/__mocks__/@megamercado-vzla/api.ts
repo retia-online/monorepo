@@ -1,4 +1,4 @@
-// Mock for @megamercado-vzla/api package
+// Mock for @retia-global/api package
 export const connectDB = jest.fn();
 
 export const User = {

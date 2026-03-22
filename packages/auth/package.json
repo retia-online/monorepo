@@ -1,9 +1,9 @@
 {
-  "name": "@megamercado-vzla/auth",
+  "name": "@retia-global/auth",
   "version": "1.0.1",
   "description": "Authentication SDK with NextAuth configuration and route protection middleware",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "files": [
     "dist"
   ],
@@ -17,7 +17,7 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "@megamercado-vzla:registry": "https://npm.pkg.github.com"
+    "@retia-global:registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
   "license": "MIT",
   "dependencies": {
     "next-auth": "^5.0.0-beta.4",
-    "@megamercado-vzla/api": "^1.0.0",
+    "@retia-global/api": "^1.0.0",
     "zod": "^3.22.4",
     "jose": "^5.2.0"
   },
@@ -51,5 +51,14 @@
   "peerDependencies": {
     "next": ">=14.0.0",
     "react": ">=18.0.0"
+  },
+  "module": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
   }
 }

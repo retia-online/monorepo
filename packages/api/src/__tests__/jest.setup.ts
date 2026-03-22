@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 
 // Mock environment variables for testing
-process.env.MONGODB_URI = 'mongodb://localhost:27017/test-megamercado-api';
+process.env.MONGODB_URI = 'mongodb://localhost:27017/retia';
 process.env.NODE_ENV = 'test';
 process.env.SMTP_HOST = 'localhost';
 process.env.SMTP_PORT = '587';

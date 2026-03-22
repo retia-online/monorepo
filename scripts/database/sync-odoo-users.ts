@@ -7,7 +7,7 @@
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import { createOdooService, User, UserRole } from '@megamercado-vzla/api';
+import { createOdooService, User, UserRole } from '@retia-global/api';
 
 // Load environment variables
 dotenv.config({ path: path.resolve(process.cwd(), 'apps/web/.env.development') });

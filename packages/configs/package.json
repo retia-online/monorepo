@@ -1,5 +1,5 @@
 {
-  "name": "@megamercado-vzla/configs",
+  "name": "@retia-global/configs",
   "version": "1.0.1",
   "description": "Shared configuration presets for MegaMercado applications",
   "main": "dist/index.js",
@@ -19,7 +19,7 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "@megamercado-vzla:registry": "https://npm.pkg.github.com"
+    "@retia-global:registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
@@ -44,5 +44,15 @@
     "tailwindcss": "^3.0.0",
     "typescript": "^5.0.0",
     "eslint": "^8.0.0 || ^9.0.0"
+  },
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "dist/index.d.ts",
+      "import": "dist/index.js",
+      "require": "dist/index.js",
+      "default": "dist/index.js"
+    },
+    "./tailwind.preset": "./tailwind.preset.js"
   }
 }

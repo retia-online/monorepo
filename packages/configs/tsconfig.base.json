@@ -13,7 +13,7 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@megamercado/*": ["node_modules/@megamercado/*/dist"]
+      "@megamercado/*": ["node_modules/@retia/*/dist"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

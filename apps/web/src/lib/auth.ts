@@ -1,2 +1,2 @@
-// Import auth configuration and handlers from @megamercado-vzla/auth SDK
-export { authConfig, handlers, auth, signIn, signOut } from '@megamercado-vzla/auth';
+// Import auth configuration and handlers from @retia-global/auth SDK
+export { authConfig, handlers, auth, signIn, signOut } from '@retia-global/auth';

@@ -2,8 +2,8 @@ import fc from 'fast-check';
 
 // **Feature: external-sdk-transformation, Property 1: Functional Preservation During Extraction**
 
-// Mock @megamercado-vzla/api at the top level to avoid ES module issues
-jest.mock('@megamercado-vzla/api', () => ({
+// Mock @retia-global/api at the top level to avoid ES module issues
+jest.mock('@retia-global/api', () => ({
   connectDB: jest.fn(),
   User: {
     findOne: jest.fn(),

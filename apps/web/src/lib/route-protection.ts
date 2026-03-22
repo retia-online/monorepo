@@ -1,7 +1,7 @@
-// Import route protection functions from @megamercado-vzla/auth SDK
+// Import route protection functions from @retia-global/auth SDK
 export {
     requireAuth,
     redirectIfAuthenticated,
     requireAdmin,
     checkFirstUser,
-} from '@megamercado-vzla/auth';
+} from '@retia-global/auth';

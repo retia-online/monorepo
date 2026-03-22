@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@megamercado-vzla/api';
+import { connectDB, User } from '@retia-global/api';
 import { jwtVerify } from 'jose';
 import { logAPI } from '@/lib/logger';
 
