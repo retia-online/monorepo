@@ -23,9 +23,9 @@ describe('SDK Update and Compatibility Flow', () => {
         const webPackageJson = JSON.parse(readFileSync(webPackageJsonPath, 'utf-8'));
         const dependencies = webPackageJson.dependencies || {};
         
-        // Validate semantic versioning for all @megamercado packages
+        // Validate semantic versioning for all @retia packages
         Object.keys(dependencies).forEach(dep => {
-          if (dep.startsWith('@megamercado/')) {
+          if (dep.startsWith('@retia-global/')) {
             const version = dependencies[dep];
             // Remove ^ or ~ prefixes for validation
             const cleanVersion = version.replace(/^[\^~]/, '');
@@ -39,9 +39,9 @@ describe('SDK Update and Compatibility Flow', () => {
         const mobilePackageJson = JSON.parse(readFileSync(mobilePackageJsonPath, 'utf-8'));
         const dependencies = mobilePackageJson.dependencies || {};
         
-        // Validate semantic versioning for all @megamercado packages
+        // Validate semantic versioning for all @retia packages
         Object.keys(dependencies).forEach(dep => {
-          if (dep.startsWith('@megamercado/')) {
+          if (dep.startsWith('@retia-global/')) {
             const version = dependencies[dep];
             const cleanVersion = version.replace(/^[\^~]/, '');
             const semverRegex = /^\d+\.\d+\.\d+$/;
@@ -161,17 +161,17 @@ describe('SDK Update and Compatibility Flow', () => {
         const webPackageJson = JSON.parse(readFileSync(webPackageJsonPath, 'utf-8'));
         const dependencies = webPackageJson.dependencies || {};
         
-        const megamercadoPackages = Object.keys(dependencies)
-          .filter(dep => dep.startsWith('@megamercado/'));
+        const retiaPackages = Object.keys(dependencies)
+          .filter(dep => dep.startsWith('@retia-global/'));
         
         // Verify all required SDKs are present for web app
-        const requiredWebSDKs = ['@megamercado-vzla/auth', '@megamercado-vzla/api', '@megamercado-vzla/ui', '@megamercado-vzla/configs'];
+        const requiredWebSDKs = ['@retia-global/auth', '@retia-global/api', '@retia-global/ui', '@retia-global/configs'];
         requiredWebSDKs.forEach(sdk => {
-          expect(megamercadoPackages).toContain(sdk);
+          expect(retiaPackages).toContain(sdk);
         });
         
         // Verify version consistency (all should be compatible)
-        const versions = megamercadoPackages.map(pkg => {
+        const versions = retiaPackages.map(pkg => {
           const version = dependencies[pkg].replace(/^[\^~]/, '');
           const [major] = version.split('.');
           return parseInt(major, 10);
@@ -303,7 +303,7 @@ describe('SDK Update and Compatibility Flow', () => {
         
         // Verify they can have different versions (gradual rollout capability)
         const commonSDKs = Object.keys(webDeps).filter(dep => 
-          dep.startsWith('@megamercado/') && mobileDeps[dep]
+          dep.startsWith('@retia-global/') && mobileDeps[dep]
         );
         
         // At least one common SDK should exist for comparison

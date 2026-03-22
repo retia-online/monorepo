@@ -13,13 +13,13 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.megamercado.app"
+      "bundleIdentifier": "com.retia.app"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "package": "com.megamercado.app",
+      "package": "com.retia.app",
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
@@ -32,6 +32,6 @@
       "expo-secure-store",
       "expo-web-browser"
     ],
-    "scheme": "megamercado"
+    "scheme": "retia"
   }
 }

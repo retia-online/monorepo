@@ -102,8 +102,8 @@ describe('External SDK Package Publishing Property Tests', () => {
       fc.assert(fc.property(
         fc.constantFrom(...EXTERNAL_SDK_PACKAGES),
         (packageName) => {
-          // For any external SDK package, name should start with @megamercado/ scope
-          expect(packageName).toMatch(/^@megamercado\/.+$/);
+          // For any external SDK package, name should start with @retia-global/ scope
+          expect(packageName).toMatch(/^@retia\/.+$/);
           
           // Name should not contain invalid characters
           expect(packageName).toMatch(/^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$/);
@@ -125,7 +125,7 @@ describe('External SDK Package Publishing Property Tests', () => {
           expect(expectedScopedRegistry).toMatch(/^https:\/\/npm\.pkg\.github\.com$/);
           
           // Package name should be compatible with GitHub Packages
-          expect(packageName.split('/')[0]).toBe('@megamercado');
+          expect(packageName.split('/')[0]).toBe('@retia');
         }
       ), { numRuns: 100 });
     });
@@ -192,7 +192,7 @@ describe('External SDK Package Publishing Property Tests', () => {
         (package1, package2) => {
           // For any two external SDK packages, they should have consistent naming
           expect(package1.split('/')[0]).toBe(package2.split('/')[0]);
-          expect(package1.split('/')[0]).toBe('@megamercado');
+          expect(package1.split('/')[0]).toBe('@retia');
           
           // Package names should be different (no duplicates)
           if (package1 !== package2) {
@@ -206,7 +206,7 @@ describe('External SDK Package Publishing Property Tests', () => {
       const expectedPackages = ['auth', 'api', 'ui', 'configs'];
       
       expectedPackages.forEach(packageName => {
-        const fullPackageName = `@megamercado/${packageName}`;
+        const fullPackageName = `@retia-global/${packageName}`;
         expect(EXTERNAL_SDK_PACKAGES).toContain(fullPackageName);
       });
       

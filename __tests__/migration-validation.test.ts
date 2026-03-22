@@ -74,10 +74,10 @@ describe('Comprehensive Migration Validation', () => {
         const webDeps = webPackageJson.dependencies || {};
         
         // Verify external SDK dependencies are present
-        expect(webDeps['@megamercado-vzla/auth']).toBeDefined();
-        expect(webDeps['@megamercado-vzla/api']).toBeDefined();
-        expect(webDeps['@megamercado-vzla/ui']).toBeDefined();
-        expect(webDeps['@megamercado-vzla/configs']).toBeDefined();
+        expect(webDeps['@retia-global/auth']).toBeDefined();
+        expect(webDeps['@retia-global/api']).toBeDefined();
+        expect(webDeps['@retia-global/ui']).toBeDefined();
+        expect(webDeps['@retia-global/configs']).toBeDefined();
         
         // Verify no local workspace dependencies remain
         Object.keys(webDeps).forEach(dep => {
@@ -94,8 +94,8 @@ describe('Comprehensive Migration Validation', () => {
         const mobileDeps = mobilePackageJson.dependencies || {};
         
         // Verify external SDK dependencies are present (mobile uses api and ui)
-        expect(mobileDeps['@megamercado-vzla/api']).toBeDefined();
-        expect(mobileDeps['@megamercado-vzla/ui']).toBeDefined();
+        expect(mobileDeps['@retia-global/api']).toBeDefined();
+        expect(mobileDeps['@retia-global/ui']).toBeDefined();
         
         // Verify no local workspace dependencies remain
         Object.keys(mobileDeps).forEach(dep => {
@@ -142,7 +142,7 @@ describe('Comprehensive Migration Validation', () => {
       if (existsSync(webSrcPath)) {
         checkImportsInDirectory(
           webSrcPath,
-          ['@megamercado-vzla/auth', '@megamercado-vzla/api', '@megamercado-vzla/ui', '@megamercado-vzla/configs'],
+          ['@retia-global/auth', '@retia-global/api', '@retia-global/ui', '@retia-global/configs'],
           ['@retia/', '../packages/', '../../packages/']
         );
       }
@@ -151,7 +151,7 @@ describe('Comprehensive Migration Validation', () => {
       if (existsSync(mobileSrcPath)) {
         checkImportsInDirectory(
           mobileSrcPath,
-          ['@megamercado-vzla/api', '@megamercado-vzla/ui'],
+          ['@retia-global/api', '@retia-global/ui'],
           ['@retia/', '../packages/', '../../packages/']
         );
       }
@@ -351,7 +351,7 @@ describe('Comprehensive Migration Validation', () => {
         const webDeps = webPackageJson.dependencies || {};
         
         // Count external SDK dependencies
-        const externalSDKCount = Object.keys(webDeps).filter(dep => dep.startsWith('@megamercado/')).length;
+        const externalSDKCount = Object.keys(webDeps).filter(dep => dep.startsWith('@retia-global/')).length;
         expect(externalSDKCount).toBeGreaterThanOrEqual(4); // auth, api, ui, configs
         
         // Verify no local dependencies
@@ -364,7 +364,7 @@ describe('Comprehensive Migration Validation', () => {
         const mobileDeps = mobilePackageJson.dependencies || {};
         
         // Count external SDK dependencies (mobile uses fewer SDKs)
-        const externalSDKCount = Object.keys(mobileDeps).filter(dep => dep.startsWith('@megamercado/')).length;
+        const externalSDKCount = Object.keys(mobileDeps).filter(dep => dep.startsWith('@retia-global/')).length;
         expect(externalSDKCount).toBeGreaterThanOrEqual(2); // api, ui
         
         // Verify no local dependencies
@@ -376,28 +376,28 @@ describe('Comprehensive Migration Validation', () => {
       const webTailwindPath = join(process.cwd(), 'apps/web/tailwind.config.js');
       if (existsSync(webTailwindPath)) {
         const tailwindContent = readFileSync(webTailwindPath, 'utf-8');
-        expect(tailwindContent).toMatch(/@megamercado\/configs/);
+        expect(tailwindContent).toMatch(/@retia\/configs/);
       }
       
       // 3. Verify auth configuration
       const webAuthPath = join(process.cwd(), 'apps/web/src/lib/auth.ts');
       if (existsSync(webAuthPath)) {
         const authContent = readFileSync(webAuthPath, 'utf-8');
-        expect(authContent).toMatch(/@megamercado\/auth/);
+        expect(authContent).toMatch(/@retia\/auth/);
       }
       
       // 4. Verify middleware configuration
       const webMiddlewarePath = join(process.cwd(), 'apps/web/middleware.ts');
       if (existsSync(webMiddlewarePath)) {
         const middlewareContent = readFileSync(webMiddlewarePath, 'utf-8');
-        expect(middlewareContent).toMatch(/@megamercado\/auth/);
+        expect(middlewareContent).toMatch(/@retia\/auth/);
       }
       
       // 5. Verify mobile API configuration
       const mobileApiPath = join(process.cwd(), 'apps/mobile/src/lib/api.ts');
       if (existsSync(mobileApiPath)) {
         const apiContent = readFileSync(mobileApiPath, 'utf-8');
-        expect(apiContent).toMatch(/@megamercado\/api/);
+        expect(apiContent).toMatch(/@retia\/api/);
       }
     });
     

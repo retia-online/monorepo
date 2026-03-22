@@ -18,7 +18,7 @@ const WEB_APP_FILES = [
   'apps/web/middleware.ts'
 ];
 
-// Files that should import from @megamercado packages
+// Files that should import from @retia packages
 const UI_COMPONENT_FILES = [
   'apps/web/src/app/login/login-form.tsx',
   'apps/web/src/app/register/page.tsx',
@@ -27,7 +27,7 @@ const UI_COMPONENT_FILES = [
   'apps/web/src/app/admin/users/page.tsx'
 ];
 
-// API route files that should import from @megamercado-vzla/api
+// API route files that should import from @retia-global/api
 const API_ROUTE_FILES = [
   'apps/web/src/app/api/change-password/route.ts',
   'apps/web/src/app/api/forgot-password/route.ts',
@@ -52,8 +52,8 @@ function hasLegacyRetiaImports(content: string): boolean {
   return content.includes('@retia/');
 }
 
-function hasMegamercadoImports(content: string): boolean {
-  return content.includes('@megamercado/');
+function hasRetiaImports(content: string): boolean {
+  return content.includes('@retia-global/');
 }
 
 function hasLocalAuthLogic(content: string): boolean {
@@ -86,7 +86,7 @@ function hasLocalDatabaseLogic(content: string): boolean {
 }
 
 function hasTailwindPresetImport(content: string): boolean {
-  return content.includes('require("@megamercado-vzla/configs/tailwind")');
+  return content.includes('require("@retia-global/configs/tailwind")');
 }
 
 function hasMiddlewareFactory(content: string): boolean {
@@ -114,7 +114,7 @@ describe('Web App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should import UI components from @megamercado-vzla/ui', () => {
+    it('should import UI components from @retia-global/ui', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constantFrom(...UI_COMPONENT_FILES),
@@ -126,16 +126,16 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For any UI component file, should import from @megamercado-vzla/ui
+          // For any UI component file, should import from @retia-global/ui
           if (content.includes('import') && (content.includes('Button') || content.includes('Card') || content.includes('Input'))) {
-            expect(hasMegamercadoImports(content)).toBe(true);
-            expect(content).toMatch(/@megamercado\/ui/);
+            expect(hasRetiaImports(content)).toBe(true);
+            expect(content).toMatch(/@retia\/ui/);
           }
         }
       ), { numRuns: 100 });
     });
 
-    it('should import API functionality from @megamercado-vzla/api', () => {
+    it('should import API functionality from @retia-global/api', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constantFrom(...API_ROUTE_FILES),
@@ -147,10 +147,10 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For any API route file, should import from @megamercado-vzla/api
+          // For any API route file, should import from @retia-global/api
           if (content.includes('connectDB') || content.includes('User') || content.includes('sendEmail')) {
-            expect(hasMegamercadoImports(content)).toBe(true);
-            expect(content).toMatch(/@megamercado\/api/);
+            expect(hasRetiaImports(content)).toBe(true);
+            expect(content).toMatch(/@retia\/api/);
           }
         }
       ), { numRuns: 100 });
@@ -171,8 +171,8 @@ describe('Web App Cleanup Property Tests', () => {
           // For auth.ts file, after cleanup should not contain local auth implementation
           expect(hasLocalAuthLogic(content)).toBe(false);
           
-          // Should import from @megamercado-vzla/auth instead
-          expect(content).toMatch(/@megamercado\/auth/);
+          // Should import from @retia-global/auth instead
+          expect(content).toMatch(/@retia\/auth/);
         }
       ), { numRuns: 100 });
     });
@@ -191,7 +191,7 @@ describe('Web App Cleanup Property Tests', () => {
           
           // For any API route, after cleanup should not contain local database logic
           // (Database operations should be imported from SDK)
-          if (content.includes('@megamercado-vzla/api')) {
+          if (content.includes('@retia-global/api')) {
             // If using SDK, should not have local database implementation patterns
             expect(hasLocalDatabaseLogic(content)).toBe(false);
           }
@@ -199,7 +199,7 @@ describe('Web App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should use @megamercado-vzla/configs preset in tailwind.config.js', () => {
+    it('should use @retia-global/configs preset in tailwind.config.js', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constant('apps/web/tailwind.config.js'),
@@ -211,7 +211,7 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For tailwind config, should use @megamercado-vzla/configs preset
+          // For tailwind config, should use @retia-global/configs preset
           expect(hasTailwindPresetImport(content)).toBe(true);
           
           // Should not contain manual theme configuration (should be in preset)
@@ -221,7 +221,7 @@ describe('Web App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should use middleware factory from @megamercado-vzla/auth', () => {
+    it('should use middleware factory from @retia-global/auth', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constant('apps/web/middleware.ts'),
@@ -233,14 +233,14 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For middleware.ts, should use factory from @megamercado-vzla/auth
+          // For middleware.ts, should use factory from @retia-global/auth
           expect(hasMiddlewareFactory(content)).toBe(true);
-          expect(content).toMatch(/@megamercado\/auth/);
+          expect(content).toMatch(/@retia\/auth/);
         }
       ), { numRuns: 100 });
     });
 
-    it('should export route protection functions from @megamercado-vzla/auth', () => {
+    it('should export route protection functions from @retia-global/auth', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constant('apps/web/src/lib/route-protection.ts'),
@@ -252,8 +252,8 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For route-protection.ts, should export from @megamercado-vzla/auth
-          expect(content).toMatch(/export[\s\S]*from[\s\S]*@megamercado\/auth/);
+          // For route-protection.ts, should export from @retia-global/auth
+          expect(content).toMatch(/export[\s\S]*from[\s\S]*@retia\/auth/);
           
           // Should not contain local implementation
           expect(content).not.toMatch(/async function requireAuth/);
@@ -281,17 +281,17 @@ describe('Web App Cleanup Property Tests', () => {
             expect(fileExists(file)).toBe(true);
           });
           
-          // Check package.json has @megamercado dependencies
+          // Check package.json has @retia dependencies
           const packageJsonPath = 'apps/web/package.json';
           if (fileExists(packageJsonPath)) {
             const packageJson = JSON.parse(readFileContent(packageJsonPath));
             const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
             
-            // Should have @megamercado packages
-            expect(dependencies['@megamercado-vzla/auth']).toBeDefined();
-            expect(dependencies['@megamercado-vzla/api']).toBeDefined();
-            expect(dependencies['@megamercado-vzla/ui']).toBeDefined();
-            expect(dependencies['@megamercado-vzla/configs']).toBeDefined();
+            // Should have @retia packages
+            expect(dependencies['@retia-global/auth']).toBeDefined();
+            expect(dependencies['@retia-global/api']).toBeDefined();
+            expect(dependencies['@retia-global/ui']).toBeDefined();
+            expect(dependencies['@retia-global/configs']).toBeDefined();
           }
         }
       ), { numRuns: 100 });

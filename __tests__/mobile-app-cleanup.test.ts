@@ -15,7 +15,7 @@ const MOBILE_APP_FILES = [
   'apps/mobile/package.json'
 ];
 
-// Files that should import from @megamercado packages
+// Files that should import from @retia packages
 const MOBILE_SOURCE_FILES = [
   'apps/mobile/src/lib/api.ts',
   'apps/mobile/src/lib/oauth.ts'
@@ -50,15 +50,15 @@ function hasLegacyPackageImports(content: string): boolean {
          content.includes("from '@retia/");
 }
 
-function hasMegamercadoImports(content: string): boolean {
-  return content.includes('@megamercado/');
+function hasRetiaImports(content: string): boolean {
+  return content.includes('@retia-global/');
 }
 
 function hasValidMobileDependencies(packageJson: any): boolean {
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
   
-  // Should have @megamercado-vzla/api for validation schemas and utilities
-  const hasMegamercadoApi = dependencies['@megamercado-vzla/api'];
+  // Should have @retia-global/api for validation schemas and utilities
+  const hasRetiaApi = dependencies['@retia-global/api'];
   
   // Should not have workspace references
   const hasWorkspaceRefs = Object.keys(dependencies).some(dep => 
@@ -70,7 +70,7 @@ function hasValidMobileDependencies(packageJson: any): boolean {
     dep.startsWith('@retia/')
   );
   
-  return hasMegamercadoApi && !hasWorkspaceRefs && !hasLegacyRetia;
+  return hasRetiaApi && !hasWorkspaceRefs && !hasLegacyRetia;
 }
 
 function hasValidMobileApiUsage(content: string): boolean {
@@ -108,7 +108,7 @@ describe('Mobile App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should import validation schemas from @megamercado-vzla/api', () => {
+    it('should import validation schemas from @retia-global/api', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constantFrom(...MOBILE_SOURCE_FILES),
@@ -120,10 +120,10 @@ describe('Mobile App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For mobile source files that use validation, should import from @megamercado-vzla/api
+          // For mobile source files that use validation, should import from @retia-global/api
           if (content.includes('Schema') || content.includes('validate')) {
-            expect(hasMegamercadoImports(content)).toBe(true);
-            expect(content).toMatch(/@megamercado\/api/);
+            expect(hasRetiaImports(content)).toBe(true);
+            expect(content).toMatch(/@retia\/api/);
           }
         }
       ), { numRuns: 100 });
@@ -196,7 +196,7 @@ describe('Mobile App Cleanup Property Tests', () => {
             // Should have mobile-specific packages
             expect(dependencies['expo']).toBeDefined();
             expect(dependencies['react-native']).toBeDefined();
-            expect(dependencies['@megamercado-vzla/api']).toBeDefined();
+            expect(dependencies['@retia-global/api']).toBeDefined();
             
             // Should not have web-specific packages as main dependencies
             expect(dependencies['next']).toBeUndefined();

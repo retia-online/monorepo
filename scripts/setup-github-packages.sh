@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Setup GitHub Packages for local development
-# This script configures the local .npmrc for the @megamercado-vzla scope
+# This script configures the local .npmrc for the @retia-global scope
 
 set -e
 

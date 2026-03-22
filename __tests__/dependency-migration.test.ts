@@ -25,12 +25,12 @@ const APP_PACKAGES = [
   'apps/mobile'
 ];
 
-// Expected @megamercado packages that should replace @retia packages
-const EXPECTED_MEGAMERCADO_PACKAGES = [
-  '@megamercado-vzla/auth',
-  '@megamercado-vzla/api', 
-  '@megamercado-vzla/ui',
-  '@megamercado-vzla/configs'
+// Expected @retia packages that should replace @retia packages
+const EXPECTED_RETIA_PACKAGES = [
+  '@retia-global/auth',
+  '@retia-global/api', 
+  '@retia-global/ui',
+  '@retia-global/configs'
 ];
 
 // Legacy @retia packages that should be removed
@@ -68,9 +68,9 @@ function hasLegacyRetiaPackages(dependencies: Record<string, string>): boolean {
   );
 }
 
-function hasMegamercadoPackages(dependencies: Record<string, string>): boolean {
+function hasRetiaPackages(dependencies: Record<string, string>): boolean {
   return Object.keys(dependencies).some(packageName => 
-    packageName.startsWith('@megamercado/')
+    packageName.startsWith('@retia-global/')
   );
 }
 
@@ -93,12 +93,12 @@ function validateNpmrcContent(appPath: string): boolean {
   
   const content = fs.readFileSync(npmrcPath, 'utf8');
   
-  // Should contain GitHub Packages registry configuration for @megamercado scope
-  const hasMegamercadoRegistry = content.includes('@megamercado:registry=https://npm.pkg.github.com');
+  // Should contain GitHub Packages registry configuration for @retia scope
+  const hasRetiaRegistry = content.includes('@retia:registry=https://npm.pkg.github.com');
   const hasAuthToken = content.includes('//npm.pkg.github.com/:_authToken=');
   const hasFallbackRegistry = content.includes('registry=https://registry.npmjs.org/');
   
-  return hasMegamercadoRegistry && hasAuthToken && hasFallbackRegistry;
+  return hasRetiaRegistry && hasAuthToken && hasFallbackRegistry;
 }
 
 describe('Dependency Migration Property Tests', () => {
@@ -142,7 +142,7 @@ describe('Dependency Migration Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should include appropriate @megamercado packages', () => {
+    it('should include appropriate @retia packages', () => {
       // **Feature: external-sdk-transformation, Property 6: Dependency Migration Completeness**
       fc.assert(fc.property(
         fc.constantFrom(...APP_PACKAGES),
@@ -150,19 +150,19 @@ describe('Dependency Migration Property Tests', () => {
           const packageInfo = loadAppPackageJson(appPath);
           const allDependencies = getAllDependencies(packageInfo);
           
-          // For any application, after migration should include @megamercado packages
-          expect(hasMegamercadoPackages(allDependencies)).toBe(true);
+          // For any application, after migration should include @retia packages
+          expect(hasRetiaPackages(allDependencies)).toBe(true);
           
-          // Should have at least one @megamercado package
-          const megamercadoPackages = Object.keys(allDependencies).filter(packageName => 
-            packageName.startsWith('@megamercado/')
+          // Should have at least one @retia package
+          const retiaPackages = Object.keys(allDependencies).filter(packageName => 
+            packageName.startsWith('@retia-global/')
           );
-          expect(megamercadoPackages.length).toBeGreaterThan(0);
+          expect(retiaPackages.length).toBeGreaterThan(0);
         }
       ), { numRuns: 100 });
     });
 
-    it('should use valid version ranges for @megamercado packages', () => {
+    it('should use valid version ranges for @retia packages', () => {
       // **Feature: external-sdk-transformation, Property 6: Dependency Migration Completeness**
       fc.assert(fc.property(
         fc.constantFrom(...APP_PACKAGES),
@@ -170,9 +170,9 @@ describe('Dependency Migration Property Tests', () => {
           const packageInfo = loadAppPackageJson(appPath);
           const allDependencies = getAllDependencies(packageInfo);
           
-          // For any @megamercado package dependency, version should be a valid range
+          // For any @retia package dependency, version should be a valid range
           Object.entries(allDependencies).forEach(([packageName, version]) => {
-            if (packageName.startsWith('@megamercado/')) {
+            if (packageName.startsWith('@retia-global/')) {
               expect(isValidVersionRange(version)).toBe(true);
               
               // Should use caret range for automatic minor updates (^1.0.0)
@@ -223,23 +223,23 @@ describe('Dependency Migration Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should have consistent @megamercado package versions across apps', () => {
+    it('should have consistent @retia package versions across apps', () => {
       // **Feature: external-sdk-transformation, Property 6: Dependency Migration Completeness**
       fc.assert(fc.property(
-        fc.constantFrom(...EXPECTED_MEGAMERCADO_PACKAGES),
-        (megamercadoPackage) => {
+        fc.constantFrom(...EXPECTED_RETIA_PACKAGES),
+        (retiaPackage) => {
           const appVersions: string[] = [];
           
           APP_PACKAGES.forEach(appPath => {
             const packageInfo = loadAppPackageJson(appPath);
             const allDependencies = getAllDependencies(packageInfo);
             
-            if (allDependencies[megamercadoPackage]) {
-              appVersions.push(allDependencies[megamercadoPackage]);
+            if (allDependencies[retiaPackage]) {
+              appVersions.push(allDependencies[retiaPackage]);
             }
           });
           
-          // For any @megamercado package used by multiple apps, versions should be consistent
+          // For any @retia package used by multiple apps, versions should be consistent
           if (appVersions.length > 1) {
             const firstVersion = appVersions[0];
             appVersions.forEach(version => {
@@ -280,7 +280,7 @@ describe('Dependency Migration Property Tests', () => {
           const packageInfo = loadAppPackageJson(appPath);
           
           // For any application, should maintain its specific configuration
-          expect(packageInfo.name).toMatch(/^@megamercado\/(web|mobile)$/);
+          expect(packageInfo.name).toMatch(/^@retia\/(web|mobile)$/);
           expect(packageInfo.version).toBeDefined();
           expect(packageInfo.private).toBe(true);
           
@@ -298,10 +298,10 @@ describe('Dependency Migration Property Tests', () => {
         (appPath) => {
           const packageInfo = loadAppPackageJson(appPath);
           
-          // For any application, @megamercado packages should be in dependencies (not devDependencies)
+          // For any application, @retia packages should be in dependencies (not devDependencies)
           if (packageInfo.dependencies) {
             Object.keys(packageInfo.dependencies).forEach(packageName => {
-              if (packageName.startsWith('@megamercado/')) {
+              if (packageName.startsWith('@retia-global/')) {
                 // Should not also be in devDependencies
                 expect(packageInfo.devDependencies?.[packageName]).toBeUndefined();
                 expect(packageInfo.peerDependencies?.[packageName]).toBeUndefined();
@@ -339,8 +339,8 @@ describe('Dependency Migration Property Tests', () => {
             // No legacy packages
             expect(hasLegacyRetiaPackages(allDependencies)).toBe(false);
             
-            // Has @megamercado packages
-            expect(hasMegamercadoPackages(allDependencies)).toBe(true);
+            // Has @retia packages
+            expect(hasRetiaPackages(allDependencies)).toBe(true);
             
             // Has .npmrc configuration
             expect(checkNpmrcExists(appPath)).toBe(true);
@@ -358,20 +358,20 @@ describe('Dependency Migration Property Tests', () => {
           const allDependencies = getAllDependencies(packageInfo);
           
           // For any application, after migration should have equivalent functionality
-          // This is validated by ensuring all necessary @megamercado packages are present
+          // This is validated by ensuring all necessary @retia packages are present
           
           if (appPath === 'apps/web') {
             // Web app needs auth, api, ui, and configs
-            expect(allDependencies['@megamercado-vzla/auth']).toBeDefined();
-            expect(allDependencies['@megamercado-vzla/api']).toBeDefined();
-            expect(allDependencies['@megamercado-vzla/ui']).toBeDefined();
-            expect(allDependencies['@megamercado-vzla/configs']).toBeDefined();
+            expect(allDependencies['@retia-global/auth']).toBeDefined();
+            expect(allDependencies['@retia-global/api']).toBeDefined();
+            expect(allDependencies['@retia-global/ui']).toBeDefined();
+            expect(allDependencies['@retia-global/configs']).toBeDefined();
           }
           
           if (appPath === 'apps/mobile') {
             // Mobile app needs api and ui (auth is handled differently in mobile)
-            expect(allDependencies['@megamercado-vzla/api']).toBeDefined();
-            expect(allDependencies['@megamercado-vzla/ui']).toBeDefined();
+            expect(allDependencies['@retia-global/api']).toBeDefined();
+            expect(allDependencies['@retia-global/ui']).toBeDefined();
           }
         }
       ), { numRuns: 100 });

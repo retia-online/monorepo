@@ -38,7 +38,7 @@ export const NotAuthenticated: Story = {
 export const AuthenticatedUser: Story = {
     args: {
         showAuthButtons: true,
-        instanceName: 'MegaMercado',
+        instanceName: 'Retia',
         user: {
             name: 'Juan Pérez',
             email: 'juan@example.com',
@@ -52,7 +52,7 @@ export const AuthenticatedUser: Story = {
 export const AuthenticatedAdmin: Story = {
     args: {
         showAuthButtons: true,
-        instanceName: 'MegaMercado',
+        instanceName: 'Retia',
         user: {
             name: 'Admin User',
             email: 'admin@example.com',
@@ -66,7 +66,7 @@ export const AuthenticatedAdmin: Story = {
 export const NoAuthButtons: Story = {
     args: {
         showAuthButtons: false,
-        instanceName: 'MegaMercado',
+        instanceName: 'Retia',
         user: null,
         onLogout: () => console.log('Logout clicked'),
     },

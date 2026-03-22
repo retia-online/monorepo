@@ -16,26 +16,26 @@ describe('Documentation Completeness Property Tests', () => {
 
   // Mock SDK package structure for testing
   const mockSDKPackages = [
-    '@megamercado-vzla/auth',
-    '@megamercado-vzla/api', 
-    '@megamercado-vzla/ui',
-    '@megamercado-vzla/configs'
+    '@retia-global/auth',
+    '@retia-global/api', 
+    '@retia-global/ui',
+    '@retia-global/configs'
   ];
 
   const mockExportedFunctions = {
-    '@megamercado-vzla/auth': [
+    '@retia-global/auth': [
       'authConfig', 'handlers', 'auth', 'signIn', 'signOut', 
       'requireAuth', 'requireAdmin', 'redirectIfAuthenticated'
     ],
-    '@megamercado-vzla/api': [
+    '@retia-global/api': [
       'connectDB', 'User', 'Account', 'Session', 'getUserBackup', 
       'createUser', 'updateUser', 'sendEmail', 'hashPassword', 'comparePassword'
     ],
-    '@megamercado-vzla/ui': [
+    '@retia-global/ui': [
       'Button', 'Card', 'Input', 'PasswordStrength', 'LoginForm', 
       'Navbar', 'ProfileCard', 'BaseLayout', 'AuthLayout'
     ],
-    '@megamercado-vzla/configs': [
+    '@retia-global/configs': [
       'tailwindPreset', 'tsconfig', 'tsconfigReact', 'eslintConfig'
     ]
   };
@@ -253,7 +253,7 @@ describe('Documentation Completeness Property Tests', () => {
           if (matches && matches.length > 0) {
             matches.forEach(codeBlock => {
               // Property: Import statements should be valid
-              expect(codeBlock).toMatch(/import\s+{[^}]*}\s+from\s+['"]@megamercado\/[^'"]+['"]/);
+              expect(codeBlock).toMatch(/import\s+{[^}]*}\s+from\s+['"]@retia\/[^'"]+['"]/);
               
               // Property: Code should not have obvious syntax errors
               expect(codeBlock).not.toContain('undefined');
