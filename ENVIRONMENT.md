@@ -170,9 +170,22 @@ brew services restart mongodb-community
 
 ## 6. PRODUCCIÓN
 
+
 ```bash
 cp apps/web/.env.template apps/web/.env.production
 ```
+
+https://cloud.mongodb.com/
+
+Build a Cluster
+name: app
+
+Crear Usuario y Contrasena
+Seleccionar tipo de coneccion Driver 
+node.js
+Copiar el stream a .env
+
+
 
 Variables clave:
 ```env
@@ -181,6 +194,9 @@ NEXTAUTH_URL=https://[tu-dominio.com]
 NEXTAUTH_SECRET=[clave segura]
 NODE_ENV=production
 ```
+
+Crear Proyecto en Vercel
+
 
 Para el build:
 ```bash
