@@ -1,6 +1,6 @@
 # Environment Setup
 
-## 1. CONFIGURAR UN NUEVO CLIENTE
+## 1. CONFIGURAR UN NUEVO CLIENTE DESDE SU PROPIO GITHUB
 
 ### 1.1. Configurar el repositorio
 
