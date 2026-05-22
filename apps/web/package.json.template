@@ -1,5 +1,10 @@
+// NOTE: Before using this file, make sure you have created the following environment files
+// based on the local versions already present in this directory:
+//   - .env.development  (copy and configure from the existing .env.development)
+//   - .env.production   (copy and configure from the existing .env.production)
+// Then rename this file to package.json and run: yarn install
 {
-    "name": "@[NAME]/web",
+    "name": "@[YOUR_ORG]/web",
     "version": "1.0.0",
     "private": true,
     "scripts": {
@@ -13,10 +18,10 @@
         "dev:all": "yarn workspace app dev:all"
     },
     "dependencies": {
-        "@retia-global/auth": "workspace:*",
-        "@retia-global/api": "workspace:*",
-        "@retia-global/ui": "workspace:*",
-        "@retia-global/configs": "workspace:*",
+        "@[YOUR_ORG]/auth": "file:../../packages/auth",
+        "@[YOUR_ORG]/api": "file:../../packages/api",
+        "@[YOUR_ORG]/ui": "file:../../packages/ui",
+        "@[YOUR_ORG]/configs": "file:../../packages/configs",
 
         "bcryptjs": "^3.0.3",
         "next": "^16.0.8",

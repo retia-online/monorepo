@@ -1,3 +1,7 @@
+// NOTE: Before using this file, make sure you have created the following environment files
+// based on the local versions already present in this directory:
+//   - .env.development  (copy and configure from the existing .env.development)
+//   - .env.production   (copy and configure from the existing .env.production)
 // Then rename this file to package.json and run: yarn install
 {
   "name": "@[YOUR_ORG]/mobile",
@@ -24,8 +28,8 @@
     "@react-navigation/native-stack": "^7.9.0",
     "@react-navigation/stack": "^7.6.13",
 
-    "@[YOUR_ORG]/api": "^1.0.0",
-    "@[YOUR_ORG]/ui": "^1.0.0",
+    "@[YOUR_ORG]/api": "file:../../packages/api",
+    "@[YOUR_ORG]/ui": "file:../../packages/ui",
 
     "expo": "~54.0.30",
     "expo-auth-session": "~7.0.10",
