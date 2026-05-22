@@ -16,7 +16,12 @@ Utilidades compartidas para todos los entornos (local, staging, production).
 - Validación de input
 - Formateo de output
 
-### 3. **Plantillas y configuraciones**
+### 3. **Limpieza de entornos**
+- Limpieza SOFT: Archivos temporales, caches, node_modules
+- Limpieza HARD: Configuraciones, datos, dependencias (destructivo)
+- Menú interactivo para selección segura
+
+### 4. **Plantillas y configuraciones**
 - Plantillas reutilizables
 - Configuraciones base
 - Estructuras comunes
@@ -28,6 +33,9 @@ scripts/environments/common/
 ├── README.md                    # Esta documentación
 ├── utils.sh                     # Funciones utilitarias
 ├── requirements.sh              # Verificación de requisitos
+├── cleanup.sh                   # Menú principal de limpieza
+├── cleanup-soft.sh              # Limpieza SOFT (seguro)
+├── cleanup-hard.sh              # Limpieza HARD (destructivo)
 ├── templates/                   # Plantillas comunes
 │   ├── .env.base               # Variables base
 │   ├── mongodb-connection.txt  # Plantilla conexión MongoDB
@@ -65,6 +73,18 @@ check_node_version 18
 check_yarn_installed
 
 # Continuar con configuración específica...
+```
+
+### Ejemplo de limpieza:
+```bash
+# Menú interactivo de limpieza
+./scripts/environments/common/cleanup.sh
+
+# Solo limpieza SOFT
+./scripts/environments/common/cleanup-soft.sh
+
+# Limpieza HARD (¡peligroso!)
+./scripts/environments/common/cleanup-hard.sh
 ```
 
 ## 🔧 Funciones Disponibles
@@ -127,6 +147,53 @@ read_input "Ingresa tu nombre: " NAME
 validate_email "usuario@example.com"
 validate_url "https://example.com"
 validate_port "9001"
+```
+
+### Limpieza de entornos:
+```bash
+# Menú interactivo
+./cleanup.sh
+
+# Limpieza SOFT (recomendado)
+./cleanup-soft.sh
+
+# Limpieza HARD (¡ADVERTENCIA! destructivo)
+./cleanup-hard.sh
+```
+
+## 🧹 Limpieza de Entornos
+
+### Diferencias entre SOFT y HARD:
+
+**🧹 LIMPIEZA SOFT (recomendado para uso regular):**
+- ✅ Elimina: `node_modules`, caches, archivos temporales, builds
+- ✅ Mantiene: Configuraciones (`.env`), datos, código fuente
+- ✅ Reversible: `yarn install` restaura todo
+- ✅ Uso: Entre sesiones de desarrollo, para liberar espacio
+
+**☢️ LIMPIEZA HARD (solo para casos extremos):**
+- 🔴 Elimina: TODO (`node_modules`, `.env`, datos, builds, caches, lock files)
+- 🔴 Mantiene: Solo código fuente en git
+- 🔴 Irreversible: Requiere reconfiguración completa
+- 🔴 Uso: Corrupción de dependencias, cambios mayores, reset completo
+
+### Cuándo usar cada una:
+
+| Situación | Recomendación | Tiempo restauración |
+|-----------|---------------|---------------------|
+| Liberar espacio en disco | 🧹 SOFT | 2-5 minutos |
+| Problemas con dependencias | 🧹 SOFT | 2-5 minutos |
+| Cache corrupto | 🧹 SOFT | 2-5 minutos |
+| Cambio mayor de versión | ☢️ HARD | 10-30 minutos |
+| Corrupción grave | ☢️ HARD | 10-30 minutos |
+| Reset completo | ☢️ HARD | 10-30 minutos |
+
+### Comandos rápidos:
+```bash
+# Desde la raíz del proyecto
+./scripts/environments/common/cleanup.sh      # Menú interactivo
+./scripts/environments/common/cleanup-soft.sh # Limpieza SOFT directa
+./scripts/environments/common/cleanup-hard.sh # Limpieza HARD directa (¡cuidado!)
 ```
 
 ## 📋 Plantillas Comunes

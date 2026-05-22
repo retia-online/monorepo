@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# Script principal de configuración para entorno local
+# Script principal de configuración para entorno local CON EMULADORES
 # Uso: ./setup.sh
+# 
+# IMPORTANTE: Este script configura el entorno para desarrollo local
+# con emuladores de Android Studio y iOS Simulator.
+# Para desarrollo en dispositivo físico, usa Expo Go.
 
 set -e
 
@@ -12,8 +16,10 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}💻 Configuración de entorno LOCAL${NC}"
-echo "========================================"
+echo -e "${GREEN}💻 Configuración de entorno LOCAL CON EMULADORES${NC}"
+echo "========================================================"
+echo "🤖 Específico para Android Studio Emulator y iOS Simulator"
+echo "📱 Para dispositivo físico, usa Expo Go con opción 1 en mobile/setup.sh"
 
 # Función para imprimir sección
 section() {
@@ -40,7 +46,7 @@ confirm() {
 }
 
 section "Verificación de requisitos"
-echo "Requisitos necesarios para desarrollo local:"
+echo "Requisitos necesarios para desarrollo local CON EMULADORES:"
 REQUIREMENTS=("node" "yarn" "git")
 MISSING_REQUIREMENTS=0
 
@@ -49,6 +55,25 @@ for req in "${REQUIREMENTS[@]}"; do
         MISSING_REQUIREMENTS=1
     fi
 done
+
+# Verificar requisitos opcionales para emuladores
+echo ""
+echo "Requisitos opcionales para emuladores:"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS - verificar Xcode para iOS Simulator
+    if xcode-select -p &> /dev/null; then
+        echo -e "  ✅ Xcode Command Line Tools (iOS Simulator)"
+    else
+        echo -e "  ⚠️  Xcode Command Line Tools (necesario para iOS Simulator)"
+    fi
+fi
+
+# Verificar Android Studio/emulator
+if command -v emulator &> /dev/null || [ -d "$HOME/Library/Android/sdk" ]; then
+    echo -e "  ✅ Android SDK/Emulator"
+else
+    echo -e "  ⚠️  Android SDK/Emulator (necesario para Android Emulator)"
+fi
 
 # Verificar Node.js version
 if command -v node &> /dev/null; then
@@ -66,16 +91,22 @@ fi
 if [ $MISSING_REQUIREMENTS -eq 1 ]; then
     echo -e "\n${RED}❌ Faltan requisitos. Instala los requerimientos antes de continuar.${NC}"
     echo ""
-    echo "📦 Instalación recomendada:"
+    echo "📦 Instalación recomendada PARA DESARROLLO CON EMULADORES:"
     echo ""
-    echo "Para macOS:"
-    echo "  brew install node yarn git mongodb-community"
+    echo "Para macOS (iOS Simulator + Android Emulator):"
+    echo "  1. Xcode desde App Store (para iOS Simulator)"
+    echo "  2. Android Studio desde https://developer.android.com/studio"
+    echo "  3. Homebrew: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+    echo "  4. brew install node yarn git mongodb-community"
     echo ""
-    echo "Para Windows:"
-    echo "  1. Node.js desde https://nodejs.org"
-    echo "  2. Yarn: npm install -g yarn"
-    echo "  3. Git desde https://git-scm.com"
-    echo "  4. MongoDB desde https://www.mongodb.com/try/download/community"
+    echo "Para Windows (solo Android Emulator):"
+    echo "  1. Android Studio desde https://developer.android.com/studio"
+    echo "  2. Node.js desde https://nodejs.org"
+    echo "  3. Yarn: npm install -g yarn"
+    echo "  4. Git desde https://git-scm.com"
+    echo "  5. MongoDB desde https://www.mongodb.com/try/download/community"
+    echo ""
+    echo "💡 Nota: iOS Simulator solo disponible en macOS con Xcode"
     exit 1
 fi
 
@@ -178,24 +209,29 @@ case $OPTION in
 esac
 
 section "Resumen de configuración"
-echo -e "${GREEN}✅ Configuración de desarrollo local completada${NC}"
+echo -e "${GREEN}✅ Configuración de desarrollo local CON EMULADORES completada${NC}"
 echo ""
-echo "📋 Pasos siguientes recomendados:"
+echo "📋 Pasos siguientes recomendados PARA EMULADORES:"
 echo "1. 🔧 Revisar archivos de configuración generados"
 echo "2. 🚀 Iniciar servicios: ./scripts/environments/local/start.sh"
 echo "3. 🌐 Acceder a web app: http://localhost:9001"
-echo "4. 📱 Configurar mobile app para desarrollo"
-echo "5. 🧪 Probar la aplicación localmente"
+echo "4. 📱 Configurar mobile app para emulador (opción 4 en mobile/setup.sh)"
+echo "5. 🤖 Iniciar emulador Android o iOS Simulator"
+echo "6. 🧪 Probar la aplicación en el emulador"
 echo ""
-echo "🔗 URLs locales:"
+echo "🔗 URLs locales PARA EMULADORES:"
 echo "- Web App: http://localhost:9001"
 echo "- API: http://localhost:9001/api/..."
 echo "- MongoDB: mongodb://localhost:27017"
 echo "- Expo Metro: http://localhost:8081"
+echo "- Android Emulator API: http://10.0.2.2:9001"
+echo "- iOS Simulator API: http://localhost:9001"
 echo ""
-echo "🔧 Comandos útiles:"
+echo "🔧 Comandos útiles PARA EMULADORES:"
 echo "- Iniciar web: cd apps/web && yarn dev"
-echo "- Iniciar mobile: cd apps/mobile && expo start"
+echo "- Iniciar mobile para emulador: cd apps/mobile && expo start"
+echo "- Iniciar Android Emulator: emulator -avd [NOMBRE_AVD]"
+echo "- Iniciar iOS Simulator: open -a Simulator"
 echo "- Iniciar MongoDB: brew services start mongodb-community"
 echo "- Ver todos: ./scripts/environments/local/start.sh"
 
