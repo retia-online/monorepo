@@ -1,33 +1,35 @@
 #!/bin/bash
 
-# Setup GitHub Packages for local development
-# This script configures the local .npmrc for the @retia-global scope
+# Repository setup script
+# This repository is self-contained and does not require private registry setup
 
 set -e
 
-echo "🚀 Setting up GitHub Packages configuration..."
+echo "🚀 Setting up repository for development..."
 
-# Check if .npmrc already exists and has the configuration
+echo "📋 Checking repository configuration..."
+
+# Check if .npmrc exists with old private registry configuration
 if [ -f .npmrc ]; then
     if grep -q "npm.pkg.github.com" .npmrc; then
-        echo "✅ .npmrc is already configured for GitHub Packages."
+        echo "⚠️  Found old private registry configuration in .npmrc"
+        echo "   This repository is now self-contained and doesn't require private registry access."
+        echo "   Consider updating or removing .npmrc if it contains private registry settings."
     else
-        echo "📝 Adding GitHub Packages configuration to .npmrc..."
-        cat .npmrc.template >> .npmrc
+        echo "✅ .npmrc configuration looks good."
     fi
 else
-    if [ -f .npmrc.template ]; then
-        echo "📝 Creating .npmrc from template..."
-        cp .npmrc.template .npmrc
-    else
-        echo "❌ Error: .npmrc.template not found. Please create it first."
-        exit 1
-    fi
+    echo "✅ No .npmrc file found (not required for this self-contained repository)."
 fi
 
 echo ""
-echo "🔐 Authentication Check:"
-echo "To authenticate, you need a GitHub Personal Access Token (PAT) with 'read:packages' scope."
-echo "If you haven't done so, update the //npm.pkg.github.com/:_authToken= line in your .npmrc"
+echo "📦 Dependency Information:"
+echo "This repository uses Yarn workspaces with local package references."
+echo "All @retia-global/* packages are resolved locally from the packages/ directory."
 echo ""
-echo "✅ Setup complete! You can now run 'yarn install' to fetch packages."
+echo "🔧 Build Instructions:"
+echo "1. Install dependencies: yarn install"
+echo "2. Build internal packages: yarn build:packages"
+echo "3. Start development: yarn dev"
+echo ""
+echo "✅ Repository is self-contained and ready for development!"

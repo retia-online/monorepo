@@ -57,3 +57,7 @@ next-env.d.ts
 .npmrc
 .env*.local
 package.json
+
+tmp/
+# Staging environment files
+.env.staging

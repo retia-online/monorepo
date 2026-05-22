@@ -9,10 +9,7 @@
     "dist/**/*",
     "src/**/*"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "@retia-global:registry": "https://npm.pkg.github.com"
-  },
+
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

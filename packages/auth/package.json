@@ -15,10 +15,7 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "@retia-global:registry": "https://npm.pkg.github.com"
-  },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/megamercado-vzla/auth.git"
@@ -34,7 +31,7 @@
   "license": "MIT",
   "dependencies": {
     "next-auth": "^5.0.0-beta.4",
-    "@retia-global/api": "^1.0.0",
+    "@retia-global/api": "file:../api",
     "zod": "^3.22.4",
     "jose": "^5.2.0"
   },

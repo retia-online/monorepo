@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "apps/web/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "distDir": ".next"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "apps/web/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_VERCEL_ENV": "production"
+    }
+  },
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "staging": true,
+      "preview": true
+    }
+  },
+  "regions": ["iad1"],
+  "public": false,
+  "github": {
+    "enabled": true,
+    "autoAlias": true,
+    "silent": true
+  }
+}

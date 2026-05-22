@@ -60,11 +60,9 @@ yarn workspace @monorepo/web dev
 
 ## 📚 Documentación
 
-- **[QUICKSTART.md](./apps/mobile/QUICKSTART.md)** - Guía rápida (5 min)
-- **[README.md](./apps/mobile/README.md)** - Documentación completa
-- **[ARCHITECTURE.md](./apps/mobile/ARCHITECTURE.md)** - Arquitectura del sistema
-- **[OAUTH_SETUP.md](./apps/mobile/OAUTH_SETUP.md)** - Configuración de OAuth
-- **[API_ENDPOINTS.md](./apps/mobile/API_ENDPOINTS.md)** - Endpoints de API
+- **[QUICKSTART.md](../apps/mobile/QUICKSTART.md)** - Guía rápida (5 min)
+- **[README.md](../apps/mobile/README.md)** - Documentación completa
+- **Documentación adicional**: Ver [docs/backup/mobile/](../backup/mobile/) para archivos específicos de arquitectura, OAuth y API
 
 ## 🧪 Flujos de Prueba
 
@@ -148,8 +146,8 @@ yarn start --clear     # Limpia caché
 
 ## 📞 Soporte
 
-- Revisa la [documentación completa](./apps/mobile/README.md)
-- Consulta [QUICKSTART.md](./apps/mobile/QUICKSTART.md)
+- Revisa la [documentación completa](../apps/mobile/README.md)
+- Consulta [QUICKSTART.md](../apps/mobile/QUICKSTART.md)
 - Abre un issue en el repositorio
 
 ---

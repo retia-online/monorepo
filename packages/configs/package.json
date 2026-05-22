@@ -17,10 +17,7 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "@retia-global:registry": "https://npm.pkg.github.com"
-  },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/megamercado-vzla/configs.git"

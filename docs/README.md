@@ -1,55 +1,122 @@
-# 📚 Documentación del Proyecto
+# Documentación del Proyecto
 
-## 🏗️ Configuración y Setup
-
-- [**LOCAL_SETUP.md**](./LOCAL_SETUP.md) - Guía completa para configurar el entorno de desarrollo local
-- [**ENVIRONMENT.md**](./ENVIRONMENT.md) - Configuración de variables de entorno
-- [**DEPLOYMENT.md**](./DEPLOYMENT.md) - Guías de despliegue para producción
-
-## 🔐 Autenticación y Seguridad
-
-- [**AUTH.md**](./AUTH.md) - Sistema de autenticación y autorización
-- [**AUTHENTICATION_GUIDE.md**](./AUTHENTICATION_GUIDE.md) - Guía detallada de autenticación
-- [**ROUTE_PROTECTION.md**](./ROUTE_PROTECTION.md) - Protección de rutas y middleware
-- [**SECURITY.md**](./SECURITY.md) - Mejores prácticas de seguridad
-
-## 🛠️ Desarrollo
-
-- [**LINTING.md**](./LINTING.md) - Configuración de ESLint y Prettier
-- [**LOGGING.md**](./LOGGING.md) - Sistema de logging estructurado
-
-## 📱 Aplicación Móvil
-
-- [**mobile/OAUTH_SETUP.md**](./mobile/OAUTH_SETUP.md) - Configuración de OAuth para móvil
-- [**mobile/ARCHITECTURE.md**](./mobile/ARCHITECTURE.md) - Arquitectura de la aplicación móvil
-- [**mobile/API_ENDPOINTS.md**](./mobile/API_ENDPOINTS.md) - Documentación de endpoints de API
-- [**mobile/THEME_USAGE.md**](./mobile/THEME_USAGE.md) - Guía de uso de temas y variables de diseño
-- [**mobile/IMPLEMENTATION_STATUS.md**](./mobile/IMPLEMENTATION_STATUS.md) - Estado de implementación
-- [**mobile/TROUBLESHOOTING_EXPO.md**](./mobile/TROUBLESHOOTING_EXPO.md) - Solución de problemas con Expo
-
-## 🚀 Inicio Rápido
-
-Para empezar rápidamente:
-
-1. **Web App**: Ver [apps/web/README.md](../apps/web/README.md)
-2. **Mobile App**: Ver [apps/mobile/README.md](../apps/mobile/README.md)
-3. **Setup Local**: Ver [LOCAL_SETUP.md](./LOCAL_SETUP.md)
-
-## 📋 Estructura del Proyecto
+## Estructura Actualizada
 
 ```
-monorepo/
-├── apps/
-│   ├── web/          # Aplicación Next.js
-│   └── mobile/       # Aplicación React Native/Expo
-├── docs/             # Documentación (este directorio)
-│   └── mobile/       # Documentación específica de móvil
-├── scripts/          # Scripts de utilidad
-└── __tests__/        # Tests del sistema
+docs/
+├── environments/          # Configuración de entornos
+│   ├── local.md          # Desarrollo local
+│   ├── staging.md        # Staging/Preview en Vercel
+│   └── production.md     # Producción en Vercel
+├── QUICKSTART.md         # Guía de inicio rápido (5 minutos)
+├── MOBILE_GETTING_STARTED.md  # Guía rápida para móvil
+└── backup/              # Documentación antigua (respaldo)
 ```
 
-## 🆘 Soporte
+## Guías Disponibles
 
-- **Issues**: Abre un issue en el repositorio
-- **Documentación**: Revisa los archivos en este directorio
-- **Setup**: Comienza con [LOCAL_SETUP.md](./LOCAL_SETUP.md)
+### 1. 🚀 Inicio Rápido
+Para empezar en 5 minutos:
+- **Archivo**: `QUICKSTART.md`
+- **Uso**: Configuración inicial rápida
+- **Tiempo**: ~5 minutos
+
+### 2. 📱 Mobile App
+Para configuración específica de móvil:
+- **Archivo**: `MOBILE_GETTING_STARTED.md`
+- **Uso**: Setup de app móvil
+- **Plataformas**: iOS, Android, Web
+
+### 3. 🖥️ Desarrollo Local
+Para configurar tu entorno de desarrollo local:
+- **Archivo**: `environments/local.md`
+- **Uso**: Configuración inicial, desarrollo, testing
+- **Variables**: `.env.local` para web y mobile
+
+### 4. 🧪 Staging (Preview)
+Para entornos de pruebas e integración:
+- **Archivo**: `environments/staging.md`
+- **Uso**: Testing de integración, preview en Vercel
+- **Variables**: `.env.production` con credenciales de staging
+
+### 5. 🚀 Producción
+Para despliegue en producción:
+- **Archivo**: `environments/production.md`
+- **Uso**: Entorno final para usuarios
+- **Variables**: `.env.production` con credenciales de producción
+
+## Flujo de Trabajo Recomendado
+
+### Para nuevos desarrolladores:
+1. **Clonar repositorio**
+2. **Leer** `environments/local.md`
+3. **Configurar** variables de entorno local
+4. **Iniciar** servicios de desarrollo
+
+### Para despliegues:
+1. **Staging**: Seguir `environments/staging.md`
+2. **Producción**: Seguir `environments/production.md`
+
+## Documentación Antigua
+
+La documentación anterior ha sido movida a `docs/backup/` por las siguientes razones:
+
+### Problemas identificados:
+1. **Redundancia**: Múltiples archivos con información similar
+2. **Desactualización**: Referencias a configuraciones obsoletas
+3. **Complejidad**: Demasiada información dispersa
+4. **Contradicciones**: Instrucciones conflictivas entre archivos
+
+### Archivos movidos a respaldo:
+- `AUTH.md`, `AUTHENTICATION_GUIDE.md`, `DEPLOYMENT.md`
+- `ENVIRONMENT.md`, `FORK_GUIDE.md`, `INFRASTRUCTURE_GUIDE.md`
+- `LINTING.md`, `LOCAL_SETUP.md`, `LOGGING.md`
+- `ROUTE_PROTECTION.md`, `SECURITY.md`
+- `GITHUB_PACKAGES_SETUP_SUMMARY.md`, `REPOSITORY_SECRETS.md`
+- Carpeta completa `mobile/`
+- Archivos de prueba: `test-first-user.ts`, `test-middleware.js`
+
+## Próximos Pasos
+
+### 1. Probar cada entorno
+Seguir las guías en orden:
+- [ ] Configurar y probar entorno local
+- [ ] Configurar y probar entorno staging
+- [ ] Configurar y probar entorno producción
+
+### 2. Corregir problemas
+Durante las pruebas, documentar:
+- Errores encontrados
+- Configuraciones faltantes
+- Pasos no claros
+
+### 3. Mejorar documentación
+Basado en las pruebas:
+- Actualizar guías con correcciones
+- Agregar screenshots o ejemplos
+- Simplificar pasos complejos
+
+## Notas Importantes
+
+### ✅ Cambios realizados:
+- **Repositorio self-contained**: Ya no requiere autenticación con registros privados
+- **Workspace references**: Todas las dependencias usan `workspace:*`
+- **Simplificación**: Documentación consolidada y organizada por entorno
+
+### ⚠️ Consideraciones:
+- Las variables de entorno son sensibles, nunca committearlas
+- Usar diferentes credenciales para cada entorno
+- Mantener backups de configuraciones importantes
+
+## Soporte
+
+Si encuentras problemas:
+1. Revisar la guía correspondiente al entorno
+2. Verificar variables de entorno
+3. Revisar logs de error
+4. Consultar `docs/backup/` si necesitas información antigua
+
+---
+
+**Última actualización**: Mayo 21, 2026  
+**Estado**: Documentación reorganizada y simplificada

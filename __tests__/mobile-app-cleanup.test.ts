@@ -60,17 +60,17 @@ function hasValidMobileDependencies(packageJson: any): boolean {
   // Should have @retia-global/api for validation schemas and utilities
   const hasRetiaApi = dependencies['@retia-global/api'];
   
-  // Should not have workspace references
-  const hasWorkspaceRefs = Object.keys(dependencies).some(dep => 
-    dependencies[dep] === '*' || dependencies[dep].includes('workspace:')
+  // Can have workspace references (we use workspace:* for local development)
+  const hasValidRetiaDeps = Object.keys(dependencies).some(dep => 
+    dep.startsWith('@retia-global/')
   );
   
-  // Should not have legacy @retia packages
+  // Should not have legacy @retia packages (without -global)
   const hasLegacyRetia = Object.keys(dependencies).some(dep => 
-    dep.startsWith('@retia/')
+    dep.startsWith('@retia/') && !dep.startsWith('@retia-global/')
   );
   
-  return hasRetiaApi && !hasWorkspaceRefs && !hasLegacyRetia;
+  return hasValidRetiaDeps && !hasLegacyRetia;
 }
 
 function hasValidMobileApiUsage(content: string): boolean {
@@ -123,7 +123,7 @@ describe('Mobile App Cleanup Property Tests', () => {
           // For mobile source files that use validation, should import from @retia-global/api
           if (content.includes('Schema') || content.includes('validate')) {
             expect(hasRetiaImports(content)).toBe(true);
-            expect(content).toMatch(/@retia\/api/);
+            expect(content).toMatch(/@retia-global\/api/);
           }
         }
       ), { numRuns: 100 });

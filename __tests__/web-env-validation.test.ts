@@ -6,11 +6,11 @@
 describe('Web App Environment Configuration', () => {
   
   describe('Environment Files Exist', () => {
-    it('should have .env.development file with required variables', () => {
+    it('should have .env.local file with required variables', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/web/.env.development');
+      const envPath = path.join(process.cwd(), 'apps/web/.env.local');
       expect(fs.existsSync(envPath)).toBe(true);
       
       const envContent = fs.readFileSync(envPath, 'utf8');
@@ -79,11 +79,11 @@ describe('Web App Environment Configuration', () => {
   });
 
   describe('Database Configuration', () => {
-    it('should have DATABASE_URL configured in .env.development', () => {
+    it('should have DATABASE_URL configured in .env.local', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/web/.env.development');
+      const envPath = path.join(process.cwd(), 'apps/web/.env.local');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Extract MONGODB_URI value
@@ -99,7 +99,7 @@ describe('Web App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/web/.env.development');
+      const envPath = path.join(process.cwd(), 'apps/web/.env.local');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Check NextAuth configuration
@@ -117,7 +117,7 @@ describe('Web App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/web/.env.development');
+      const envPath = path.join(process.cwd(), 'apps/web/.env.local');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       const authModeMatch = envContent.match(/AUTH_MODE=(.+)/);
@@ -136,7 +136,7 @@ describe('Web App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/web/.env.development');
+      const envPath = path.join(process.cwd(), 'apps/web/.env.local');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
       // Check theme colors
@@ -151,10 +151,11 @@ describe('Web App Environment Configuration', () => {
       const fs = require('fs');
       const path = require('path');
       
-      const envPath = path.join(process.cwd(), 'apps/web/.env.development');
+      const envPath = path.join(process.cwd(), 'apps/web/.env.local');
       const envContent = fs.readFileSync(envPath, 'utf8');
       
-      const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+      // Accept hex colors with or without # prefix (Tailwind colors don't use #)
+      const hexColorRegex = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
       
       const primaryColorMatch = envContent.match(/NEXT_PUBLIC_PRIMARY_COLOR=(.+)/);
       const secondaryColorMatch = envContent.match(/NEXT_PUBLIC_SECONDARY_COLOR=(.+)/);

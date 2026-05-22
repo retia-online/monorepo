@@ -1,0 +1,38 @@
+{
+  "cli": {
+    "version": ">= 3.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://localhost:9001"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://retia-app-staging.vercel.app",
+        "EXPO_PUBLIC_AUTH_MODE": "required",
+        "EXPO_PUBLIC_AUTH_METHODS": "email,google",
+        "EXPO_PUBLIC_INSTANCE": "Retia-Staging"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://retia-app.vercel.app",
+        "EXPO_PUBLIC_AUTH_MODE": "required",
+        "EXPO_PUBLIC_AUTH_METHODS": "odoo,email,google",
+        "EXPO_PUBLIC_INSTANCE": "Retia"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

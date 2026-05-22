@@ -7,12 +7,12 @@ Guía rápida para tener el sistema completo funcionando en menos de 5 minutos.
 ### 🌐 Solo Web App
 Si solo necesitas la aplicación web:
 
-**→ [Web App - Inicio Rápido](./apps/web/QUICKSTART.md)**
+**→ [Web App - Inicio Rápido](../apps/web/QUICKSTART.md)**
 
 ### 📱 Solo Mobile App  
 Si solo necesitas la aplicación móvil:
 
-**→ [Mobile App - Inicio Rápido](./apps/mobile/QUICKSTART.md)**
+**→ [Mobile App - Inicio Rápido](../apps/mobile/QUICKSTART.md)**
 
 ### 🔄 Sistema Completo (Recomendado)
 Para web y móvil integrados con usuarios compartidos:
@@ -109,12 +109,12 @@ Tienes ambas aplicaciones funcionando:
 ### 🌐 Web App
 - **URL**: http://localhost:3000
 - **Funciones**: Dashboard, admin panel, recuperación de contraseña
-- **Documentación**: [apps/web/README.md](./apps/web/README.md)
+- **Documentación**: [apps/web/README.md](../apps/web/README.md)
 
 ### 📱 Mobile App
 - **Acceso**: Escanea QR con Expo Go
 - **Funciones**: Login, perfil, configuración flexible
-- **Documentación**: [apps/mobile/README.md](./apps/mobile/README.md)
+- **Documentación**: [apps/mobile/README.md](../apps/mobile/README.md)
 
 ### 🔄 Integración
 - ✅ **Usuarios compartidos** entre web y móvil
@@ -150,6 +150,6 @@ yarn install
 
 ## 📚 Próximos Pasos
 
-- 📖 **Documentación completa**: [README.md](./README.md)
-- 🛠️ **Configuración avanzada**: [DEVELOPMENT_SETUP.md](./DEVELOPMENT_SETUP.md)
-- 🚀 **Despliegue**: Ver docs específicas de cada app
+- 📖 **Documentación completa**: [README.md](../README.md)
+- 🛠️ **Configuración avanzada**: [Entornos](./environments/)
+- 🚀 **Despliegue**: Ver [Staging](./environments/staging.md) y [Producción](./environments/production.md)

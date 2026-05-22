@@ -80,7 +80,7 @@ cd apps/web && yarn dev &
 cd apps/mobile && yarn start
 ```
 
-**→ [Documentación Completa](./docs/README.md)**
+**→ [Inicio Rápido](./docs/QUICKSTART.md)**
 
 ## 👤 Sistema de Usuarios
 
@@ -197,18 +197,15 @@ Pull requests son bienvenidos. Para cambios mayores, por favor abre un issue pri
 
 ### 📖 Documentación General
 - [**Documentación Completa**](./docs/README.md) - Índice de toda la documentación
-- [**Setup Local**](./docs/LOCAL_SETUP.md) - Configuración de desarrollo
-- [**Autenticación**](./docs/AUTH.md) - Sistema de autenticación
-- [**Seguridad**](./docs/SECURITY.md) - Mejores prácticas de seguridad
+- [**Inicio Rápido**](./docs/QUICKSTART.md) - Guía de 5 minutos para empezar
+- [**Configuración de Entornos**](./docs/environments/) - Guías para local, staging y producción
 
 ### 🌐 Web App
 - [**README Web**](./apps/web/README.md) - Documentación completa de la web app
 
 ### 📱 Mobile App  
 - [**README Mobile**](./apps/mobile/README.md) - Documentación completa de la mobile app
-- [**OAuth Setup**](./docs/mobile/OAUTH_SETUP.md) - Configuración de OAuth
-- [**Arquitectura**](./docs/mobile/ARCHITECTURE.md) - Arquitectura del sistema móvil
-- [**API Endpoints**](./docs/mobile/API_ENDPOINTS.md) - Documentación de endpoints
+- [**Getting Started Mobile**](./docs/MOBILE_GETTING_STARTED.md) - Guía rápida para móvil
 
 ## 🆘 Soporte
 

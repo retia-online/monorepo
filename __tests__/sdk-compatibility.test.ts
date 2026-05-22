@@ -23,14 +23,15 @@ describe('SDK Update and Compatibility Flow', () => {
         const webPackageJson = JSON.parse(readFileSync(webPackageJsonPath, 'utf-8'));
         const dependencies = webPackageJson.dependencies || {};
         
-        // Validate semantic versioning for all @retia packages
+        // Validate @retia-global packages use either semantic versioning or workspace references
         Object.keys(dependencies).forEach(dep => {
           if (dep.startsWith('@retia-global/')) {
             const version = dependencies[dep];
-            // Remove ^ or ~ prefixes for validation
-            const cleanVersion = version.replace(/^[\^~]/, '');
-            const semverRegex = /^\d+\.\d+\.\d+$/;
-            expect(semverRegex.test(cleanVersion)).toBe(true);
+            // Accept either semantic versioning (x.x.x) or workspace references (workspace:*)
+            const isValidVersion = 
+              version === 'workspace:*' || 
+              /^\d+\.\d+\.\d+$/.test(version.replace(/^[\^~]/, ''));
+            expect(isValidVersion).toBe(true);
           }
         });
       }
@@ -39,13 +40,15 @@ describe('SDK Update and Compatibility Flow', () => {
         const mobilePackageJson = JSON.parse(readFileSync(mobilePackageJsonPath, 'utf-8'));
         const dependencies = mobilePackageJson.dependencies || {};
         
-        // Validate semantic versioning for all @retia packages
+        // Validate @retia-global packages use either semantic versioning or workspace references
         Object.keys(dependencies).forEach(dep => {
           if (dep.startsWith('@retia-global/')) {
             const version = dependencies[dep];
-            const cleanVersion = version.replace(/^[\^~]/, '');
-            const semverRegex = /^\d+\.\d+\.\d+$/;
-            expect(semverRegex.test(cleanVersion)).toBe(true);
+            // Accept either semantic versioning (x.x.x) or workspace references (workspace:*)
+            const isValidVersion = 
+              version === 'workspace:*' || 
+              /^\d+\.\d+\.\d+$/.test(version.replace(/^[\^~]/, ''));
+            expect(isValidVersion).toBe(true);
           }
         });
       }

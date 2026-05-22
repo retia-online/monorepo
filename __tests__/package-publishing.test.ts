@@ -103,7 +103,7 @@ describe('External SDK Package Publishing Property Tests', () => {
         fc.constantFrom(...EXTERNAL_SDK_PACKAGES),
         (packageName) => {
           // For any external SDK package, name should start with @retia-global/ scope
-          expect(packageName).toMatch(/^@retia\/.+$/);
+          expect(packageName).toMatch(/^@retia-global\/.+$/);
           
           // Name should not contain invalid characters
           expect(packageName).toMatch(/^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$/);
@@ -125,7 +125,7 @@ describe('External SDK Package Publishing Property Tests', () => {
           expect(expectedScopedRegistry).toMatch(/^https:\/\/npm\.pkg\.github\.com$/);
           
           // Package name should be compatible with GitHub Packages
-          expect(packageName.split('/')[0]).toBe('@retia');
+          expect(packageName.split('/')[0]).toBe('@retia-global');
         }
       ), { numRuns: 100 });
     });
@@ -179,10 +179,10 @@ describe('External SDK Package Publishing Property Tests', () => {
   });
 
   describe('External SDK Migration Validation', () => {
-    it('should confirm packages directory has been removed', () => {
-      // Validate that the migration to external SDKs is complete
+    it('should confirm packages directory exists for workspace packages', () => {
+      // Validate that we have local packages for workspace development
       const fs = require('fs');
-      expect(fs.existsSync('packages')).toBe(false);
+      expect(fs.existsSync('packages')).toBe(true);
     });
 
     it('should validate external SDK package names are consistent', () => {
@@ -192,7 +192,7 @@ describe('External SDK Package Publishing Property Tests', () => {
         (package1, package2) => {
           // For any two external SDK packages, they should have consistent naming
           expect(package1.split('/')[0]).toBe(package2.split('/')[0]);
-          expect(package1.split('/')[0]).toBe('@retia');
+          expect(package1.split('/')[0]).toBe('@retia-global');
           
           // Package names should be different (no duplicates)
           if (package1 !== package2) {

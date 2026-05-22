@@ -13,10 +13,10 @@
         "dev:all": "yarn workspace app dev:all"
     },
     "dependencies": {
-        "@retia-global/auth": "^1.0.0",
-        "@retia-global/api": "^1.0.0",
-        "@retia-global/ui": "^1.0.0",
-        "@retia-global/configs": "^1.0.0",
+        "@retia-global/auth": "workspace:*",
+        "@retia-global/api": "workspace:*",
+        "@retia-global/ui": "workspace:*",
+        "@retia-global/configs": "workspace:*",
 
         "bcryptjs": "^3.0.3",
         "next": "^16.0.8",

@@ -1,53 +1,120 @@
-# GitHub Packages Authentication Guide
+# Repository Authentication Guide
 
-This guide provides step-by-step instructions for setting up authentication with GitHub Packages for the @monorepo SDK packages.
+This guide provides information about the repository's self-contained authentication setup.
 
 ## Overview
 
-GitHub Packages requires authentication for both publishing and consuming private packages. This guide covers all authentication methods and scenarios.
+This repository is fully self-contained and does not require authentication with private package registries. All dependencies are resolved locally through workspace references or from the public npm registry.
 
-## 1. Personal Access Token (PAT) Setup
+## 1. No Authentication Required
 
-### Creating a Personal Access Token
+### Simplified Setup
 
-1. **Navigate to GitHub Settings**
-   - Go to [GitHub.com](https://github.com)
-   - Click your profile picture → Settings
-   - Scroll down to "Developer settings" → "Personal access tokens" → "Tokens (classic)"
+The repository has been updated to be fully self-contained:
 
-2. **Generate New Token**
-   - Click "Generate new token (classic)"
-   - Add a descriptive note (e.g., "TU-Org SDK Packages")
-   - Set expiration (recommended: 90 days for security)
+1. **No Private Registry Access Needed**: All packages resolve locally or from public npm
+2. **No Authentication Tokens Required**: No GitHub Personal Access Tokens needed
+3. **No .npmrc Configuration Required**: Works out of the box
 
-3. **Select Required Scopes**
-   ```
-   ✅ read:packages    - Download packages from GitHub Packages
-   ✅ write:packages   - Upload packages to GitHub Packages
-   ✅ delete:packages  - Delete packages (optional, for maintenance)
-   ✅ repo            - Access private repositories (if packages are in private repos)
-   ```
+### Benefits
 
-4. **Generate and Copy Token**
-   - Click "Generate token"
-   - **Important**: Copy the token immediately - you won't see it again!
-   - Store it securely (password manager, environment variable)
+- **Simplified Onboarding**: New contributors can clone and run without configuration
+- **Improved Security**: No token management or secret rotation needed
+- **Faster Setup**: No authentication steps required
+- **Better Collaboration**: External contributors can work without access barriers
 
-### Token Security Best Practices
+## 2. Local Development Setup
 
-- **Never commit tokens to version control**
-- Use environment variables or secure credential managers
-- Rotate tokens regularly (every 90 days)
-- Use least privilege principle (only required scopes)
-- Monitor token usage in GitHub audit logs
+### Method 1: Simple Clone and Run (Recommended)
 
-## 2. Local Development Authentication
-
-### Method 1: .npmrc File (Recommended)
-
-1. **Create .npmrc file in your project root**:
+1. **Clone the repository**:
    ```bash
-   cp .npmrc.template .npmrc
+   git clone <repository-url>
+   cd <repository>
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   yarn install  # Works without any authentication
+   ```
+
+3. **Start developing**:
+   ```bash
+   yarn dev  # Start development servers
+   ```
+
+### Method 2: Workspace Development
+
+The repository uses Yarn workspaces for local package development:
+
+1. **All internal packages** are referenced with `workspace:*` syntax
+2. **Dependencies resolve locally** from the `packages/` directory
+3. **No network calls to private registries** during development
+
+## 3. Package Publishing (Optional)
+
+If you need to publish packages:
+
+### To Public npm Registry
+1. Update package.json with appropriate `publishConfig` if needed
+2. Run `npm publish` with npm account credentials
+
+### To Private Registry (Advanced)
+1. Configure `.npmrc` with your private registry settings
+2. Add appropriate authentication tokens
+3. Update package.json `publishConfig` sections
+
+## 4. Security Best Practices
+
+Even though no authentication is required for development:
+
+- **Keep dependencies updated**: Regularly update public npm dependencies
+- **Review package sources**: Verify all dependencies come from trusted sources
+- **Use workspace references**: Internal packages should use `workspace:*` references
+- **Monitor for vulnerabilities**: Use tools like `npm audit` or `yarn audit`
+
+## 5. Troubleshooting
+
+### Issue: Package resolution fails
+**Solution**: Ensure all internal packages are built:
+```bash
+yarn build:packages  # Build all internal packages
+```
+
+### Issue: Workspace references not working
+**Solution**: Verify package.json files use `workspace:*` syntax:
+```json
+{
+  "dependencies": {
+    "@retia-global/api": "workspace:*"
+  }
+}
+```
+
+### Issue: Build scripts fail
+**Solution**: Check build script references in root package.json:
+```bash
+yarn workspace @retia-global/api build  # Build specific package
+```
+
+## 6. Migration from Previous Setup
+
+If you were using the previous private registry setup:
+
+1. **Remove old .npmrc files** if they contain private registry configuration
+2. **Update package.json files** to use workspace references
+3. **Rebuild internal packages** to ensure local versions are available
+
+## Summary
+
+This repository is designed to be accessible to all users without authentication requirements. The self-contained architecture ensures that:
+
+- ✅ **No authentication tokens** needed for development
+- ✅ **All dependencies resolve locally** or from public npm
+- ✅ **Workspace packages** are built and referenced internally
+- ✅ **Simplified contributor onboarding** with zero configuration
+
+For any issues, check the repository documentation or open an issue in the repository.
    ```
 
 2. **Edit .npmrc with your token**:
