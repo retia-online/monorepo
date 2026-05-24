@@ -131,7 +131,8 @@ echo "1. ✅ Todos los servicios (recomendado)"
 echo "2. 🌐 Solo web app (modo desarrollo)"
 echo "3. 📱 Solo mobile app (modo desarrollo)"
 echo "4. 🗄️  Solo MongoDB"
-echo "5. 🚪 Salir"
+echo "5. 🤖 Mobile app con EMULADORES (Android/iOS)"
+echo "6. 🚪 Salir"
 
 read -p "Opción [1]: " OPTION
 OPTION=${OPTION:-1}
@@ -317,6 +318,34 @@ case $OPTION in
         ;;
     
     "5")
+        # Mobile app con EMULADORES
+        section "Iniciando mobile app con EMULADORES"
+        
+        # Verificar que mobile esté configurado
+        if [ ! -f "$PROJECT_ROOT/apps/mobile/package.json" ]; then
+            echo -e "${RED}❌ Mobile app no encontrada${NC}"
+            echo "   Ejecuta primero: ./scripts/environments/local/setup.sh"
+            exit 1
+        fi
+        
+        # Verificar web app
+        if ! check_port 9001; then
+            echo -e "${YELLOW}⚠️  Web app no está corriendo en puerto 9001${NC}"
+            echo "   💡 La mobile app necesita la API para funcionar"
+            echo "   Inicia la web app primero: opción 2"
+            exit 1
+        fi
+        
+        echo "   ✅ Web app corriendo en http://localhost:9001"
+        echo ""
+        echo "▶️  Iniciando script de emuladores..."
+        echo ""
+        
+        # Ejecutar el script de emuladores
+        "$SCRIPT_DIR/mobile/start.sh"
+        ;;
+    
+    "6")
         echo "Saliendo..."
         exit 0
         ;;
