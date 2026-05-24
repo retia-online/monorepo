@@ -60,41 +60,39 @@ confirm() {
     [[ $REPLY =~ ^[Ss]$ ]]
 }
 
-# Función para verificar e instalar dependencias
+# Función para verificar dependencias (sin instalación)
 check_dependencies() {
     echo "📦 Verificando dependencias..."
     cd "$PROJECT_ROOT"
     
     # Verificar dependencias en raíz
     if [ ! -d "node_modules" ]; then
-        echo "  ⚠️  node_modules no encontrado en raíz, instalando dependencias..."
-        yarn install
-        echo -e "  ✅ Dependencias de raíz instaladas"
+        echo -e "${RED}❌ node_modules no encontrado en raíz${NC}"
+        echo "  💡 Ejecuta primero: ./scripts/environments/local/setup.sh"
+        return 1
     else
-        echo -e "  ✅ Dependencias de raíz ya instaladas"
+        echo -e "  ✅ Dependencias de raíz instaladas"
     fi
     
     # Verificar dependencias en apps/web
     if [ ! -d "apps/web/node_modules" ]; then
-        echo "  ⚠️  Instalando dependencias de web app..."
-        cd "$PROJECT_ROOT/apps/web"
-        yarn install
-        echo -e "  ✅ Dependencias de web app instaladas"
-        cd "$PROJECT_ROOT"
+        echo -e "${RED}❌ node_modules no encontrado en apps/web${NC}"
+        echo "  💡 Ejecuta primero: ./scripts/environments/local/setup.sh"
+        return 1
     else
-        echo -e "  ✅ Dependencias de web app ya instaladas"
+        echo -e "  ✅ Dependencias de web app instaladas"
     fi
     
     # Verificar dependencias en apps/mobile
     if [ ! -d "apps/mobile/node_modules" ]; then
-        echo "  ⚠️  Instalando dependencias de mobile app..."
-        cd "$PROJECT_ROOT/apps/mobile"
-        yarn install
-        echo -e "  ✅ Dependencias de mobile app instaladas"
-        cd "$PROJECT_ROOT"
+        echo -e "${RED}❌ node_modules no encontrado en apps/mobile${NC}"
+        echo "  💡 Ejecuta primero: ./scripts/environments/local/setup.sh"
+        return 1
     else
-        echo -e "  ✅ Dependencias de mobile app ya instaladas"
+        echo -e "  ✅ Dependencias de mobile app instaladas"
     fi
+    
+    return 0
 }
 
 section "Verificación de puertos"
@@ -140,8 +138,12 @@ case $OPTION in
         # Todos los servicios
         section "Iniciando todos los servicios"
         
-        # 1. Verificar/instalar dependencias
-        check_dependencies
+        # 1. Verificar dependencias
+        if ! check_dependencies; then
+            echo -e "${RED}❌ Dependencias no instaladas. Ejecuta primero:${NC}"
+            echo "  ./scripts/environments/local/setup.sh"
+            exit 1
+        fi
         
         # 2. MongoDB
         echo "🗄️  Iniciando MongoDB..."
@@ -207,8 +209,12 @@ case $OPTION in
         # Solo web app
         section "Iniciando web app (modo desarrollo)"
         
-        # Verificar/instalar dependencias
-        check_dependencies
+        # Verificar dependencias
+        if ! check_dependencies; then
+            echo -e "${RED}❌ Dependencias no instaladas. Ejecuta primero:${NC}"
+            echo "  ./scripts/environments/local/setup.sh"
+            exit 1
+        fi
         
         # Iniciar web app
         echo "🌐 Iniciando web app..."
@@ -223,8 +229,12 @@ case $OPTION in
         # Solo mobile app
         section "Iniciando mobile app (modo desarrollo)"
         
-        # Verificar/instalar dependencias
-        check_dependencies
+        # Verificar dependencias
+        if ! check_dependencies; then
+            echo -e "${RED}❌ Dependencias no instaladas. Ejecuta primero:${NC}"
+            echo "  ./scripts/environments/local/setup.sh"
+            exit 1
+        fi
         
         # Iniciar mobile app
         echo "📱 Iniciando mobile app..."

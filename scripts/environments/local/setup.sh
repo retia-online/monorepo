@@ -127,7 +127,8 @@ echo "2. 🌐 Solo web app"
 echo "3. 📱 Solo mobile app"
 echo "4. 🗄️  Solo base de datos"
 echo "5. 📋 Solo plantillas"
-echo "6. 🚪 Salir"
+echo "6. 🔒 Actualizar dependencias vulnerables"
+echo "7. 🚪 Salir"
 
 read -p "Opción [1]: " OPTION
 OPTION=${OPTION:-1}
@@ -198,6 +199,20 @@ case $OPTION in
         ;;
     
     "6")
+        # Actualizar dependencias vulnerables
+        section "Actualizando dependencias vulnerables"
+        echo "⚠️  Esta opción actualizará dependencias con vulnerabilidades conocidas."
+        echo "📋 Incluye: glob, uuid, abab, rimraf, eslint"
+        
+        if confirm "¿Continuar con la actualización de dependencias vulnerables?"; then
+            "$SCRIPT_DIR/../../common/update-vulnerable-deps.sh"
+        else
+            echo "Actualización cancelada"
+        fi
+        exit 0
+        ;;
+    
+    "7")
         echo "Saliendo..."
         exit 0
         ;;
