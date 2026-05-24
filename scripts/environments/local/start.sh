@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Script para iniciar todos los servicios de desarrollo local
+# Script para iniciar servicios de desarrollo local
 # Uso: ./start.sh
+# 
+# IMPORTANTE: Para desarrollo local NO se necesita build.
+# Solo instala dependencias y ejecuta en modo desarrollo.
 
 set -e
 
@@ -14,6 +17,8 @@ NC='\033[0m' # No Color
 
 echo -e "${GREEN}🚀 Iniciando servicios de desarrollo LOCAL${NC}"
 echo "=============================================="
+echo "💡 Modo desarrollo: NO se construyen paquetes"
+echo "📦 Solo se verifican/instalan dependencias"
 
 # Función para imprimir sección
 section() {
@@ -55,6 +60,43 @@ confirm() {
     [[ $REPLY =~ ^[Ss]$ ]]
 }
 
+# Función para verificar e instalar dependencias
+check_dependencies() {
+    echo "📦 Verificando dependencias..."
+    cd "$PROJECT_ROOT"
+    
+    # Verificar dependencias en raíz
+    if [ ! -d "node_modules" ]; then
+        echo "  ⚠️  node_modules no encontrado en raíz, instalando dependencias..."
+        yarn install
+        echo -e "  ✅ Dependencias de raíz instaladas"
+    else
+        echo -e "  ✅ Dependencias de raíz ya instaladas"
+    fi
+    
+    # Verificar dependencias en apps/web
+    if [ ! -d "apps/web/node_modules" ]; then
+        echo "  ⚠️  Instalando dependencias de web app..."
+        cd "$PROJECT_ROOT/apps/web"
+        yarn install
+        echo -e "  ✅ Dependencias de web app instaladas"
+        cd "$PROJECT_ROOT"
+    else
+        echo -e "  ✅ Dependencias de web app ya instaladas"
+    fi
+    
+    # Verificar dependencias en apps/mobile
+    if [ ! -d "apps/mobile/node_modules" ]; then
+        echo "  ⚠️  Instalando dependencias de mobile app..."
+        cd "$PROJECT_ROOT/apps/mobile"
+        yarn install
+        echo -e "  ✅ Dependencias de mobile app instaladas"
+        cd "$PROJECT_ROOT"
+    else
+        echo -e "  ✅ Dependencias de mobile app ya instaladas"
+    fi
+}
+
 section "Verificación de puertos"
 PORTS=(9001 8081 27017)
 for port in "${PORTS[@]}"; do
@@ -68,11 +110,10 @@ done
 section "Opciones de inicio"
 echo "Selecciona qué servicios iniciar:"
 echo "1. ✅ Todos los servicios (recomendado)"
-echo "2. 🌐 Solo web app"
-echo "3. 📱 Solo mobile app"
+echo "2. 🌐 Solo web app (modo desarrollo)"
+echo "3. 📱 Solo mobile app (modo desarrollo)"
 echo "4. 🗄️  Solo MongoDB"
-echo "5. 🔧 Solo build de paquetes"
-echo "6. 🚪 Salir"
+echo "5. 🚪 Salir"
 
 read -p "Opción [1]: " OPTION
 OPTION=${OPTION:-1}
@@ -99,14 +140,8 @@ case $OPTION in
         # Todos los servicios
         section "Iniciando todos los servicios"
         
-        # 1. Build de paquetes
-        echo "📦 Construyendo paquetes..."
-        cd "$PROJECT_ROOT"
-        yarn build:packages &
-        PACKAGE_PID=$!
-        PIDS+=($PACKAGE_PID)
-        wait $PACKAGE_PID
-        echo -e "  ✅ Paquetes construidos"
+        # 1. Verificar/instalar dependencias
+        check_dependencies
         
         # 2. MongoDB
         echo "🗄️  Iniciando MongoDB..."
@@ -125,8 +160,8 @@ case $OPTION in
             echo -e "${YELLOW}⚠️  MongoDB no responde, pero continuando...${NC}"
         fi
         
-        # 3. Web app
-        echo "🌐 Iniciando web app..."
+        # 3. Web app (modo desarrollo)
+        echo "🌐 Iniciando web app (modo desarrollo)..."
         cd "$PROJECT_ROOT/apps/web"
         free_port 9001
         yarn dev &
@@ -142,8 +177,8 @@ case $OPTION in
             echo -e "${YELLOW}⚠️  Web app no responde en puerto 9001${NC}"
         fi
         
-        # 4. Mobile app
-        echo "📱 Iniciando mobile app..."
+        # 4. Mobile app (modo desarrollo)
+        echo "📱 Iniciando mobile app (modo desarrollo)..."
         cd "$PROJECT_ROOT/apps/mobile"
         free_port 8081
         
@@ -170,13 +205,10 @@ case $OPTION in
     
     "2")
         # Solo web app
-        section "Iniciando web app"
+        section "Iniciando web app (modo desarrollo)"
         
-        # Build de paquetes primero
-        echo "📦 Construyendo paquetes..."
-        cd "$PROJECT_ROOT"
-        yarn build:packages
-        echo -e "  ✅ Paquetes construidos"
+        # Verificar/instalar dependencias
+        check_dependencies
         
         # Iniciar web app
         echo "🌐 Iniciando web app..."
@@ -189,13 +221,10 @@ case $OPTION in
     
     "3")
         # Solo mobile app
-        section "Iniciando mobile app"
+        section "Iniciando mobile app (modo desarrollo)"
         
-        # Build de paquetes primero
-        echo "📦 Construyendo paquetes..."
-        cd "$PROJECT_ROOT"
-        yarn build:packages
-        echo -e "  ✅ Paquetes construidos"
+        # Verificar/instalar dependencias
+        check_dependencies
         
         # Iniciar mobile app
         echo "📱 Iniciando mobile app..."
@@ -234,16 +263,6 @@ case $OPTION in
         ;;
     
     "5")
-        # Solo build de paquetes
-        section "Construyendo paquetes"
-        
-        cd "$PROJECT_ROOT"
-        yarn build:packages
-        echo -e "${GREEN}✅ Paquetes construidos${NC}"
-        exit 0
-        ;;
-    
-    "6")
         echo "Saliendo..."
         exit 0
         ;;
