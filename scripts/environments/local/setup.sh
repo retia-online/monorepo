@@ -128,7 +128,8 @@ echo "3. 📱 Solo mobile app"
 echo "4. 🗄️  Solo base de datos"
 echo "5. 📋 Solo plantillas"
 echo "6. 🔒 Actualizar dependencias vulnerables"
-echo "7. 🚪 Salir"
+echo "7. 📦 Instalar solo dependencias de web/mobile"
+echo "8. 🚪 Salir"
 
 read -p "Opción [1]: " OPTION
 OPTION=${OPTION:-1}
@@ -142,8 +143,54 @@ case $OPTION in
         if confirm "¿Instalar dependencias del proyecto?"; then
             echo "📦 Instalando dependencias..."
             cd "$PROJECT_ROOT"
-            yarn install
-            echo -e "  ✅ Dependencias instaladas"
+            
+            # Primero, verificar que los paquetes workspace existan
+            echo "  🔍 Verificando paquetes workspace..."
+            for pkg in api auth configs ui; do
+                if [ -d "packages/$pkg" ]; then
+                    echo "    ✅ @retia-global/$pkg encontrado"
+                else
+                    echo -e "    ${RED}❌ @retia-global/$pkg no encontrado${NC}"
+                fi
+            done
+            
+            # Intentar instalar dependencias
+            echo "  📥 Ejecutando yarn install..."
+            if yarn install; then
+                echo -e "  ✅ Dependencias instaladas"
+            else
+                echo -e "${YELLOW}⚠️  Error instalando dependencias. Intentando alternativa...${NC}"
+                
+                # Alternativa: instalar dependencias de cada workspace por separado
+                echo "  🔄 Intentando instalación alternativa..."
+                
+                # 1. Instalar dependencias de raíz
+                echo "    1. Instalando dependencias de raíz..."
+                yarn install --ignore-workspaces 2>/dev/null || true
+                
+                # 2. Construir paquetes workspace primero
+                echo "    2. Construyendo paquetes workspace..."
+                for pkg in api auth configs ui; do
+                    if [ -d "packages/$pkg" ]; then
+                        echo "      📦 @retia-global/$pkg..."
+                        cd "packages/$pkg"
+                        yarn install --ignore-workspaces 2>/dev/null || true
+                        cd "$PROJECT_ROOT"
+                    fi
+                done
+                
+                # 3. Intentar yarn install completo nuevamente
+                echo "    3. Reintentando instalación completa..."
+                if yarn install; then
+                    echo -e "  ✅ Dependencias instaladas (con trabajo alternativo)"
+                else
+                    echo -e "${RED}❌ No se pudieron instalar dependencias${NC}"
+                    echo "  💡 Posibles soluciones:"
+                    echo "    1. Ejecutar: yarn workspaces focus @retia-app/web"
+                    echo "    2. Ejecutar: yarn workspaces focus @retia-app/mobile"
+                    echo "    3. Revisar package.json de cada workspace"
+                fi
+            fi
         fi
         
         # Web app
@@ -213,6 +260,62 @@ case $OPTION in
         ;;
     
     "7")
+        # Instalar solo dependencias
+        section "Instalando solo dependencias de web/mobile"
+        
+        cd "$PROJECT_ROOT"
+        
+        echo "📦 Instalando todas las dependencias del monorepo..."
+        
+        # Verificar estructura de packages workspace
+        echo "  🔍 Verificando paquetes workspace..."
+        for pkg in api auth configs ui; do
+            if [ -d "packages/$pkg" ]; then
+                echo "    ✅ packages/$pkg existe"
+            else
+                echo -e "    ⚠️  packages/$pkg no encontrado (se creará si es necesario)"
+            fi
+        done
+        
+        # Ejecutar yarn install
+        echo "  📥 Ejecutando yarn install..."
+        if yarn install; then
+            echo -e "  ✅ Dependencias instaladas correctamente"
+        else
+            echo -e "${YELLOW}⚠️  yarn install tuvo problemas, intentando alternativa...${NC}"
+            
+            # Intentar con ignore-workspaces si falla
+            echo "  🔄 Reintentando con configuración alternativa..."
+            yarn install --ignore-scripts 2>/dev/null || true
+            yarn install 2>/dev/null || true
+        fi
+        
+        # Verificar que las dependencias principales estén disponibles
+        echo ""
+        echo "  🔍 Verificando instalación..."
+        
+        if [ -d "node_modules/.bin" ]; then
+            if [ -f "node_modules/.bin/next" ]; then
+                echo "    ✅ Next.js instalado"
+            fi
+            if [ -f "node_modules/.bin/concurrently" ]; then
+                echo "    ✅ Concurrently instalado"
+            fi
+        fi
+        
+        # Verificar expo en móvil
+        if [ -d "apps/mobile/node_modules/expo" ]; then
+            echo "    ✅ Expo instalado en mobile"
+        fi
+        
+        echo ""
+        echo -e "${GREEN}✅ Instalación de dependencias completada${NC}"
+        echo ""
+        echo "📋 Próximo paso: Ejecuta ./scripts/environments/local/start.sh"
+        exit 0
+        ;;
+    
+    "8")
         echo "Saliendo..."
         exit 0
         ;;

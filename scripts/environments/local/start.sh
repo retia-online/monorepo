@@ -65,7 +65,7 @@ check_dependencies() {
     echo "📦 Verificando dependencias..."
     cd "$PROJECT_ROOT"
     
-    # Verificar dependencias en raíz
+    # En Yarn workspaces, TODAS las dependencias están en node_modules de raíz
     if [ ! -d "node_modules" ]; then
         echo -e "${RED}❌ node_modules no encontrado en raíz${NC}"
         echo "  💡 Ejecuta primero: ./scripts/environments/local/setup.sh"
@@ -74,22 +74,42 @@ check_dependencies() {
         echo -e "  ✅ Dependencias de raíz instaladas"
     fi
     
-    # Verificar dependencias en apps/web
-    if [ ! -d "apps/web/node_modules" ]; then
-        echo -e "${RED}❌ node_modules no encontrado en apps/web${NC}"
-        echo "  💡 Ejecuta primero: ./scripts/environments/local/setup.sh"
-        return 1
+    # Yarn workspaces: verificar paquetes workspace desde node_modules raíz
+    echo "  🔍 Verificando paquetes workspace..."
+    
+    # Verificar next (para web app)
+    if [ -f "node_modules/.bin/next" ]; then
+        echo -e "    ✅ Next.js disponible"
     else
-        echo -e "  ✅ Dependencias de web app instaladas"
+        echo -e "    ${YELLOW}⚠️  Next.js no encontrado (necesita yarn install)${NC}"
     fi
     
-    # Verificar dependencias en apps/mobile
-    if [ ! -d "apps/mobile/node_modules" ]; then
-        echo -e "${RED}❌ node_modules no encontrado en apps/mobile${NC}"
-        echo "  💡 Ejecuta primero: ./scripts/environments/local/setup.sh"
+    # Verificar expo en node_modules local (para mobile app)
+    # Primero buscar en node_modules/.bin, luego en node_modules/expo
+    if [ -f "node_modules/.bin/expo" ]; then
+        echo -e "    ✅ Expo disponible en node_modules"
+    elif [ -d "node_modules/expo" ]; then
+        echo -e "    ✅ Expo disponible (usando npx expo)"
+    elif command -v expo &> /dev/null; then
+        echo -e "    ✅ Expo CLI disponible globalmente"
+    else
+        echo -e "    ${YELLOW}⚠️  Expo no encontrado (necesita yarn install)${NC}"
+    fi
+    
+    # Verificar que apps/web tenga package.json
+    if [ ! -f "apps/web/package.json" ]; then
+        echo -e "${RED}❌ package.json no encontrado en apps/web${NC}"
         return 1
     else
-        echo -e "  ✅ Dependencias de mobile app instaladas"
+        echo -e "  ✅ Web app configurada"
+    fi
+    
+    # Verificar que apps/mobile tenga package.json
+    if [ ! -f "apps/mobile/package.json" ]; then
+        echo -e "${RED}❌ package.json no encontrado en apps/mobile${NC}"
+        return 1
+    else
+        echo -e "  ✅ Mobile app configurada"
     fi
     
     return 0
@@ -140,8 +160,13 @@ case $OPTION in
         
         # 1. Verificar dependencias
         if ! check_dependencies; then
-            echo -e "${RED}❌ Dependencias no instaladas. Ejecuta primero:${NC}"
+            echo -e "${RED}❌ Problemas con dependencias. Ejecuta primero:${NC}"
             echo "  ./scripts/environments/local/setup.sh"
+            echo ""
+            echo "💡 En setup.sh selecciona:"
+            echo "  1. Configuración completa (recomendado)"
+            echo "  O"
+            echo "  7. Instalar solo dependencias de web/mobile"
             exit 1
         fi
         
@@ -184,14 +209,23 @@ case $OPTION in
         cd "$PROJECT_ROOT/apps/mobile"
         free_port 8081
         
-        # Verificar si Expo CLI está instalado
-        if ! command -v expo &> /dev/null; then
-            echo -e "${YELLOW}⚠️  Expo CLI no encontrado, instalando...${NC}"
-            npm install -g expo-cli
+        # Verificar si Expo está instalado (global o local)
+        EXPO_CMD=""
+        if command -v expo &> /dev/null; then
+            EXPO_CMD="expo"
+        elif [ -f "$PROJECT_ROOT/node_modules/.bin/expo" ]; then
+            EXPO_CMD="$PROJECT_ROOT/node_modules/.bin/expo"
+        elif [ -f "$PROJECT_ROOT/apps/mobile/node_modules/.bin/expo" ]; then
+            EXPO_CMD="$PROJECT_ROOT/apps/mobile/node_modules/.bin/expo"
+        else
+            # Usar npx como fallback
+            EXPO_CMD="npx expo"
         fi
         
+        echo "  🔧 Usando comando: $EXPO_CMD"
+        
         # Iniciar Expo en background
-        expo start &
+        $EXPO_CMD start &
         EXPO_PID=$!
         PIDS+=($EXPO_PID)
         
@@ -241,13 +275,23 @@ case $OPTION in
         cd "$PROJECT_ROOT/apps/mobile"
         free_port 8081
         
-        # Verificar si Expo CLI está instalado
-        if ! command -v expo &> /dev/null; then
-            echo -e "${YELLOW}⚠️  Expo CLI no encontrado, instalando...${NC}"
-            npm install -g expo-cli
+        # Verificar si Expo está instalado (global o local)
+        EXPO_CMD=""
+        if command -v expo &> /dev/null; then
+            EXPO_CMD="expo"
+        elif [ -f "$PROJECT_ROOT/node_modules/.bin/expo" ]; then
+            EXPO_CMD="$PROJECT_ROOT/node_modules/.bin/expo"
+        elif [ -f "$PROJECT_ROOT/apps/mobile/node_modules/.bin/expo" ]; then
+            EXPO_CMD="$PROJECT_ROOT/apps/mobile/node_modules/.bin/expo"
+        else
+            # Usar npx como fallback
+            EXPO_CMD="npx expo"
         fi
         
-        expo start
+        echo "  🔧 Usando comando: $EXPO_CMD"
+        
+        # Iniciar Expo en foreground
+        $EXPO_CMD start
         ;;
     
     "4")
