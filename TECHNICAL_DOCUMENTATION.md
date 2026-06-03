@@ -163,7 +163,6 @@ La aplicación se integra con **Odoo** (ERP) para:
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   @retia-global/api                         │
 │                                                             │
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │              OdooService (JSON-RPC)                  │   │
@@ -199,42 +198,7 @@ ODOO_ADMIN_PASSWORD=admin_password_for_operations
 AUTH_PROVIDERS=email,odoo
 ```
 
-### OdooService - Referencia API
 
-El servicio se encuentra en `packages/api/src/services/odoo.ts`:
-
-```typescript
-import { createOdooService } from '@retia-global/api';
-
-// Crear instancia del servicio
-const odoo = createOdooService();
-
-// Autenticar usuario
-const user = await odoo.authenticate('login', 'password');
-// Returns: { uid, name, email, company_id, isAdmin }
-
-// Crear usuario en Odoo
-const newUid = await odoo.createUser('Nombre', 'email@example.com', 'password');
-
-// Actualizar contraseña
-await odoo.updatePassword(uid, 'newPassword');
-
-// Leer datos de Odoo
-const data = await odoo.read('res.users', [uid], ['name', 'email']);
-
-// Ejecutar método personalizado
-const result = await odoo.executeKeyword('res.users', 'action_do_something', [uid]);
-```
-
-### Métodos del OdooService
-
-| Método | Descripción | Parámetros | Retorna |
-|--------|-------------|------------|---------|
-| `authenticate` | Autentica contra Odoo | `login`, `password` | `{ uid, name, email, company_id, isAdmin }` |
-| `createUser` | Crea usuario en Odoo | `name`, `login`, `password` | `uid` (number) |
-| `updatePassword` | Actualiza contraseña | `uid`, `newPassword` | `void` |
-| `read` | Lee registros | `model`, `ids`, `fields` | `object[]` |
-| `executeKeyword` | Ejecuta método Odoo | `model`, `method`, `args`, `kwargs` | `any` |
 
 ### Flujos de Autenticación
 
@@ -308,88 +272,3 @@ API /api/change-password
               Odoo XML-RPC → res.users/write
 ```
 
-### Modelos de Datos
-
-#### Usuario en MongoDB (`packages/api/src/models/user.ts`)
-
-```typescript
-interface User {
-  _id: ObjectId;
-  email: string;
-  name: string;
-  password?: string;        // Hash bcrypt (solo si AUTH_METHODS=email)
-  role: 'admin' | 'user';
-  approved: boolean;
-  authProvider: 'email' | 'odoo' | 'google' | 'facebook';
-  createdAt: Date;
-  updatedAt: Date;
-  metadata: {
-    odoo_uid?: number;      // ID del usuario en Odoo
-    google_id?: string;
-    facebook_id?: string;
-    // otros datos...
-  };
-}
-```
-
-### Habilitar/Deshabilitar Odoo
-
-Para **habilitar** Odoo como método de autenticación:
-
-```bash
-# En apps/web/.env.local
-AUTH_PROVIDERS=email,odoo
-
-# En apps/mobile/.env.local  
-EXPO_PUBLIC_AUTH_METHODS=email,odoo
-EXPO_PUBLIC_ODOO_URL=https://odoo.your-domain.com
-```
-
-Para **deshabilitar** Odoo:
-
-```bash
-AUTH_PROVIDERS=email
-EXPO_PUBLIC_AUTH_METHODS=email
-```
-
----
-
-## 🚀 Inicio Rápido
-
-### Desarrollo Local
-
-```bash
-# 1. Instalar dependencias
-yarn install
-
-# 2. Configurar entorno
-./scripts/environments/local/setup.sh
-
-# 3. Iniciar servicios
-./scripts/environments/local/start.sh
-
-# O iniciar solo web
-cd apps/web && yarn dev
-
-# O iniciar mobile con emuladores
-./scripts/environments/local/mobile/start.sh
-```
-
-### Puertos
-
-| Servicio | Puerto |
-|----------|--------|
-| Web App | 9001 |
-| Expo Metro | 8081 |
-| MongoDB | 27017 |
-
----
-
-## 📚 Recursos
-
-- [Next.js Docs](https://nextjs.org/docs)
-- [Expo Docs](https://docs.expo.dev)
-- [React Native](https://reactnative.dev)
-- [Odoo Developer Docs](https://www.odoo.com/documentation/16.0/developer)
-- [NextAuth.js](https://next-auth.js.org)
-- [MongoDB](https://docs.mongodb.com)
