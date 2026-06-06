@@ -1,3 +1,8 @@
+// Fix for ReferenceError: global is not defined in Vercel Edge Runtime
+if (typeof global === 'undefined') {
+  (globalThis as any).global = globalThis;
+}
+
 import { NextResponse } from 'next/server';
 import { auth } from './src/lib/auth';
 

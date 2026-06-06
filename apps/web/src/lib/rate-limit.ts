@@ -11,9 +11,14 @@ import { NextRequest, NextResponse } from 'next/server';
  *   UPSTASH_REDIS_REST_TOKEN — from https://console.upstash.com
  */
 
-// Check if Upstash is configured
+// Check if Upstash is configured and has a valid URL/token (not placeholders)
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 const isUpstashConfigured =
-    !!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN;
+    !!redisUrl &&
+    redisUrl.startsWith('https://') &&
+    !!redisToken &&
+    !redisToken.startsWith('[');
 
 // Redis client (only created when Upstash is configured)
 const redis = isUpstashConfigured

@@ -3,7 +3,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import { z } from 'zod';
-import { connectDB, User, UserRole, createOdooService } from '@core/api';
 import './types'; // Import type extensions
 
 // Simple logger interface for auth events
@@ -69,6 +68,9 @@ if (enabledProviders.includes('email')) {
         try {
           // Validate credentials
           const validated = loginSchema.parse(credentials);
+
+          // Import database dependencies dynamically
+          const { connectDB, User, UserRole } = await import('@core/api');
 
           // Connect to database
           await connectDB();
@@ -170,6 +172,8 @@ if (enabledProviders.includes('odoo')) {
             return null;
           }
 
+          const { connectDB, User, UserRole, createOdooService } = await import('@core/api');
+
           const odoo = createOdooService();
           const odooUser = await odoo.authenticate(
             credentials.email as string,
@@ -237,6 +241,7 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
+        const { connectDB, User, UserRole } = await import('@core/api');
         await connectDB();
 
         // If OAuth login, check if user exists or create
@@ -284,6 +289,7 @@ export const authConfig: NextAuthConfig = {
 
       // Refresh token data if needed
       if (trigger === 'update') {
+        const { connectDB, User } = await import('@core/api');
         await connectDB();
         const dbUser = await User.findById(token.id);
         if (dbUser) {
