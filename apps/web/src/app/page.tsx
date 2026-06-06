@@ -4,7 +4,7 @@ import { getEnv } from '@/lib/env';
 import Image from 'next/image';
 import { Navbar } from '@/components/Navbar';
 import { NavbarWrapper } from '@/components/NavbarWrapper';
-import { connectDB } from '@retia-global/api';
+import { connectDB } from '@core/api';
 
 export default async function HomePage() {
     const env = getEnv();

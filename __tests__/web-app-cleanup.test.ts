@@ -27,7 +27,7 @@ const UI_COMPONENT_FILES = [
   'apps/web/src/app/admin/users/page.tsx'
 ];
 
-// API route files that should import from @retia-global/api
+// API route files that should import from @core/api
 const API_ROUTE_FILES = [
   'apps/web/src/app/api/change-password/route.ts',
   'apps/web/src/app/api/forgot-password/route.ts',
@@ -53,7 +53,7 @@ function hasLegacyRetiaImports(content: string): boolean {
 }
 
 function hasRetiaImports(content: string): boolean {
-  return content.includes('@retia-global/');
+  return content.includes('@core/');
 }
 
 function hasLocalAuthLogic(content: string): boolean {
@@ -86,7 +86,7 @@ function hasLocalDatabaseLogic(content: string): boolean {
 }
 
 function hasTailwindPresetImport(content: string): boolean {
-  return content.includes('require("@retia-global/configs/tailwind")');
+  return content.includes('require("@core/configs/tailwind")');
 }
 
 function hasMiddlewareFactory(content: string): boolean {
@@ -114,7 +114,7 @@ describe('Web App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should import UI components from @retia-global/ui', () => {
+    it('should import UI components from @core/ui', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constantFrom(...UI_COMPONENT_FILES),
@@ -126,7 +126,7 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For any UI component file, should import from @retia-global/ui
+          // For any UI component file, should import from @core/ui
           if (content.includes('import') && (content.includes('Button') || content.includes('Card') || content.includes('Input'))) {
             expect(hasRetiaImports(content)).toBe(true);
             expect(content).toMatch(/@retia\/ui/);
@@ -135,7 +135,7 @@ describe('Web App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should import API functionality from @retia-global/api', () => {
+    it('should import API functionality from @core/api', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constantFrom(...API_ROUTE_FILES),
@@ -147,7 +147,7 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For any API route file, should import from @retia-global/api
+          // For any API route file, should import from @core/api
           if (content.includes('connectDB') || content.includes('User') || content.includes('sendEmail')) {
             expect(hasRetiaImports(content)).toBe(true);
             expect(content).toMatch(/@retia\/api/);
@@ -171,7 +171,7 @@ describe('Web App Cleanup Property Tests', () => {
           // For auth.ts file, after cleanup should not contain local auth implementation
           expect(hasLocalAuthLogic(content)).toBe(false);
           
-          // Should import from @retia-global/auth instead
+          // Should import from @core/auth instead
           expect(content).toMatch(/@retia\/auth/);
         }
       ), { numRuns: 100 });
@@ -191,7 +191,7 @@ describe('Web App Cleanup Property Tests', () => {
           
           // For any API route, after cleanup should not contain local database logic
           // (Database operations should be imported from SDK)
-          if (content.includes('@retia-global/api')) {
+          if (content.includes('@core/api')) {
             // If using SDK, should not have local database implementation patterns
             expect(hasLocalDatabaseLogic(content)).toBe(false);
           }
@@ -199,7 +199,7 @@ describe('Web App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should use @retia-global/configs preset in tailwind.config.js', () => {
+    it('should use @core/configs preset in tailwind.config.js', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constant('apps/web/tailwind.config.js'),
@@ -211,7 +211,7 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For tailwind config, should use @retia-global/configs preset
+          // For tailwind config, should use @core/configs preset
           expect(hasTailwindPresetImport(content)).toBe(true);
           
           // Should not contain manual theme configuration (should be in preset)
@@ -221,7 +221,7 @@ describe('Web App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should use middleware factory from @retia-global/auth', () => {
+    it('should use middleware factory from @core/auth', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constant('apps/web/middleware.ts'),
@@ -233,14 +233,14 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For middleware.ts, should use factory from @retia-global/auth
+          // For middleware.ts, should use factory from @core/auth
           expect(hasMiddlewareFactory(content)).toBe(true);
           expect(content).toMatch(/@retia\/auth/);
         }
       ), { numRuns: 100 });
     });
 
-    it('should export route protection functions from @retia-global/auth', () => {
+    it('should export route protection functions from @core/auth', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constant('apps/web/src/lib/route-protection.ts'),
@@ -252,7 +252,7 @@ describe('Web App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For route-protection.ts, should export from @retia-global/auth
+          // For route-protection.ts, should export from @core/auth
           expect(content).toMatch(/export[\s\S]*from[\s\S]*@retia\/auth/);
           
           // Should not contain local implementation
@@ -288,10 +288,10 @@ describe('Web App Cleanup Property Tests', () => {
             const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
             
             // Should have @retia packages
-            expect(dependencies['@retia-global/auth']).toBeDefined();
-            expect(dependencies['@retia-global/api']).toBeDefined();
-            expect(dependencies['@retia-global/ui']).toBeDefined();
-            expect(dependencies['@retia-global/configs']).toBeDefined();
+            expect(dependencies['@core/auth']).toBeDefined();
+            expect(dependencies['@core/api']).toBeDefined();
+            expect(dependencies['@core/ui']).toBeDefined();
+            expect(dependencies['@core/configs']).toBeDefined();
           }
         }
       ), { numRuns: 100 });

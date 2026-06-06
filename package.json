@@ -24,7 +24,7 @@
   "scripts": {
     "dev": "yarn workspace @retia-app/web dev",
     "build": "yarn build:packages && yarn build:web",
-    "build:packages": "yarn workspace @retia-global/types build && yarn workspace @retia-global/database build && yarn workspace @retia-global/api build && yarn workspace @retia-global/auth build && yarn workspace @retia-global/ui build && yarn workspace @retia-global/configs build && yarn workspace @retia-global/utils build",
+    "build:packages": "yarn workspace @core/types build && yarn workspace @core/database build && yarn workspace @core/api build && yarn workspace @core/auth build && yarn workspace @core/ui build && yarn workspace @core/configs build && yarn workspace @core/utils build",
     "build:web": "yarn workspace @retia-app/web build",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -66,6 +66,6 @@
     "yarn": ">=1.22.0"
   },
   "dependencies": {
-    "@retia-global/api": "^1.0.1"
+    "@core/api": "^1.0.1"
   }
 }

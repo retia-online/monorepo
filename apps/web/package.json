@@ -13,10 +13,10 @@
         "dev:all": "yarn workspace app dev:all"
     },
     "dependencies": {
-        "@retia-global/api": "file:../../packages/api",
-        "@retia-global/auth": "file:../../packages/auth",
-        "@retia-global/configs": "file:../../packages/configs",
-        "@retia-global/ui": "file:../../packages/ui",
+        "@core/api": "file:../../packages/api",
+        "@core/auth": "file:../../packages/auth",
+        "@core/configs": "file:../../packages/configs",
+        "@core/ui": "file:../../packages/ui",
         "@upstash/ratelimit": "^2.0.8",
         "@upstash/redis": "^1.38.0",
         "bcryptjs": "^3.0.3",

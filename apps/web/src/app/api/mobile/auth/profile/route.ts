@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@retia-global/api';
-import { verifyMobileToken } from '@retia-global/auth';
+import { connectDB, User } from '@core/api';
+import { verifyMobileToken } from '@core/auth';
 import { logAPI } from '@/lib/logger';
 
 const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fallback-secret';

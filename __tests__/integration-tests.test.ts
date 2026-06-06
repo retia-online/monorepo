@@ -15,7 +15,7 @@ describe('Integration Tests - External SDK Migration', () => {
   
   describe('Authentication Flow Integration', () => {
     
-    test('should validate auth configuration imports from @retia-global/auth', () => {
+    test('should validate auth configuration imports from @core/auth', () => {
       const authFilePath = join(process.cwd(), 'apps/web/src/lib/auth.ts');
       
       if (!existsSync(authFilePath)) {
@@ -33,7 +33,7 @@ describe('Integration Tests - External SDK Migration', () => {
       expect(authContent).toMatch(/NextAuth|authOptions|signIn|signOut/);
     });
     
-    test('should validate middleware imports from @retia-global/auth', () => {
+    test('should validate middleware imports from @core/auth', () => {
       const middlewarePath = join(process.cwd(), 'apps/web/middleware.ts');
       
       if (!existsSync(middlewarePath)) {
@@ -82,7 +82,7 @@ describe('Integration Tests - External SDK Migration', () => {
   
   describe('Database Operations Integration', () => {
     
-    test('should validate API imports from @retia-global/api in mobile app', () => {
+    test('should validate API imports from @core/api in mobile app', () => {
       const apiFilePath = join(process.cwd(), 'apps/mobile/src/lib/api.ts');
       
       if (!existsSync(apiFilePath)) {
@@ -141,7 +141,7 @@ describe('Integration Tests - External SDK Migration', () => {
   
   describe('UI Components Integration', () => {
     
-    test('should validate UI component imports from @retia-global/ui in web app', () => {
+    test('should validate UI component imports from @core/ui in web app', () => {
       const pagesDir = join(process.cwd(), 'apps/web/src/pages');
       const appDir = join(process.cwd(), 'apps/web/src/app');
       
@@ -162,7 +162,7 @@ describe('Integration Tests - External SDK Migration', () => {
       }
     });
     
-    test('should validate Tailwind configuration uses @retia-global/configs preset', () => {
+    test('should validate Tailwind configuration uses @core/configs preset', () => {
       const tailwindConfigPath = join(process.cwd(), 'apps/web/tailwind.config.js');
       
       if (!existsSync(tailwindConfigPath)) {
@@ -230,10 +230,10 @@ describe('Integration Tests - External SDK Migration', () => {
       const dependencies = webPackageJson.dependencies || {};
       
       // Verify external SDK dependencies
-      expect(dependencies['@retia-global/auth']).toBeDefined();
-      expect(dependencies['@retia-global/api']).toBeDefined();
-      expect(dependencies['@retia-global/ui']).toBeDefined();
-      expect(dependencies['@retia-global/configs']).toBeDefined();
+      expect(dependencies['@core/auth']).toBeDefined();
+      expect(dependencies['@core/api']).toBeDefined();
+      expect(dependencies['@core/ui']).toBeDefined();
+      expect(dependencies['@core/configs']).toBeDefined();
       
       // Verify no local workspace dependencies
       expect(dependencies['@retia/auth']).toBeUndefined();
@@ -253,8 +253,8 @@ describe('Integration Tests - External SDK Migration', () => {
       const dependencies = mobilePackageJson.dependencies || {};
       
       // Verify external SDK dependencies (mobile uses api and ui)
-      expect(dependencies['@retia-global/api']).toBeDefined();
-      expect(dependencies['@retia-global/ui']).toBeDefined();
+      expect(dependencies['@core/api']).toBeDefined();
+      expect(dependencies['@core/ui']).toBeDefined();
       
       // Verify no local workspace dependencies
       expect(dependencies['@retia/api']).toBeUndefined();

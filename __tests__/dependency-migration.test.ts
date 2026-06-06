@@ -27,10 +27,10 @@ const APP_PACKAGES = [
 
 // Expected @retia packages that should replace @retia packages
 const EXPECTED_RETIA_PACKAGES = [
-  '@retia-global/auth',
-  '@retia-global/api', 
-  '@retia-global/ui',
-  '@retia-global/configs'
+  '@core/auth',
+  '@core/api', 
+  '@core/ui',
+  '@core/configs'
 ];
 
 // Legacy @retia packages that should be removed
@@ -70,7 +70,7 @@ function hasLegacyRetiaPackages(dependencies: Record<string, string>): boolean {
 
 function hasRetiaPackages(dependencies: Record<string, string>): boolean {
   return Object.keys(dependencies).some(packageName => 
-    packageName.startsWith('@retia-global/')
+    packageName.startsWith('@core/')
   );
 }
 
@@ -155,7 +155,7 @@ describe('Dependency Migration Property Tests', () => {
           
           // Should have at least one @retia package
           const retiaPackages = Object.keys(allDependencies).filter(packageName => 
-            packageName.startsWith('@retia-global/')
+            packageName.startsWith('@core/')
           );
           expect(retiaPackages.length).toBeGreaterThan(0);
         }
@@ -172,7 +172,7 @@ describe('Dependency Migration Property Tests', () => {
           
           // For any @retia package dependency, version should be a valid range
           Object.entries(allDependencies).forEach(([packageName, version]) => {
-            if (packageName.startsWith('@retia-global/')) {
+            if (packageName.startsWith('@core/')) {
               expect(isValidVersionRange(version)).toBe(true);
               
               // Should use caret range for automatic minor updates (^1.0.0)
@@ -301,7 +301,7 @@ describe('Dependency Migration Property Tests', () => {
           // For any application, @retia packages should be in dependencies (not devDependencies)
           if (packageInfo.dependencies) {
             Object.keys(packageInfo.dependencies).forEach(packageName => {
-              if (packageName.startsWith('@retia-global/')) {
+              if (packageName.startsWith('@core/')) {
                 // Should not also be in devDependencies
                 expect(packageInfo.devDependencies?.[packageName]).toBeUndefined();
                 expect(packageInfo.peerDependencies?.[packageName]).toBeUndefined();
@@ -362,16 +362,16 @@ describe('Dependency Migration Property Tests', () => {
           
           if (appPath === 'apps/web') {
             // Web app needs auth, api, ui, and configs
-            expect(allDependencies['@retia-global/auth']).toBeDefined();
-            expect(allDependencies['@retia-global/api']).toBeDefined();
-            expect(allDependencies['@retia-global/ui']).toBeDefined();
-            expect(allDependencies['@retia-global/configs']).toBeDefined();
+            expect(allDependencies['@core/auth']).toBeDefined();
+            expect(allDependencies['@core/api']).toBeDefined();
+            expect(allDependencies['@core/ui']).toBeDefined();
+            expect(allDependencies['@core/configs']).toBeDefined();
           }
           
           if (appPath === 'apps/mobile') {
             // Mobile app needs api and ui (auth is handled differently in mobile)
-            expect(allDependencies['@retia-global/api']).toBeDefined();
-            expect(allDependencies['@retia-global/ui']).toBeDefined();
+            expect(allDependencies['@core/api']).toBeDefined();
+            expect(allDependencies['@core/ui']).toBeDefined();
           }
         }
       ), { numRuns: 100 });

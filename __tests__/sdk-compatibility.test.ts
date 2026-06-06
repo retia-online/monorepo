@@ -23,9 +23,9 @@ describe('SDK Update and Compatibility Flow', () => {
         const webPackageJson = JSON.parse(readFileSync(webPackageJsonPath, 'utf-8'));
         const dependencies = webPackageJson.dependencies || {};
         
-        // Validate @retia-global packages use either semantic versioning or workspace references
+        // Validate @core packages use either semantic versioning or workspace references
         Object.keys(dependencies).forEach(dep => {
-          if (dep.startsWith('@retia-global/')) {
+          if (dep.startsWith('@core/')) {
             const version = dependencies[dep];
             // Accept either semantic versioning (x.x.x) or workspace references (workspace:*)
             const isValidVersion = 
@@ -40,9 +40,9 @@ describe('SDK Update and Compatibility Flow', () => {
         const mobilePackageJson = JSON.parse(readFileSync(mobilePackageJsonPath, 'utf-8'));
         const dependencies = mobilePackageJson.dependencies || {};
         
-        // Validate @retia-global packages use either semantic versioning or workspace references
+        // Validate @core packages use either semantic versioning or workspace references
         Object.keys(dependencies).forEach(dep => {
-          if (dep.startsWith('@retia-global/')) {
+          if (dep.startsWith('@core/')) {
             const version = dependencies[dep];
             // Accept either semantic versioning (x.x.x) or workspace references (workspace:*)
             const isValidVersion = 
@@ -165,10 +165,10 @@ describe('SDK Update and Compatibility Flow', () => {
         const dependencies = webPackageJson.dependencies || {};
         
         const retiaPackages = Object.keys(dependencies)
-          .filter(dep => dep.startsWith('@retia-global/'));
+          .filter(dep => dep.startsWith('@core/'));
         
         // Verify all required SDKs are present for web app
-        const requiredWebSDKs = ['@retia-global/auth', '@retia-global/api', '@retia-global/ui', '@retia-global/configs'];
+        const requiredWebSDKs = ['@core/auth', '@core/api', '@core/ui', '@core/configs'];
         requiredWebSDKs.forEach(sdk => {
           expect(retiaPackages).toContain(sdk);
         });
@@ -306,7 +306,7 @@ describe('SDK Update and Compatibility Flow', () => {
         
         // Verify they can have different versions (gradual rollout capability)
         const commonSDKs = Object.keys(webDeps).filter(dep => 
-          dep.startsWith('@retia-global/') && mobileDeps[dep]
+          dep.startsWith('@core/') && mobileDeps[dep]
         );
         
         // At least one common SDK should exist for comparison

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User } from '@retia-global/api';
-import { resetPasswordSchema, sendPasswordResetEmail } from '@retia-global/api';
+import { connectDB, User } from '@core/api';
+import { resetPasswordSchema, sendPasswordResetEmail } from '@core/api';
 import crypto from 'crypto';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';

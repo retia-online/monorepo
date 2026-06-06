@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User, UserRole } from '@retia-global/api';
-import { loginSchema } from '@retia-global/api';
+import { connectDB, User, UserRole } from '@core/api';
+import { loginSchema } from '@core/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { logger, logAuth, logAPI } from '@/lib/logger';
-import { generateMobileToken } from '@retia-global/auth';
+import { generateMobileToken } from '@core/auth';
 
 const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'fallback-secret';
 
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         let user;
 
         if (validated.provider === 'odoo') {
-            const { createOdooService } = await import('@retia-global/api');
+            const { createOdooService } = await import('@core/api');
             const odoo = createOdooService();
             const odooUser = await odoo.authenticate(validated.email, validated.password);
 

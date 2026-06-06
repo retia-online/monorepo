@@ -4,7 +4,7 @@
  * **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5**
  * 
  * IMPORTANT: Follow observation-first methodology
- * Observe behavior on UNFIXED code for non-buggy inputs: repository operations that do NOT involve resolving `@retia-global` packages from external registries
+ * Observe behavior on UNFIXED code for non-buggy inputs: repository operations that do NOT involve resolving `@core` packages from external registries
  * Write property-based tests capturing observed behavior patterns from Preservation Requirements: monorepo workspace structure, package.json dependency resolution, build scripts, authorized team member access
  * Property-based testing generates many test cases for stronger guarantees
  * Run tests on UNFIXED code
@@ -65,7 +65,7 @@ function getAllDependencies(packageInfo: PackageInfo): Record<string, string> {
 }
 
 function isRetiaGlobalPackage(packageName: string): boolean {
-  return packageName.startsWith('@retia-global/');
+  return packageName.startsWith('@core/');
 }
 
 function isWorkspaceReference(version: string): boolean {
@@ -152,7 +152,7 @@ function checkNonRetiaDependencies(): string[] {
   const rootPackage = loadPackageJson('package.json');
   const allDeps = getAllDependencies(rootPackage);
   
-  // Get non-@retia-global dependencies
+  // Get non-@core dependencies
   return Object.keys(allDeps).filter(packageName => !isRetiaGlobalPackage(packageName));
 }
 
@@ -160,7 +160,7 @@ function checkAppNonRetiaDependencies(appPath: string): string[] {
   const appPackage = loadPackageJson(path.join(appPath, 'package.json'));
   const allDeps = getAllDependencies(appPackage);
   
-  // Get non-@retia-global dependencies
+  // Get non-@core dependencies
   return Object.keys(allDeps).filter(packageName => !isRetiaGlobalPackage(packageName));
 }
 
@@ -266,12 +266,12 @@ describe('Preservation Property Tests', () => {
       expect(appsWithBuildScripts.length).toBeGreaterThan(0);
     });
 
-    // Test 3: Non-@retia-global dependency preservation
-    it('should preserve all non-@retia-global dependencies', () => {
+    // Test 3: Non-@core dependency preservation
+    it('should preserve all non-@core dependencies', () => {
       // **Feature: remove-external-package-dependencies, Property 2: Preservation**
       // **Validates: Requirements 3.2**
       
-      // Property-based test: For any non-@retia-global dependency, it should be preserved
+      // Property-based test: For any non-@core dependency, it should be preserved
       fc.assert(fc.property(
         fc.constantFrom('root', 'web', 'mobile'),
         (packageType) => {
@@ -285,13 +285,13 @@ describe('Preservation Property Tests', () => {
             nonRetiaDeps = checkAppNonRetiaDependencies('apps/mobile');
           }
           
-          // For any package type, there should be non-@retia-global dependencies
+          // For any package type, there should be non-@core dependencies
           expect(nonRetiaDeps.length).toBeGreaterThan(0);
           
-          // All non-@retia-global dependencies should have valid names
+          // All non-@core dependencies should have valid names
           nonRetiaDeps.forEach(dep => {
             expect(dep).toBeTruthy();
-            expect(dep).not.toMatch(/^@retia-global\//);
+            expect(dep).not.toMatch(/^@core\//);
           });
         }
       ), { numRuns: 10 });
@@ -533,7 +533,7 @@ describe('Preservation Property Tests', () => {
     });
 
     // Test 14: Property-based test for dependency resolution patterns
-    it('should preserve dependency resolution patterns for non-@retia-global packages', () => {
+    it('should preserve dependency resolution patterns for non-@core packages', () => {
       // **Feature: remove-external-package-dependencies, Property 2: Preservation**
       // **Validates: Requirements 3.2**
       
@@ -553,7 +553,7 @@ describe('Preservation Property Tests', () => {
           const allDeps = getAllDependencies(packageInfo);
           const nonRetiaDeps = Object.keys(allDeps).filter(dep => !isRetiaGlobalPackage(dep));
           
-          // For any package type, non-@retia-global dependencies should have valid version ranges
+          // For any package type, non-@core dependencies should have valid version ranges
           nonRetiaDeps.forEach(dep => {
             const version = allDeps[dep];
             expect(version).toBeTruthy();
@@ -603,13 +603,13 @@ describe('Preservation Property Tests', () => {
       const appPackages = getAppPackages();
       console.log(`7. App packages: ${appPackages.length} found`);
       
-      // Non-@retia-global dependencies in root
+      // Non-@core dependencies in root
       const nonRetiaDeps = checkNonRetiaDependencies();
-      console.log(`8. Non-@retia-global dependencies in root: ${nonRetiaDeps.length} found`);
+      console.log(`8. Non-@core dependencies in root: ${nonRetiaDeps.length} found`);
       
       console.log('');
       console.log('=== PRESERVATION STATUS ===');
-      console.log('All non-@retia-global functionality should be preserved.');
+      console.log('All non-@core functionality should be preserved.');
       console.log('These tests PASSING confirms baseline behavior to preserve.');
       
       // Overall validation

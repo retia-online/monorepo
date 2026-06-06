@@ -24,26 +24,26 @@ describe.skip('Documentation Completeness Property Tests', () => {
 
   // Mock SDK package structure for testing
   const mockSDKPackages = [
-    '@retia-global/auth',
-    '@retia-global/api', 
-    '@retia-global/ui',
-    '@retia-global/configs'
+    '@core/auth',
+    '@core/api', 
+    '@core/ui',
+    '@core/configs'
   ];
 
   const mockExportedFunctions = {
-    '@retia-global/auth': [
+    '@core/auth': [
       'authConfig', 'handlers', 'auth', 'signIn', 'signOut', 
       'requireAuth', 'requireAdmin', 'redirectIfAuthenticated'
     ],
-    '@retia-global/api': [
+    '@core/api': [
       'connectDB', 'User', 'Account', 'Session', 'getUserBackup', 
       'createUser', 'updateUser', 'sendEmail', 'hashPassword', 'comparePassword'
     ],
-    '@retia-global/ui': [
+    '@core/ui': [
       'Button', 'Card', 'Input', 'PasswordStrength', 'LoginForm', 
       'Navbar', 'ProfileCard', 'BaseLayout', 'AuthLayout'
     ],
-    '@retia-global/configs': [
+    '@core/configs': [
       'tailwindPreset', 'tsconfig', 'tsconfigReact', 'eslintConfig'
     ]
   };

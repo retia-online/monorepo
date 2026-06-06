@@ -799,6 +799,28 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@core/api@file:packages/api":
+  version "1.0.1"
+  dependencies:
+    bcryptjs "^2.4.3"
+    mongoose "^8.0.3"
+    nodemailer "^6.9.7"
+    zod "^3.22.4"
+
+"@core/auth@file:packages/auth":
+  version "1.0.1"
+  dependencies:
+    "@core/api" "file:../../../Library/Caches/Yarn/v6/npm-@core-auth-1.0.1-b2086476-7ead-4063-9ec6-38df5d2c4b83-1780772538349/node_modules/@core/api"
+    jose "^5.2.0"
+    next-auth "5.0.0-beta.25"
+    zod "^3.22.4"
+
+"@core/configs@file:packages/configs":
+  version "1.0.1"
+
+"@core/ui@file:packages/ui":
+  version "1.0.1"
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -2624,28 +2646,6 @@
     "@react-navigation/elements" "^2.9.18"
     color "^4.2.3"
     use-latest-callback "^0.2.4"
-
-"@retia-global/api@file:packages/api":
-  version "1.0.1"
-  dependencies:
-    bcryptjs "^2.4.3"
-    mongoose "^8.0.3"
-    nodemailer "^6.9.7"
-    zod "^3.22.4"
-
-"@retia-global/auth@file:packages/auth":
-  version "1.0.1"
-  dependencies:
-    "@retia-global/api" "file:../../.cache/yarn/v6/npm-@retia-global-auth-1.0.1-4864fe9c-f97c-471e-89a4-cb1d7503221f-1780698774728/node_modules/@retia-global/api"
-    jose "^5.2.0"
-    next-auth "5.0.0-beta.25"
-    zod "^3.22.4"
-
-"@retia-global/configs@file:packages/configs":
-  version "1.0.1"
-
-"@retia-global/ui@file:packages/ui":
-  version "1.0.1"
 
 "@rolldown/pluginutils@1.0.0-rc.3":
   version "1.0.0-rc.3"

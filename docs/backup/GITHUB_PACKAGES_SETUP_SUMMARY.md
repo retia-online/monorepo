@@ -30,9 +30,9 @@ This repository has been updated to be fully self-contained and no longer requir
 ## 🔧 Changes Made
 
 ### Dependency Resolution
-- All `@retia-global/*` dependencies converted to `workspace:*` references
-- Root package.json dependency fixed from `@retia-online/api` to `@retia-global/api` workspace reference
-- Build scripts updated to reference correct package names (`@retia-global/*` instead of `@retia-online/*`)
+- All `@core/*` dependencies converted to `workspace:*` references
+- Root package.json dependency fixed from `@retia-online/api` to `@core/api` workspace reference
+- Build scripts updated to reference correct package names (`@core/*` instead of `@retia-online/*`)
 
 ### Registry Configuration
 - Removed private GitHub Packages registry configuration

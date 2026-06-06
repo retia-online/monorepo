@@ -117,12 +117,12 @@ monorepo/
 
 | Paquete | Tecnologías |
 |---------|-------------|
-| **@retia-global/api** | Odoo XML-RPC, MongoDB, Nodemailer, Zod, bcryptjs |
-| **@retia-global/auth** | NextAuth.js v5, jose |
-| **@retia-global/ui** | React, React Native, Storybook |
-| **@retia-global/configs** | Tailwind, TypeScript, ESLint |
-| **@retia-global/types** | TypeScript |
-| **@retia-global/utils** | Zod, Nodemailer |
+| **@core/api** | Odoo XML-RPC, MongoDB, Nodemailer, Zod, bcryptjs |
+| **@core/auth** | NextAuth.js v5, jose |
+| **@core/ui** | React, React Native, Storybook |
+| **@core/configs** | Tailwind, TypeScript, ESLint |
+| **@core/types** | TypeScript |
+| **@core/utils** | Zod, Nodemailer |
 
 ### Herramientas de Desarrollo
 
@@ -211,7 +211,7 @@ Usuario ingresa credenciales
 Mobile/Web → API /api/auth/login (provider=odoo)
          │
          ▼
-@retia-global/api → OdooService.authenticate()
+@core/api → OdooService.authenticate()
          │
          ▼
 Odoo XML-RPC → Odoo Server (common.login)

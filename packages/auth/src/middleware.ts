@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from './auth-config';
-import { connectDB, User } from '@retia-global/api';
+import { connectDB, User } from '@core/api';
 
 // Environment helper - simplified version for the SDK
 function getAuthMode(): string {

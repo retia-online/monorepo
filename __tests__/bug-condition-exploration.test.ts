@@ -14,7 +14,7 @@
  * AND NOT hasRegistryAccess(input.packageScope) 
  * AND packageExistsInRegistry(input.packageName) = false
  * 
- * NOTE: Actual code uses @retia-global scope, not @retia-online as mentioned in spec
+ * NOTE: Actual code uses @core scope, not @retia-online as mentioned in spec
  */
 
 import fc from 'fast-check';
@@ -55,13 +55,13 @@ function getAllDependencies(packageInfo: AppPackageInfo): Record<string, string>
 
 function hasRetiaGlobalDependencies(dependencies: Record<string, string>): boolean {
   return Object.keys(dependencies).some(packageName => 
-    packageName.startsWith('@retia-global/')
+    packageName.startsWith('@core/')
   );
 }
 
 function getRetiaGlobalPackages(dependencies: Record<string, string>): string[] {
   return Object.keys(dependencies).filter(packageName => 
-    packageName.startsWith('@retia-global/')
+    packageName.startsWith('@core/')
   );
 }
 
@@ -72,13 +72,13 @@ function checkNpmrcConfig(): boolean {
   // Check if .npmrc exists (users might have created it from template)
   if (fs.existsSync(npmrcPath)) {
     const content = fs.readFileSync(npmrcPath, 'utf8');
-    return content.includes('@retia-global:registry=https://npm.pkg.github.com');
+    return content.includes('@core:registry=https://npm.pkg.github.com');
   }
   
   // Check .npmrc.template (this is what new users would see)
   if (fs.existsSync(npmrcTemplatePath)) {
     const content = fs.readFileSync(npmrcTemplatePath, 'utf8');
-    return content.includes('@retia-global:registry=https://npm.pkg.github.com');
+    return content.includes('@core:registry=https://npm.pkg.github.com');
   }
   
   return false;
@@ -98,7 +98,7 @@ function checkPackagePublishConfig(): boolean {
       const packageInfo = loadPackageJson(packageJsonPath);
       if (packageInfo.publishConfig && 
           (packageInfo.publishConfig.registry === 'https://npm.pkg.github.com' ||
-           packageInfo.publishConfig['@retia-global:registry'] === 'https://npm.pkg.github.com')) {
+           packageInfo.publishConfig['@core:registry'] === 'https://npm.pkg.github.com')) {
         return true;
       }
     }
@@ -114,7 +114,7 @@ function checkPackagePublishConfig(): boolean {
 describe('Bug Condition Exploration Tests', () => {
   describe('Property 1: Bug Condition - Package Resolution Without Private Registry', () => {
     // Test 1: Verify package resolution works without private registry access
-    it('should successfully resolve @retia-global packages without private registry access', () => {
+    it('should successfully resolve @core packages without private registry access', () => {
       // **Feature: remove-external-package-dependencies, Property 1: Bug Condition**
       // **Validates: Requirements 1.1, 1.2, 1.3, 1.4, 1.5**
       
@@ -126,7 +126,7 @@ describe('Bug Condition Exploration Tests', () => {
       expect(hasPrivateRegistryConfig).toBe(false);
       expect(hasPublishConfig).toBe(false);
       
-      // Check that @retia-global packages are referenced as workspace dependencies
+      // Check that @core packages are referenced as workspace dependencies
       const rootPackage = loadPackageJson('package.json');
       const rootDeps = getAllDependencies(rootPackage);
       const hasRootRetiaDeps = hasRetiaGlobalDependencies(rootDeps);
@@ -155,28 +155,28 @@ describe('Bug Condition Exploration Tests', () => {
       const webUsesWorkspace = checkWorkspaceReferences(webDeps, webRetiaPackages);
       const mobileUsesWorkspace = checkWorkspaceReferences(mobileDeps, mobileRetiaPackages);
       
-      // All @retia-global dependencies should use workspace references
+      // All @core dependencies should use workspace references
       if (hasRootRetiaDeps) expect(rootUsesWorkspace).toBe(true);
       if (hasWebRetiaDeps) expect(webUsesWorkspace).toBe(true);
       if (hasMobileRetiaDeps) expect(mobileUsesWorkspace).toBe(true);
       
-      // At least one should have @retia-global dependencies (to verify we're checking something)
+      // At least one should have @core dependencies (to verify we're checking something)
       expect(hasRootRetiaDeps || hasWebRetiaDeps || hasMobileRetiaDeps).toBe(true);
     });
 
     // Test 2: Verify package resolution works without private registry access
-    it('should successfully resolve @retia-global packages without private registry access', () => {
+    it('should successfully resolve @core packages without private registry access', () => {
       // **Feature: remove-external-package-dependencies, Property 1: Bug Condition**
       // **Validates: Requirements 1.1, 1.2, 1.3, 1.4, 1.5**
       
-      // Check that @retia-global packages are configured to use workspace resolution
+      // Check that @core packages are configured to use workspace resolution
       // not private registry
       const hasPrivateRegistryConfig = checkNpmrcConfig();
       
       // After fix, there should be no private registry configuration
       expect(hasPrivateRegistryConfig).toBe(false);
       
-      // Check that all @retia-global dependencies use workspace references
+      // Check that all @core dependencies use workspace references
       const rootPackage = loadPackageJson('package.json');
       const rootDeps = getAllDependencies(rootPackage);
       const rootRetiaPackages = getRetiaGlobalPackages(rootDeps);
@@ -189,7 +189,7 @@ describe('Bug Condition Exploration Tests', () => {
       const mobileDeps = getAllDependencies(mobilePackage);
       const mobileRetiaPackages = getRetiaGlobalPackages(mobileDeps);
       
-      // All @retia-global dependencies should use workspace:* references
+      // All @core dependencies should use workspace:* references
       const checkWorkspaceReferences = (dependencies: Record<string, string>, packages: string[]): boolean => {
         return packages.every(pkg => {
           const version = dependencies[pkg];
@@ -207,7 +207,7 @@ describe('Bug Condition Exploration Tests', () => {
     });
 
     // Test 3: Check that .npmrc.template does NOT configure private registry
-    it('should NOT have .npmrc.template configuring @retia-global scope to private registry', () => {
+    it('should NOT have .npmrc.template configuring @core scope to private registry', () => {
       // **Feature: remove-external-package-dependencies, Property 1: Bug Condition**
       // **Validates: Requirements 1.4**
       
@@ -217,7 +217,7 @@ describe('Bug Condition Exploration Tests', () => {
       const content = fs.readFileSync(npmrcTemplatePath, 'utf8');
       
       // Should NOT contain private registry configuration after fix
-      expect(content).not.toContain('@retia-global:registry=https://npm.pkg.github.com');
+      expect(content).not.toContain('@core:registry=https://npm.pkg.github.com');
       expect(content).not.toContain('//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN');
       
       // Should indicate repository is self-contained
@@ -236,8 +236,8 @@ describe('Bug Condition Exploration Tests', () => {
       expect(hasPublishConfig).toBe(false);
     });
 
-    // Test 5: Check that apps depend on @retia-global packages as workspace references
-    it('should have apps depending on @retia-global packages as workspace references', () => {
+    // Test 5: Check that apps depend on @core packages as workspace references
+    it('should have apps depending on @core packages as workspace references', () => {
       // **Feature: remove-external-package-dependencies, Property 1: Bug Condition**
       // **Validates: Requirements 1.5**
       
@@ -261,7 +261,7 @@ describe('Bug Condition Exploration Tests', () => {
       const webHasExternal = hasExternalDependencies(webDeps, webRetiaPackages);
       const mobileHasExternal = hasExternalDependencies(mobileDeps, mobileRetiaPackages);
       
-      // After fix, apps should NOT have external dependencies on @retia-global packages
+      // After fix, apps should NOT have external dependencies on @core packages
       expect(webHasExternal).toBe(false);
       expect(mobileHasExternal).toBe(false);
     });
@@ -276,7 +276,7 @@ describe('Bug Condition Exploration Tests', () => {
       
       // Check 1: Private registry configuration
       if (!checkNpmrcConfig()) {
-        console.log('✓ 1. .npmrc.template does NOT configure @retia-global scope to use private GitHub registry');
+        console.log('✓ 1. .npmrc.template does NOT configure @core scope to use private GitHub registry');
         console.log('   - No authentication token required for access');
         console.log('   - External users can resolve packages without private registry access');
       } else {
@@ -312,7 +312,7 @@ describe('Bug Condition Exploration Tests', () => {
       const mobileUsesWorkspace = checkWorkspaceReferences(mobileDeps, mobileRetiaPackages);
       
       if (webRetiaPackages.length > 0 || mobileRetiaPackages.length > 0) {
-        console.log('3. Apps depend on @retia-global packages:');
+        console.log('3. Apps depend on @core packages:');
         webRetiaPackages.forEach(pkg => {
           const isWorkspace = webDeps[pkg] && webDeps[pkg].includes('workspace:');
           console.log(`   ${isWorkspace ? '✓' : '✗'} Web app: ${pkg} = ${webDeps[pkg]} ${isWorkspace ? '(workspace reference)' : '(EXTERNAL - BUG NOT FIXED)'}`);
@@ -331,7 +331,7 @@ describe('Bug Condition Exploration Tests', () => {
       const rootUsesWorkspace = checkWorkspaceReferences(rootDeps, rootRetiaPackages);
       
       if (rootRetiaPackages.length > 0) {
-        console.log('4. Root package depends on @retia-global packages:');
+        console.log('4. Root package depends on @core packages:');
         rootRetiaPackages.forEach(pkg => {
           const isWorkspace = rootDeps[pkg] && rootDeps[pkg].includes('workspace:');
           console.log(`   ${isWorkspace ? '✓' : '✗'} ${pkg} = ${rootDeps[pkg]} ${isWorkspace ? '(workspace reference)' : '(EXTERNAL - BUG NOT FIXED)'}`);
@@ -343,7 +343,7 @@ describe('Bug Condition Exploration Tests', () => {
       console.log('The bug fix has been successfully implemented if:');
       console.log('1. All checks above show ✓ (not ✗)');
       console.log('2. No private registry configuration exists');
-      console.log('3. All @retia-global dependencies use workspace:* references');
+      console.log('3. All @core dependencies use workspace:* references');
       console.log('4. Fresh repository clones can install dependencies successfully');
       
       // This test always passes - it's just for documentation

@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@retia-global'
+          scope: '@core'
 
       - name: Install dependencies
         run: yarn install
@@ -34,18 +34,18 @@ jobs:
       # auth y ui después (dependen de api)
       - name: Build packages (en orden)
         run: |
-          yarn workspace @retia-global/configs build
-          yarn workspace @retia-global/api build
-          yarn workspace @retia-global/ui build
-          yarn workspace @retia-global/auth build
+          yarn workspace @core/configs build
+          yarn workspace @core/api build
+          yarn workspace @core/ui build
+          yarn workspace @core/auth build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── Publicación 1: @retia-global ──────────────────────────────────
-      - name: Publish → @retia-global
+      # ── Publicación 1: @core ──────────────────────────────────
+      - name: Publish → @core
         run: |
           for pkg in configs api ui auth; do
-            echo "📦 Publicando @retia-global/$pkg ..."
+            echo "📦 Publicando @core/$pkg ..."
             cd packages/$pkg
             npm publish || echo "⚠️  Ya publicado o falló ($pkg)"
             cd ../..
@@ -64,7 +64,7 @@ jobs:
             node -e "
               const fs = require('fs');
               const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-              pkg.name = pkg.name.replace('@retia-global', '@retia-latam');
+              pkg.name = pkg.name.replace('@core', '@retia-latam');
               pkg.publishConfig = {
                 registry: 'https://npm.pkg.github.com',
                 '@retia-latam:registry': 'https://npm.pkg.github.com'
@@ -73,7 +73,7 @@ jobs:
                 if (pkg[dep]) {
                   const updated = {};
                   for (const [k, v] of Object.entries(pkg[dep])) {
-                    updated[k.replace('@retia-global', '@retia-latam')] = v;
+                    updated[k.replace('@core', '@retia-latam')] = v;
                   }
                   pkg[dep] = updated;
                 }

@@ -51,23 +51,23 @@ function hasLegacyPackageImports(content: string): boolean {
 }
 
 function hasRetiaImports(content: string): boolean {
-  return content.includes('@retia-global/');
+  return content.includes('@core/');
 }
 
 function hasValidMobileDependencies(packageJson: any): boolean {
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
   
-  // Should have @retia-global/api for validation schemas and utilities
-  const hasRetiaApi = dependencies['@retia-global/api'];
+  // Should have @core/api for validation schemas and utilities
+  const hasRetiaApi = dependencies['@core/api'];
   
   // Can have workspace references (we use workspace:* for local development)
   const hasValidRetiaDeps = Object.keys(dependencies).some(dep => 
-    dep.startsWith('@retia-global/')
+    dep.startsWith('@core/')
   );
   
   // Should not have legacy @retia packages (without -global)
   const hasLegacyRetia = Object.keys(dependencies).some(dep => 
-    dep.startsWith('@retia/') && !dep.startsWith('@retia-global/')
+    dep.startsWith('@retia/') && !dep.startsWith('@core/')
   );
   
   return hasValidRetiaDeps && !hasLegacyRetia;
@@ -108,7 +108,7 @@ describe('Mobile App Cleanup Property Tests', () => {
       ), { numRuns: 100 });
     });
 
-    it('should import validation schemas from @retia-global/api', () => {
+    it('should import validation schemas from @core/api', () => {
       // **Feature: external-sdk-transformation, Property 5: Application Cleanup Transformation**
       fc.assert(fc.property(
         fc.constantFrom(...MOBILE_SOURCE_FILES),
@@ -120,10 +120,10 @@ describe('Mobile App Cleanup Property Tests', () => {
           
           const content = readFileContent(filePath);
           
-          // For mobile source files that use validation, should import from @retia-global/api
+          // For mobile source files that use validation, should import from @core/api
           if (content.includes('Schema') || content.includes('validate')) {
             expect(hasRetiaImports(content)).toBe(true);
-            expect(content).toMatch(/@retia-global\/api/);
+            expect(content).toMatch(/@core\/api/);
           }
         }
       ), { numRuns: 100 });
@@ -196,7 +196,7 @@ describe('Mobile App Cleanup Property Tests', () => {
             // Should have mobile-specific packages
             expect(dependencies['expo']).toBeDefined();
             expect(dependencies['react-native']).toBeDefined();
-            expect(dependencies['@retia-global/api']).toBeDefined();
+            expect(dependencies['@core/api']).toBeDefined();
             
             // Should not have web-specific packages as main dependencies
             expect(dependencies['next']).toBeUndefined();

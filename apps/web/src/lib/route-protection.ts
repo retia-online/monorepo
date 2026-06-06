@@ -1,7 +1,7 @@
-// Import route protection functions from @retia-global/auth SDK
+// Import route protection functions from @core/auth SDK
 export {
     requireAuth,
     redirectIfAuthenticated,
     requireAdmin,
     checkFirstUser,
-} from '@retia-global/auth';
+} from '@core/auth';

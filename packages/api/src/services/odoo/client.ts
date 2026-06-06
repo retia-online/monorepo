@@ -1,5 +1,5 @@
 /**
- * Odoo JSON-RPC Service
+ * Odoo JSON-RPC Core Service Client
  */
 export class OdooService {
     private url: string;
@@ -119,9 +119,6 @@ export class OdooService {
         password?: string,
         uid?: number
     ): Promise<any> {
-        // If uid or password not provided, we might need to authenticate first or use provided ones
-        // In many cases we'll pass them from the session/config
-
         try {
             const response = await fetch(`${this.url}/jsonrpc`, {
                 method: 'POST',
@@ -162,9 +159,6 @@ export class OdooService {
             throw new Error('Odoo Admin credentials missing for user creation');
         }
 
-        // 1. Create the user record
-        // By default, we try to make them portal users if possible
-        // We might need to find the portal group ID first or just use common defaults
         const userId = await this.executeKeyword(
             'res.users',
             'create',
@@ -173,16 +167,13 @@ export class OdooService {
                 login: login,
                 email: login,
                 password: password,
-                // In many Odoo installations, new users should be in group_portal
-                // This part might vary, but let's try a standard approach
-                groups_id: [[6, 0, []]] // We can refine this if we know the portal group XML ID
+                groups_id: [[6, 0, []]]
             }],
             {},
             this.adminPassword,
             this.adminUid
         );
 
-        // 2. Try to assign portal group by XML ID if we can
         try {
             const groupData = await this.executeKeyword(
                 'ir.model.data',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Input, Button, Card } from '@retia-global/ui';
+import { Input, Button, Card } from '@core/ui';
 import Link from 'next/link';
 
 export default function ForgotPasswordPage() {

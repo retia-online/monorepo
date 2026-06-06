@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from './src/lib/auth';
 
-export default auth((request) => {
+export default auth((request: any) => {
   const { pathname } = request.nextUrl;
   const session = request.auth;
   const isAuthenticated = !!session;

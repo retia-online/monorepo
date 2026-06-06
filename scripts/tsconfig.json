@@ -13,7 +13,7 @@
     "moduleResolution": "node",
     "baseUrl": "..",
     "paths": {
-      "@retia-global/*": [
+      "@core/*": [
         "packages/*/src"
       ]
     }

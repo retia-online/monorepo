@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB, User, UserRole } from '@retia-global/api';
+import { connectDB, User, UserRole } from '@core/api';
 import { auth } from '@/lib/auth';
 import { logger } from '@/lib/logger';
-import { sendEmail } from '@retia-global/api';
+import { sendEmail } from '@core/api';
 import crypto from 'crypto';
 
 /**

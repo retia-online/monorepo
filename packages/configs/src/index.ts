@@ -1,4 +1,4 @@
-// Main exports for @retia-global/configs package
+// Main exports for @core/configs package
 // Note: Configuration files are exported directly as JS files
 // TypeScript configurations are exported as JSON files
 
@@ -21,5 +21,5 @@ export interface ESLintConfig {
 }
 
 // Re-export configurations
-// These will be available as: require('@retia-global/configs/tailwind.preset')
-// Import TypeScript configs like: require('@retia-global/configs/tsconfig.base.json')
+// These will be available as: require('@core/configs/tailwind.preset')
+// Import TypeScript configs like: require('@core/configs/tsconfig.base.json')

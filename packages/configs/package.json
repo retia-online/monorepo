@@ -1,5 +1,5 @@
 {
-  "name": "@retia-global/configs",
+  "name": "@core/configs",
   "version": "1.0.1",
   "description": "Shared configuration presets for MegaMercado applications",
   "main": "dist/index.js",

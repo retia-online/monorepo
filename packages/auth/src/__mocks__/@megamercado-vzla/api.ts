@@ -1,4 +1,4 @@
-// Mock for @retia-global/api package
+// Mock for @core/api package
 export const connectDB = jest.fn();
 
 export const User = {

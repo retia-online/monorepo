@@ -74,10 +74,10 @@ describe('Comprehensive Migration Validation', () => {
         const webDeps = webPackageJson.dependencies || {};
         
         // Verify external SDK dependencies are present
-        expect(webDeps['@retia-global/auth']).toBeDefined();
-        expect(webDeps['@retia-global/api']).toBeDefined();
-        expect(webDeps['@retia-global/ui']).toBeDefined();
-        expect(webDeps['@retia-global/configs']).toBeDefined();
+        expect(webDeps['@core/auth']).toBeDefined();
+        expect(webDeps['@core/api']).toBeDefined();
+        expect(webDeps['@core/ui']).toBeDefined();
+        expect(webDeps['@core/configs']).toBeDefined();
         
         // Verify no local workspace dependencies remain
         Object.keys(webDeps).forEach(dep => {
@@ -94,8 +94,8 @@ describe('Comprehensive Migration Validation', () => {
         const mobileDeps = mobilePackageJson.dependencies || {};
         
         // Verify external SDK dependencies are present (mobile uses api and ui)
-        expect(mobileDeps['@retia-global/api']).toBeDefined();
-        expect(mobileDeps['@retia-global/ui']).toBeDefined();
+        expect(mobileDeps['@core/api']).toBeDefined();
+        expect(mobileDeps['@core/ui']).toBeDefined();
         
         // Verify no local workspace dependencies remain
         Object.keys(mobileDeps).forEach(dep => {
@@ -142,7 +142,7 @@ describe('Comprehensive Migration Validation', () => {
       if (existsSync(webSrcPath)) {
         checkImportsInDirectory(
           webSrcPath,
-          ['@retia-global/auth', '@retia-global/api', '@retia-global/ui', '@retia-global/configs'],
+          ['@core/auth', '@core/api', '@core/ui', '@core/configs'],
           ['@retia/', '../packages/', '../../packages/']
         );
       }
@@ -151,7 +151,7 @@ describe('Comprehensive Migration Validation', () => {
       if (existsSync(mobileSrcPath)) {
         checkImportsInDirectory(
           mobileSrcPath,
-          ['@retia-global/api', '@retia-global/ui'],
+          ['@core/api', '@core/ui'],
           ['@retia/', '../packages/', '../../packages/']
         );
       }
@@ -351,7 +351,7 @@ describe('Comprehensive Migration Validation', () => {
         const webDeps = webPackageJson.dependencies || {};
         
         // Count external SDK dependencies
-        const externalSDKCount = Object.keys(webDeps).filter(dep => dep.startsWith('@retia-global/')).length;
+        const externalSDKCount = Object.keys(webDeps).filter(dep => dep.startsWith('@core/')).length;
         expect(externalSDKCount).toBeGreaterThanOrEqual(4); // auth, api, ui, configs
         
         // Verify no local dependencies
@@ -364,7 +364,7 @@ describe('Comprehensive Migration Validation', () => {
         const mobileDeps = mobilePackageJson.dependencies || {};
         
         // Count external SDK dependencies (mobile uses fewer SDKs)
-        const externalSDKCount = Object.keys(mobileDeps).filter(dep => dep.startsWith('@retia-global/')).length;
+        const externalSDKCount = Object.keys(mobileDeps).filter(dep => dep.startsWith('@core/')).length;
         expect(externalSDKCount).toBeGreaterThanOrEqual(2); // api, ui
         
         // Verify no local dependencies
@@ -376,21 +376,21 @@ describe('Comprehensive Migration Validation', () => {
       const webTailwindPath = join(process.cwd(), 'apps/web/tailwind.config.js');
       if (existsSync(webTailwindPath)) {
         const tailwindContent = readFileSync(webTailwindPath, 'utf-8');
-        expect(tailwindContent).toMatch(/@retia-global\/configs/);
+        expect(tailwindContent).toMatch(/@core\/configs/);
       }
       
       // 3. Verify auth configuration
       const webAuthPath = join(process.cwd(), 'apps/web/src/lib/auth.ts');
       if (existsSync(webAuthPath)) {
         const authContent = readFileSync(webAuthPath, 'utf-8');
-        expect(authContent).toMatch(/@retia-global\/auth/);
+        expect(authContent).toMatch(/@core\/auth/);
       }
       
       // 4. Verify middleware configuration
       const webMiddlewarePath = join(process.cwd(), 'apps/web/middleware.ts');
       if (existsSync(webMiddlewarePath)) {
         const middlewareContent = readFileSync(webMiddlewarePath, 'utf-8');
-        // Middleware should handle authentication (either using @retia-global/auth or next-auth directly)
+        // Middleware should handle authentication (either using @core/auth or next-auth directly)
         expect(middlewareContent).toMatch(/getToken/);
         expect(middlewareContent).toMatch(/isAuthenticated/);
       }
@@ -399,7 +399,7 @@ describe('Comprehensive Migration Validation', () => {
       const mobileApiPath = join(process.cwd(), 'apps/mobile/src/lib/api.ts');
       if (existsSync(mobileApiPath)) {
         const apiContent = readFileSync(mobileApiPath, 'utf-8');
-        expect(apiContent).toMatch(/@retia-global\/api/);
+        expect(apiContent).toMatch(/@core\/api/);
       }
     });
     

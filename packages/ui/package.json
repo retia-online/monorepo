@@ -1,5 +1,5 @@
 {
-  "name": "@retia-global/ui",
+  "name": "@core/ui",
   "version": "1.0.1",
   "description": "UI components and layouts for MegaMercado applications",
   "main": "./src/index.tsx",

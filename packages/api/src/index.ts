@@ -5,6 +5,7 @@ export { connectDB, default as connect } from './connection';
 export { default as User, UserRole, type IUser } from './models/User';
 export { default as Account, type IAccount } from './models/Account';
 export { default as Session, type ISession } from './models/Session';
+export { default as Task, TaskStatus, type ITask } from './models/Task';
 
 // User services
 export {
@@ -27,7 +28,7 @@ export {
 } from './services/email';
 
 // Odoo services
-export { OdooService, createOdooService } from './services/odoo';
+export { OdooService, createOdooService, createOdooTask, updateOdooTask, readOdooTask } from './services/odoo';
 
 // Crypto utilities
 export {

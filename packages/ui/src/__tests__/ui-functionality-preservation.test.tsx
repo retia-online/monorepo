@@ -8,7 +8,7 @@ import { BaseLayout, AuthLayout } from '../layouts';
  * **Feature: external-sdk-transformation, Property 1: Functional Preservation During Extraction**
  * 
  * This test validates that all UI components maintain their functionality
- * after being extracted from the original packages/ui to @retia-global/ui
+ * after being extracted from the original packages/ui to @core/ui
  */
 
 describe('UI Component Functionality Preservation', () => {

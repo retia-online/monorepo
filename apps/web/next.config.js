@@ -2,10 +2,10 @@
 const nextConfig = {
     reactStrictMode: true,
     transpilePackages: [
-        '@retia-global/auth',
-        '@retia-global/api',
-        '@retia-global/ui',
-        '@retia-global/configs',
+        '@core/auth',
+        '@core/api',
+        '@core/ui',
+        '@core/configs',
     ],
     serverExternalPackages: ['mongoose', 'pino', 'thread-stream'],
     turbopack: {

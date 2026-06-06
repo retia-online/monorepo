@@ -13,10 +13,10 @@ import fc from 'fast-check';
 
 // External SDK packages that should be available on GitHub Packages
 const EXTERNAL_SDK_PACKAGES = [
-  '@retia-global/auth',
-  '@retia-global/api', 
-  '@retia-global/ui',
-  '@retia-global/configs'
+  '@core/auth',
+  '@core/api', 
+  '@core/ui',
+  '@core/configs'
 ];
 
 // Utility functions for semantic versioning validation
@@ -102,8 +102,8 @@ describe('External SDK Package Publishing Property Tests', () => {
       fc.assert(fc.property(
         fc.constantFrom(...EXTERNAL_SDK_PACKAGES),
         (packageName) => {
-          // For any external SDK package, name should start with @retia-global/ scope
-          expect(packageName).toMatch(/^@retia-global\/.+$/);
+          // For any external SDK package, name should start with @core/ scope
+          expect(packageName).toMatch(/^@core\/.+$/);
           
           // Name should not contain invalid characters
           expect(packageName).toMatch(/^@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*$/);
@@ -125,7 +125,7 @@ describe('External SDK Package Publishing Property Tests', () => {
           expect(expectedScopedRegistry).toMatch(/^https:\/\/npm\.pkg\.github\.com$/);
           
           // Package name should be compatible with GitHub Packages
-          expect(packageName.split('/')[0]).toBe('@retia-global');
+          expect(packageName.split('/')[0]).toBe('@core');
         }
       ), { numRuns: 100 });
     });
@@ -192,7 +192,7 @@ describe('External SDK Package Publishing Property Tests', () => {
         (package1, package2) => {
           // For any two external SDK packages, they should have consistent naming
           expect(package1.split('/')[0]).toBe(package2.split('/')[0]);
-          expect(package1.split('/')[0]).toBe('@retia-global');
+          expect(package1.split('/')[0]).toBe('@core');
           
           // Package names should be different (no duplicates)
           if (package1 !== package2) {
@@ -206,7 +206,7 @@ describe('External SDK Package Publishing Property Tests', () => {
       const expectedPackages = ['auth', 'api', 'ui', 'configs'];
       
       expectedPackages.forEach(packageName => {
-        const fullPackageName = `@retia-global/${packageName}`;
+        const fullPackageName = `@core/${packageName}`;
         expect(EXTERNAL_SDK_PACKAGES).toContain(fullPackageName);
       });
       

@@ -86,7 +86,7 @@ yarn build:packages  # Build all internal packages
 ```json
 {
   "dependencies": {
-    "@retia-global/api": "workspace:*"
+    "@core/api": "workspace:*"
   }
 }
 ```
@@ -94,7 +94,7 @@ yarn build:packages  # Build all internal packages
 ### Issue: Build scripts fail
 **Solution**: Check build script references in root package.json:
 ```bash
-yarn workspace @retia-global/api build  # Build specific package
+yarn workspace @core/api build  # Build specific package
 ```
 
 ## 6. Migration from Previous Setup

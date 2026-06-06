@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { Input, Button, Card } from '@retia-global/ui';
+import { Input, Button, Card } from '@core/ui';
 import Link from 'next/link';
 
 interface LoginFormProps {

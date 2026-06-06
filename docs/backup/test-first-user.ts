@@ -1,4 +1,4 @@
-import { connectDB, User, UserRole } from '@retia-global/api';
+import { connectDB, User, UserRole } from '@core/api';
 import mongoose from 'mongoose';
 
 async function testRegistrationLogic() {

@@ -23,7 +23,7 @@ export function createAuthMiddleware(config: AuthMiddlewareConfig = {}) {
     homePath = '/',
   } = config;
 
-  return auth(async function middleware(request) {
+  return auth(async function middleware(request: any) {
     const { pathname } = request.nextUrl;
     const session = request.auth;
     

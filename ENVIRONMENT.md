@@ -8,7 +8,7 @@ Si deseas agregar una nueva cuenta a esta lógica, debes seguir los pasos detall
 
 ## 1.1. Configurar el nuevo repositorio
 
-Dar Acceso a la cuenta de cliente desde el repositorio Principal @retia-global/monorepo como colaborador 
+Dar Acceso a la cuenta de cliente desde el repositorio Principal @core/monorepo como colaborador 
 
 Debes loguearte a la cuenta en github.com con el Id de google del Cliente y hacer un fork del repositorio base.
 

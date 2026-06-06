@@ -8,7 +8,7 @@ import {
     Card,
     PasswordStrength,
     type PasswordRequirement,
-} from '@retia-global/ui';
+} from '@core/ui';
 import Link from 'next/link';
 import Image from 'next/image';
 
