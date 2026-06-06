@@ -1,5 +1,7 @@
 # Changelog
 
+- [5366ffc] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
+
 - [8ec0854] fix: resolve global reference error in edge runtime and restructure development environment deployment scripts (2026-06-06)
 - [fb03392] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
 
