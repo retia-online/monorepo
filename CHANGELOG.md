@@ -1,5 +1,7 @@
 # Changelog
 
+- [8ff6ba5] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
+
 - [27d4bba] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
 
 - [3c0b52a] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
