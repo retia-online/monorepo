@@ -1,5 +1,7 @@
 # Changelog
 
+- [1c88173] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
+
 - [eb435e7] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
 
 - [60692e1] style: update branding logo gradient colors to blue-green theme (2026-06-06)
