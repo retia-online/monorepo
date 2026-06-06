@@ -210,18 +210,8 @@ case $OPTION in
         cd "$PROJECT_ROOT/apps/mobile"
         free_port 8081
         
-        # Verificar si Expo está instalado (global o local)
-        EXPO_CMD=""
-        if command -v expo &> /dev/null; then
-            EXPO_CMD="expo"
-        elif [ -f "$PROJECT_ROOT/node_modules/.bin/expo" ]; then
-            EXPO_CMD="$PROJECT_ROOT/node_modules/.bin/expo"
-        elif [ -f "$PROJECT_ROOT/apps/mobile/node_modules/.bin/expo" ]; then
-            EXPO_CMD="$PROJECT_ROOT/apps/mobile/node_modules/.bin/expo"
-        else
-            # Usar npx como fallback
-            EXPO_CMD="npx expo"
-        fi
+        # Usar npx expo directamente para evitar advertencias de Node y versiones obsoletas de expo-cli global
+        EXPO_CMD="npx expo"
         
         echo "  🔧 Usando comando: $EXPO_CMD"
         
@@ -276,18 +266,8 @@ case $OPTION in
         cd "$PROJECT_ROOT/apps/mobile"
         free_port 8081
         
-        # Verificar si Expo está instalado (global o local)
-        EXPO_CMD=""
-        if command -v expo &> /dev/null; then
-            EXPO_CMD="expo"
-        elif [ -f "$PROJECT_ROOT/node_modules/.bin/expo" ]; then
-            EXPO_CMD="$PROJECT_ROOT/node_modules/.bin/expo"
-        elif [ -f "$PROJECT_ROOT/apps/mobile/node_modules/.bin/expo" ]; then
-            EXPO_CMD="$PROJECT_ROOT/apps/mobile/node_modules/.bin/expo"
-        else
-            # Usar npx como fallback
-            EXPO_CMD="npx expo"
-        fi
+        # Usar npx expo directamente para evitar advertencias de Node y versiones obsoletas de expo-cli global
+        EXPO_CMD="npx expo"
         
         echo "  🔧 Usando comando: $EXPO_CMD"
         

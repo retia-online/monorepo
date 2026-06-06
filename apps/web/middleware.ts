@@ -1,22 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import { NextResponse } from 'next/server';
+import { auth } from './src/lib/auth';
 
-export async function middleware(request: NextRequest) {
+export default auth((request) => {
   const { pathname } = request.nextUrl;
-
-  let token = null;
-  try {
-    // Get session token directly avoiding mongoose in edge runtime
-    token = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET || 'fallback-secret'
-    });
-  } catch (error) {
-    console.error('Middleware getToken error:', error);
-  }
-
-  const isAuthenticated = !!token;
-  const isAdmin = token?.role === 'ADMIN';
+  const session = request.auth;
+  const isAuthenticated = !!session;
+  
+  // Under NextAuth v5, session.user holds the custom properties if mapped in callbacks
+  const isAdmin = (session?.user as any)?.role === 'ADMIN';
 
   // Configured route patterns
   const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
@@ -63,7 +54,7 @@ export async function middleware(request: NextRequest) {
   }
 
   return NextResponse.next();
-}
+});
 
 // Configure which routes the middleware should run on
 export const config = {
