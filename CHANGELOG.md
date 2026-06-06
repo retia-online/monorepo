@@ -1,5 +1,7 @@
 # Changelog
 
+- [eb435e7] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
+
 - [60692e1] style: update branding logo gradient colors to blue-green theme (2026-06-06)
 - [0231143] refactor: implement dynamic app configuration and rename project scope to @app (2026-06-06)
 - [a8ab794] refactor: rename workspace scopes from @retia-global/ to @core/ and implement Odoo service integration (2026-06-06)
