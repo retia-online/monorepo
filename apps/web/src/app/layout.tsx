@@ -4,7 +4,7 @@ import { getThemeFromEnv, generateThemeCSS } from '@/lib/theme';
 import { SessionProvider } from '@/components/SessionProvider';
 
 export const metadata: Metadata = {
-    title: 'Auth System',
+    title: process.env.INSTANCE || 'Auth System',
     description: 'Authentication system with Next.js and MongoDB',
 };
 

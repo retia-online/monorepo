@@ -57,7 +57,7 @@ function getLimiter(type: RateLimiterType): Ratelimit | null {
             redis,
             limiter: Ratelimit.slidingWindow(config.requests, config.window),
             analytics: false, // Set to true if you want Upstash analytics
-            prefix: `retia:rl:${type}`,
+            prefix: `${process.env.INSTANCE || 'app'}:rl:${type}`,
         });
     }
 

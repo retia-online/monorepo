@@ -1,8 +1,8 @@
 {
-  "name": "retia",
+  "name": "monorepo",
   "version": "1.0.0",
   "private": true,
-  "org": "retia-online",
+  "org": "core-monorepo",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
       "eslint --fix --max-warnings=200",
@@ -22,10 +22,10 @@
     "react-dom": "19.1.0"
   },
   "scripts": {
-    "dev": "yarn workspace @retia-app/web dev",
+    "dev": "yarn workspace @app/web dev",
     "build": "yarn build:packages && yarn build:web",
     "build:packages": "yarn workspace @core/types build && yarn workspace @core/database build && yarn workspace @core/api build && yarn workspace @core/auth build && yarn workspace @core/ui build && yarn workspace @core/configs build && yarn workspace @core/utils build",
-    "build:web": "yarn workspace @retia-app/web build",
+    "build:web": "yarn workspace @app/web build",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint .",

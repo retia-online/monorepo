@@ -59,7 +59,7 @@ case $OPTION in
         echo "   1. Descarga el APK desde el link"
         echo "   2. En Android, permite 'Instalar desde fuentes desconocidas'"
         echo "   3. Instala el APK"
-        echo "   4. La app se conectará a: https://retia-app-staging.vercel.app"
+        echo "   4. La app se conectará a: https://[your-app]-staging.vercel.app"
         ;;
     
     "2")
@@ -101,12 +101,12 @@ case $OPTION in
         # Crear archivo de configuración temporal
         cat > .env.local << 'EOF'
 # Configuración para staging/testing
-INSTANCE=Retia-Staging
-EXPO_PUBLIC_API_URL=https://retia-app-staging.vercel.app
+INSTANCE=Core-Staging
+EXPO_PUBLIC_API_URL=https://[your-app]-staging.vercel.app
 EXPO_PUBLIC_AUTH_MODE=required
 EXPO_PUBLIC_AUTH_METHODS=email,google
-EXPO_PUBLIC_INSTANCE=Retia-Staging
-EXPO_PUBLIC_MAIN_SCREEN_MESSAGE=¡Bienvenido a Retia Staging!
+EXPO_PUBLIC_INSTANCE=Core-Staging
+EXPO_PUBLIC_MAIN_SCREEN_MESSAGE=¡Bienvenido a Staging!
 EXPO_PUBLIC_PRIMARY_COLOR=6366f1
 EXPO_PUBLIC_SECONDARY_COLOR=ec4899
 EXPO_PUBLIC_BACKGROUND_COLOR=f8fafc
@@ -125,8 +125,8 @@ EOF
         echo "   4. La app usará el backend de staging"
         echo ""
         echo "🔧 Variables configuradas:"
-        echo "   - API URL: https://retia-app-staging.vercel.app"
-        echo "   - Instancia: Retia-Staging"
+        echo "   - API URL: https://[your-app]-staging.vercel.app"
+        echo "   - Instancia: Core-Staging"
         echo "   - Auth: email,google"
         
         read -p "¿Iniciar Expo ahora? [s/N]: " START_EXPO
@@ -145,7 +145,7 @@ echo ""
 echo "📋 Resumen:"
 echo "✅ Para APK lista para instalar: Usa EAS Build (Opción 1)"
 echo "✅ Para testing rápido: Usa Expo Go (Opción 3)"
-echo "✅ Backend de staging: https://retia-app-staging.vercel.app"
+echo "✅ Backend de staging: https://[your-app]-staging.vercel.app"
 echo ""
 echo "🔗 Recursos:"
 echo "- Expo EAS: https://docs.expo.dev/build/introduction/"
