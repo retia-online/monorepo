@@ -1,5 +1,9 @@
 # Changelog
 
+- [0943e5f] docs: update develop and production READMEs — fix script list, add Odoo technical user setup guide (2026-06-07)
+- [f2c87e8] fix: exclude Atlas API keys from Vercel env sync (admin credentials, not needed at runtime) (2026-06-07)
+- [4a62971] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
 - [9692017] chore: remove old generic .env.template (replaced by per-environment templates) (2026-06-07)
 - [75a7931] fix: replace red X checklist items with green checkmarks in DB test summaries (2026-06-07)
 - [7b12eee] fix: enforce full isolation — both users get readWrite only on their own DB, production no longer gets atlasAdmin (2026-06-07)
