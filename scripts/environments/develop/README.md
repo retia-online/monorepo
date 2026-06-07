@@ -6,28 +6,14 @@ Entorno de staging para pruebas de integración y preview en Vercel. Este entorn
 ## 🏗️ Estructura
 
 ```
-scripts/environments/staging/
+scripts/environments/develop/
 ├── README.md                    # Esta documentación
-├── setup.sh                     # Script de configuración inicial
-├── deploy.sh                    # Script de deploy a Vercel
-├── mobile/                      # Configuración móvil
-│   ├── build-apk.sh            # Generar APK de staging
-│   ├── setup.sh                 # Configurar mobile para staging
-│   └── README.md               # Documentación móvil
-├── web/                         # Configuración web
-│   ├── setup.sh                 # Configurar web para staging
-│   ├── deploy.sh               # Deploy web a Vercel
-│   └── README.md               # Documentación web
-├── database/                    # Configuración base de datos
-│   ├── setup-mongodb.sh        # Configurar MongoDB Atlas
-│   └── README.md               # Documentación MongoDB
-├── oauth/                       # Configuración OAuth
-│   ├── setup-google.sh         # Configurar Google OAuth
-│   └── README.md               # Documentación OAuth
-└── templates/                   # Plantillas
-    ├── .env.web.staging        # Plantilla variables web
-    ├── .env.mobile.staging     # Plantilla variables móvil
-    └── vercel-staging.json     # Plantilla configuración Vercel
+├── deploy.sh                    # Script de deploy a Vercel (staging)
+├── test-db-connection.sh       # Prueba completa conexión MongoDB (Node.js)
+├── quick-db-test.sh            # Prueba rápida conexión MongoDB (Node.js)
+├── simple-db-test.sh           # Prueba simple conexión MongoDB (mongosh)
+├── clear-vercel-env.sh         # Limpiar variables de Vercel
+└── mobile/                      # Configuración móvil (si existe)
 ```
 
 ## 🚀 Inicio Rápido
@@ -88,11 +74,21 @@ scripts/environments/staging/
 
 ## 🧪 Pruebas Recomendadas
 
+### Pruebas de conexión a base de datos:
+```bash
+# Prueba rápida de conexión
+./scripts/environments/develop/quick-db-test.sh
+
+# Prueba completa con diagnóstico
+./scripts/environments/develop/test-db-connection.sh
+```
+
 ### Pruebas básicas:
-1. **Registro primer usuario** → Debe obtener rol ADMIN
-2. **Login con OAuth** (Google/Email)
-3. **Endpoints API** (health, auth, users)
-4. **Mobile app** conectando a staging
+1. **Conexión a MongoDB** → Verificar whitelist de IPs
+2. **Registro primer usuario** → Debe obtener rol ADMIN
+3. **Login con OAuth** (Google/Email)
+4. **Endpoints API** (health, auth, users)
+5. **Mobile app** conectando a staging
 
 ### Pruebas avanzadas:
 1. **Carga de datos** (múltiples usuarios)
@@ -138,6 +134,50 @@ git merge staging
 
 ## 🛠️ Solución de Problemas
 
+### Problemas comunes de conexión a MongoDB:
+
+#### ❌ Error: "Could not connect to any servers in your MongoDB Atlas cluster"
+**Causas:**
+1. IP no está en la whitelist de MongoDB Atlas
+2. Credenciales incorrectas en MONGODB_URI
+3. Problemas de red/firewall
+4. Cluster no disponible o pausado
+
+**Soluciones:**
+1. **Whitelist de IPs:**
+   ```bash
+   # Ver tu IP actual
+   ./scripts/environments/develop/test-db-connection.sh
+   
+   # Agregar a MongoDB Atlas:
+   # 1. Ir a https://cloud.mongodb.com
+   # 2. Network Access → Add IP Address
+   # 3. Agregar tu IP actual o 0.0.0.0/0 (temporal)
+   ```
+
+2. **Verificar MONGODB_URI:**
+   ```bash
+   # Ver la URI actual
+   grep MONGODB_URI apps/web/.env.develop
+   
+   # Formato correcto:
+   # mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority
+   ```
+
+3. **Probar desde diferentes ubicaciones:**
+   ```bash
+   # Probar con Node.js localmente
+   ./scripts/environments/develop/quick-db-test.sh
+   
+   # Si funciona localmente pero no en Vercel:
+   # Agregar IPs de Vercel a la whitelist
+   ```
+
+#### ❌ Error: "ReferenceError: global is not defined"
+**Causa:** Código usando `global` en Edge runtime
+**Solución:** Scripts ya están arreglados para manejar ambos runtimes
+
+### Otros problemas:
 Ver archivos individuales en cada subdirectorio para troubleshooting específico.
 
 ## 📞 Soporte
