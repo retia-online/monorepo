@@ -9,11 +9,16 @@
 #   2. Sube las variables de .env.production al scope production de Vercel
 #   3. Hace merge de develop → main via GitHub API (como retia-online)
 #      → Sin commits propios en main — el merge ES el deployment
-#   4. Vercel detecta el push a main vía webhook y lanza el deployment
-#   5. Verifica que la URL de producción responda
+#   4. Crea un tag de versión (auto-incrementa patch o usa --tag vX.Y.Z)
+#   5. Vercel detecta el push a main vía webhook y lanza el deployment
+#   6. Verifica que la URL de producción responda
+#
+# Uso:
+#   ./deploy.sh              ← auto-incrementa el patch (v1.0.2 → v1.0.3)
+#   ./deploy.sh --tag v1.1.0 ← usa el tag especificado
 #
 # Flujo correcto:
-#   develop (probado) → merge a main → Vercel production deployment
+#   develop (probado) → merge a main + tag → Vercel production deployment
 # ==============================================================================
 
 set -e
@@ -26,6 +31,60 @@ RED='\033[0;31m'
 CYAN='\033[0;36m'
 BLUE='\033[0;34m'
 NC='\033[0m'
+
+# ==============================================================================
+# PARSEAR ARGUMENTOS — soporte para --tag v1.2.3
+# ==============================================================================
+EXPLICIT_TAG=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --tag)
+            EXPLICIT_TAG="$2"
+            shift 2
+            ;;
+        --tag=*)
+            EXPLICIT_TAG="${1#--tag=}"
+            shift
+            ;;
+        *)
+            echo -e "${RED}❌ Argumento desconocido: $1${NC}"
+            echo "Uso: $0 [--tag v1.2.3]"
+            exit 1
+            ;;
+    esac
+done
+
+# Calcular el tag a usar
+_next_patch_tag() {
+    # Obtener el último tag semver (v1.2.3 o 1.2.3)
+    local last
+    last=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | head -n1 || echo "")
+
+    if [ -z "$last" ]; then
+        echo "v1.0.0"
+        return
+    fi
+
+    # Normalizar a vX.Y.Z
+    local version="${last#v}"
+    local major minor patch
+    IFS='.' read -r major minor patch <<< "$version"
+    patch=$((patch + 1))
+    echo "v${major}.${minor}.${patch}"
+}
+
+if [ -n "$EXPLICIT_TAG" ]; then
+    # Validar formato
+    if ! echo "$EXPLICIT_TAG" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+        echo -e "${RED}❌ Formato de tag inválido: '$EXPLICIT_TAG'. Usa: v1.2.3${NC}"
+        exit 1
+    fi
+    RELEASE_TAG="$EXPLICIT_TAG"
+    echo -e "${CYAN}🏷️  Tag especificado manualmente: ${GREEN}$RELEASE_TAG${NC}"
+else
+    RELEASE_TAG=$(_next_patch_tag)
+    echo -e "${CYAN}🏷️  Tag auto-incrementado: ${GREEN}$RELEASE_TAG${NC} (patch del último tag)"
+fi
 
 echo -e "${GREEN}🚀 Iniciando Despliegue Automatizado a PRODUCCIÓN (Vercel)${NC}"
 echo "=========================================================================="
@@ -235,10 +294,23 @@ git -c user.name="Retia Production" -c user.email="$GITHUB_EMAIL" \
 MERGE_COMMIT=$(git rev-parse --short HEAD)
 echo -e "   ${GREEN}✅ Merge completado: $MERGE_COMMIT${NC}"
 
-# Push a GitHub como retia-online
-echo -e "\n🐙 Push como: ${GREEN}$GITHUB_USERNAME${NC} → github.com/${REPO_PATH} (main)"
+# Verificar que el tag no exista ya
+if git tag | grep -q "^${RELEASE_TAG}$"; then
+    echo -e "${RED}❌ El tag '$RELEASE_TAG' ya existe.${NC}"
+    echo -e "${YELLOW}   Usa --tag v1.X.Y con un número mayor, o borra el tag existente.${NC}"
+    git checkout develop 2>/dev/null || true
+    exit 1
+fi
 
-if git push "$HTTPS_REMOTE" main 2>&1 | sed "s|${GITHUB_TOKEN}|***|g"; then
+# Crear tag anotado en el merge commit
+git -c user.name="Retia Production" -c user.email="$GITHUB_EMAIL" \
+    tag -a "$RELEASE_TAG" -m "Release $RELEASE_TAG — production deployment"
+echo -e "   ${GREEN}🏷️  Tag creado: $RELEASE_TAG en $MERGE_COMMIT${NC}"
+
+# Push a GitHub como retia-online
+echo -e "\n🐙 Push como: ${GREEN}$GITHUB_USERNAME${NC} → github.com/${REPO_PATH} (main + $RELEASE_TAG)"
+
+if git push "$HTTPS_REMOTE" main "$RELEASE_TAG" 2>&1 | sed "s|${GITHUB_TOKEN}|***|g"; then
     echo -e "${GREEN}✅ Push exitoso — Vercel detectará el push y lanzará el deployment.${NC}"
 else
     echo -e "${RED}❌ Push falló. Verifica permisos del GITHUB_TOKEN.${NC}"
@@ -276,6 +348,7 @@ else
     echo -e "${YELLOW}⚠️  HTTP $HTTP_STATUS — el build puede estar aún en curso.${NC}"
     echo -e "   Verifica en el dashboard de Vercel."
 fi
-echo -e "🔗 URL:       ${CYAN}$PROD_URL${NC}"
-echo -e "📋 Dashboard: ${CYAN}https://vercel.com/retias-projects/monorepo${NC}"
+echo -e "🏷️  Versión:    ${CYAN}$RELEASE_TAG${NC}"
+echo -e "🔗 URL:        ${CYAN}$PROD_URL${NC}"
+echo -e "📋 Dashboard:  ${CYAN}https://vercel.com/retias-projects/monorepo${NC}"
 echo -e "${GREEN}======================================================================${NC}"
