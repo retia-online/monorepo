@@ -1,3 +1,6 @@
+// Force Node.js runtime — mongoose and @core/api are incompatible with Edge runtime
+export const runtime = 'nodejs';
+
 // Fix for ReferenceError: global is not defined in Vercel Edge Runtime
 if (typeof global === 'undefined') {
   (globalThis as any).global = globalThis;
