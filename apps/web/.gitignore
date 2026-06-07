@@ -2,3 +2,14 @@
 
 # Package config (use package.json.template as reference)
 package.json
+
+# Environment variables con valores reales — nunca commitear
+.env
+.env.local
+.env.develop
+.env.production
+.env.staging
+.env*.local
+
+# Templates SÍ se commitean (no tienen valores reales)
+!.env*.template

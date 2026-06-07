@@ -18,20 +18,20 @@ dist/
 *.seed
 *.pid.lock
 
-# Environment variables
+# Environment variables — ignorar todos los .env con valores reales
 .env
+.env.local
 .env.development
 .env.development.local
 .env.test.local
 .env.prod
 .env.production
 .env.staging
+.env.develop
+.env*.local
 
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# Conservar templates (sin valores reales, solo estructura)
+!.env*.template
 
 # IDE
 .vscode/
@@ -59,4 +59,3 @@ next-env.d.ts
 .env*.local
 
 tmp/
-.env*

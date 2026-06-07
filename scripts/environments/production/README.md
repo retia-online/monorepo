@@ -18,6 +18,11 @@ scripts/environments/production/
 ## 🚀 Uso
 
 ### Prerequisitos
+Copia el template y rellena los valores reales:
+```bash
+cp apps/web/.env.production.template apps/web/.env.production
+```
+
 Completa el archivo `apps/web/.env.production` con todos los valores reales:
 ```bash
 # Verificar que todas las variables críticas están configuradas

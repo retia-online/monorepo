@@ -43,6 +43,11 @@ El script hace automáticamente:
 
 ## 🔧 Configuración requerida
 
+Copia el template y rellena los valores:
+```bash
+cp apps/web/.env.develop.template apps/web/.env.develop
+```
+
 El archivo `apps/web/.env.develop` debe contener:
 
 ```env
@@ -55,12 +60,17 @@ GITHUB_USERNAME=retia-online
 GITHUB_EMAIL=info@retia.online
 GITHUB_TOKEN=ghp_xxxxxxxxxxxx   ← token de retia-online
 
+# MongoDB Atlas API (para setup-mongodb.sh)
+ATLAS_PUBLIC_KEY=xxxxxxxx
+ATLAS_PRIVATE_KEY=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+ATLAS_PROJECT_ID=xxxxxxxxxxxxxxxxxxxxxxxx
+
 # Base de datos
-MONGODB_URI=mongodb+srv://...
+MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/app_develop?appName=app
 
 # NextAuth
 NEXTAUTH_URL=https://develop-monorepo.vercel.app/
-NEXTAUTH_SECRET=...
+NEXTAUTH_SECRET=...   ← openssl rand -base64 32
 ```
 
 ## 🔄 Flujo de trabajo
