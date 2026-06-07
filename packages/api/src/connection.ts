@@ -1,16 +1,18 @@
 import mongoose from 'mongoose';
 
-declare global {
-    var mongoose: {
-        conn: any | null;
-        promise: Promise<any> | null;
-    };
-}
+// Handle both Node.js and Edge runtime environments
+let cached: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+} = { conn: null, promise: null };
 
-let cached = global.mongoose;
-
-if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
+// Only use global in Node.js environment (not in Edge runtime)
+if (typeof global !== 'undefined') {
+    // Define mongoose on global if it doesn't exist
+    if (!(global as any).mongoose) {
+        (global as any).mongoose = { conn: null, promise: null };
+    }
+    cached = (global as any).mongoose;
 }
 
 export async function connectDB() {
