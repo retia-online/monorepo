@@ -1,22 +1,13 @@
 # Changelog
-
 - [6580b59] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
-
 - [5366ffc] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
-
 - [8ec0854] fix: resolve global reference error in edge runtime and restructure development environment deployment scripts (2026-06-06)
 - [fb03392] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
-
 - [8ff6ba5] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
-
 - [27d4bba] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
-
 - [3c0b52a] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
-
 - [1c88173] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
-
 - [eb435e7] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
-
 - [60692e1] style: update branding logo gradient colors to blue-green theme (2026-06-06)
 - [0231143] refactor: implement dynamic app configuration and rename project scope to @app (2026-06-06)
 - [a8ab794] refactor: rename workspace scopes from @retia-global/ to @core/ and implement Odoo service integration (2026-06-06)
@@ -30,6 +21,5 @@
 - [3920732] fix: correct environment scripts and dependencies (2026-06-06)
 - [76a5b31] feat: add comprehensive cleanup scripts for environments (2026-06-06)
 - [2872614] feat: complete environment reorganization and bugfixes (2026-06-06)
-- [1d91988] brach: update Develop branch (2026-06-06)
+- [1d91988] branch: update Develop branch (2026-06-06)
 - [63d74cc] docs(environment): add MongoDB and Vercel setup instructions for production (2026-06-06)
-

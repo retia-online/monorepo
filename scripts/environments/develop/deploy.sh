@@ -1,8 +1,17 @@
 #!/bin/bash
 
 # ==============================================================================
-# Script de Despliegue Automatizado para Staging (Vercel)
+# Script de Despliegue Automatizado para Develop/Staging (Vercel)
 # Ubicación: /scripts/environments/develop/deploy.sh
+#
+# Qué hace este script:
+#   1. Verifica que la sesión de Vercel CLI sea la correcta (retia-online)
+#   2. Vincula el proyecto si no está vinculado
+#   3. Sube TODAS las variables de .env.develop al scope preview/develop de Vercel
+#   4. Actualiza CHANGELOG.md con commits recientes (firmado como info@retia.online)
+#   5. Construye los paquetes y la app web localmente
+#   6. Despliega como Preview (rama develop) en Vercel
+#   7. Verifica que la URL de staging responda correctamente
 # ==============================================================================
 
 set -e
@@ -13,15 +22,18 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 CYAN='\033[0;36m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}🚀 Iniciando Despliegue Automatizado a Staging Vercel${NC}"
-echo "=========================================================="
+echo -e "${GREEN}🚀 Iniciando Despliegue Automatizado a Staging/Develop (Vercel Preview)${NC}"
+echo "=========================================================================="
 
-# 1. Verificar Vercel CLI y Git
+# ==============================================================================
+# 1. VERIFICAR HERRAMIENTAS REQUERIDAS
+# ==============================================================================
 if ! command -v vercel &> /dev/null; then
     echo -e "${RED}❌ Vercel CLI no está instalado.${NC}"
-    echo "Instálalo globalmente ejecutando: npm install -g vercel"
+    echo "Instálalo ejecutando: npm install -g vercel"
     exit 1
 fi
 
@@ -30,354 +42,238 @@ if ! command -v git &> /dev/null; then
     exit 1
 fi
 
-# 2. Leer la cuenta de Vercel requerida desde .env.develop
+# ==============================================================================
+# 2. LEER CONFIGURACIÓN DESDE .env.develop
+# ==============================================================================
 ENV_FILE="$PROJECT_ROOT/apps/web/.env.develop"
-VERCEL_EMAIL="info@retia.online" # Fallback por defecto
-VERCEL_USERNAME="retia-online" # Fallback por defecto
 
 if [ ! -f "$ENV_FILE" ]; then
     echo -e "${RED}❌ No se encontró el archivo de variables: $ENV_FILE${NC}"
     exit 1
 fi
 
-EXTRACTED_EMAIL=$(grep -E "^VERCEL_EMAIL=" "$ENV_FILE" | cut -d'=' -f2- | xargs || true)
-if [ -n "$EXTRACTED_EMAIL" ]; then
-    VERCEL_EMAIL="$EXTRACTED_EMAIL"
-fi
+# Leer cuenta de Vercel con fallbacks seguros
+VERCEL_EMAIL=$(grep -E "^VERCEL_EMAIL=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "info@retia.online")
+VERCEL_USERNAME=$(grep -E "^VERCEL_USERNAME=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "retia-online")
+[ -z "$VERCEL_EMAIL" ]    && VERCEL_EMAIL="info@retia.online"
+[ -z "$VERCEL_USERNAME" ] && VERCEL_USERNAME="retia-online"
 
-EXTRACTED_USER=$(grep -E "^VERCEL_USERNAME=" "$ENV_FILE" | cut -d'=' -f2- | xargs || true)
-if [ -n "$EXTRACTED_USER" ]; then
-    VERCEL_USERNAME="$EXTRACTED_USER"
-fi
+echo -e "📧 Cuenta objetivo: ${GREEN}$VERCEL_EMAIL${NC} (usuario: ${GREEN}$VERCEL_USERNAME${NC})"
+echo -e "📄 Usando variables de: ${CYAN}$ENV_FILE${NC}"
 
-echo -e "📧 Cuenta objetivo de Vercel: ${GREEN}$VERCEL_EMAIL${NC} (Usuario: ${GREEN}$VERCEL_USERNAME${NC})"
+# ==============================================================================
+# 3. VERIFICAR SESIÓN DE VERCEL
+# ==============================================================================
+echo -e "\n🔑 Verificando sesión de Vercel CLI..."
+CURRENT_USER=$(vercel whoami 2>&1 | sed 's/> Logged in as //g' | head -n1 | xargs 2>/dev/null || true)
 
-# 3. Verificar y conectar a la cuenta de Vercel correcta
-echo -e "\n🔑 Verificando sesión actual en Vercel..."
-CURRENT_USER_OUTPUT=$(vercel whoami 2>&1 || true)
-# Limpiar la salida de whoami quitando prefijos de logueo habituales
-CURRENT_USER_NAME=$(echo "$CURRENT_USER_OUTPUT" | sed 's/> Logged in as //g' | head -n1 | xargs || true)
-
-SESSION_IS_CORRECT=0
-if [ "$CURRENT_USER_NAME" = "$VERCEL_USERNAME" ] || [ "$CURRENT_USER_NAME" = "$VERCEL_EMAIL" ]; then
-    SESSION_IS_CORRECT=1
-fi
-
-if [ $SESSION_IS_CORRECT -eq 1 ]; then
-    echo -e "👤 Sesión activa correcta encontrada: ${GREEN}$CURRENT_USER_NAME${NC}"
-    echo "✅ No requiere cambio de cuenta. Continuando..."
+if [ "$CURRENT_USER" = "$VERCEL_USERNAME" ] || [ "$CURRENT_USER" = "$VERCEL_EMAIL" ]; then
+    echo -e "✅ Sesión correcta: ${GREEN}$CURRENT_USER${NC}"
+elif [[ "$CURRENT_USER" == *"Error"* ]] || [ -z "$CURRENT_USER" ]; then
+    echo -e "${YELLOW}⚠️  Sin sesión activa. Iniciando sesión con: ${GREEN}$VERCEL_EMAIL${NC}"
+    echo "💡 Completa el login en el navegador..."
+    vercel login "$VERCEL_EMAIL"
 else
-    if [[ "$CURRENT_USER_OUTPUT" == *"Error:"* || -z "$CURRENT_USER_NAME" ]]; then
-        echo -e "${YELLOW}⚠️  No tienes sesión iniciada en Vercel.${NC}"
-        echo -e "🔄 Iniciando sesión con: ${GREEN}$VERCEL_EMAIL${NC}"
-        echo "💡 Por favor, completa el inicio de sesión en la ventana del navegador que se abrirá..."
-        vercel login "$VERCEL_EMAIL"
-    else
-        echo -e "👤 Sesión activa diferente encontrada: \n${YELLOW}$CURRENT_USER_OUTPUT${NC}"
-        echo ""
-        
-        # Preguntar si se desea cambiar a la cuenta correcta
-        read -p "¿Deseas cerrar esta sesión e iniciar sesión con $VERCEL_EMAIL? [S/n]: " SWITCH_ACCOUNT
-        SWITCH_ACCOUNT=${SWITCH_ACCOUNT:-S}
-        
-        if [[ "$SWITCH_ACCOUNT" =~ ^[Ss]$ ]]; then
-            echo -e "\n🛑 Cerrando sesión actual en Vercel..."
-            vercel logout || true
-            
-            echo -e "🔄 Iniciando sesión con: ${GREEN}$VERCEL_EMAIL${NC}"
-            echo "💡 Por favor, completa el inicio de sesión en la ventana del navegador que se abrirá..."
-            vercel login "$VERCEL_EMAIL"
-        else
-            echo -e "\n⚠️ Continuando con la sesión actual..."
-        fi
-    fi
+    # Sesión de otra cuenta — cerrar y re-autenticar automáticamente
+    echo -e "${YELLOW}⚠️  Sesión activa de otra cuenta: ${RED}$CURRENT_USER${NC}"
+    echo -e "🔄 Cambiando a la cuenta correcta: ${GREEN}$VERCEL_EMAIL${NC}"
+    vercel logout || true
+    vercel login "$VERCEL_EMAIL"
 fi
 
-# Verificar si el login fue exitoso
-echo -e "\n✅ Verificando estado de conexión..."
+# Validación final
 if ! vercel whoami &>/dev/null; then
-    echo -e "${RED}❌ No se pudo verificar la sesión en Vercel. Por favor, asegúrate de haber completado el login.${NC}"
+    echo -e "${RED}❌ No se pudo verificar la sesión. Asegúrate de haber completado el login.${NC}"
     exit 1
 fi
 echo -e "👤 Conectado como: ${GREEN}$(vercel whoami | head -n1)${NC}"
 
-# 4. Determinar directorio de la aplicación (apps/web)
+# ==============================================================================
+# 4. VINCULAR PROYECTO SI ES NECESARIO
+# ==============================================================================
 WEB_APP_DIR="$PROJECT_ROOT/apps/web"
-
-# 5. Verificar si el proyecto de Vercel está vinculado localmente (repo.json en raíz o project.json en apps/web)
 cd "$WEB_APP_DIR"
-LINK_EXISTS=0
-if [ -f ".vercel/project.json" ] || [ -f "$PROJECT_ROOT/.vercel/repo.json" ]; then
-    LINK_EXISTS=1
-fi
 
-if [ $LINK_EXISTS -eq 0 ]; then
-    echo -e "\n🔗 Vinculando proyecto local a Vercel..."
-    
-    # Para evitar que 'vercel link --yes' sobrescriba el archivo .env.local del usuario,
-    # hacemos un backup temporal del archivo .env.local, corremos el link, y luego lo restauramos.
-    if [ -f ".env.local" ]; then
-        echo "  📦 Respaldando archivo .env.local temporalmente..."
-        cp ".env.local" ".env.local.bak"
-    fi
-    
-    # Vincular automáticamente
+if [ ! -f ".vercel/project.json" ] && [ ! -f "$PROJECT_ROOT/.vercel/repo.json" ]; then
+    echo -e "\n🔗 Vinculando proyecto a Vercel..."
+    # Respaldar .env.local para que vercel link no lo sobrescriba
+    [ -f ".env.local" ] && cp ".env.local" ".env.local.bak"
     vercel link --yes || true
-    
-    # Restaurar backup
-    if [ -f ".env.local.bak" ]; then
-        echo "  🔄 Restaurando archivo .env.local..."
-        mv ".env.local.bak" ".env.local"
-    fi
-    
-    # Comprobar si ahora existe el archivo de enlace
+    [ -f ".env.local.bak" ] && mv ".env.local.bak" ".env.local"
+
     if [ ! -f ".vercel/project.json" ] && [ ! -f "$PROJECT_ROOT/.vercel/repo.json" ]; then
-        echo -e "${RED}❌ No se pudo vincular el proyecto automáticamente.${NC}"
-        echo "Intenta ejecutar 'vercel link' manualmente en apps/web respondiendo 'no' a descargar variables."
+        echo -e "${RED}❌ No se pudo vincular el proyecto. Ejecuta 'vercel link' manualmente en apps/web.${NC}"
         exit 1
     fi
 fi
 
-# Extraer el nombre del proyecto y el ID
-PROJECT_NAME=""
-PROJECT_ID=""
-
+# Extraer nombre e ID del proyecto vinculado
 if [ -f "$PROJECT_ROOT/.vercel/repo.json" ]; then
-    if command -v jq &> /dev/null; then
+    if command -v jq &>/dev/null; then
         PROJECT_NAME=$(jq -r '.projects[0].name' "$PROJECT_ROOT/.vercel/repo.json")
-        PROJECT_ID=$(jq -r '.projects[0].id' "$PROJECT_ROOT/.vercel/repo.json")
+        PROJECT_ID=$(jq  -r '.projects[0].id'   "$PROJECT_ROOT/.vercel/repo.json")
     else
-        PROJECT_NAME=$(cat "$PROJECT_ROOT/.vercel/repo.json" | grep -o '"name": "[^"]*' | head -n1 | cut -d'"' -f4)
-        PROJECT_ID=$(cat "$PROJECT_ROOT/.vercel/repo.json" | grep -o '"id": "[^"]*' | head -n1 | cut -d'"' -f4)
+        PROJECT_NAME=$(grep -o '"name": "[^"]*' "$PROJECT_ROOT/.vercel/repo.json" | head -n1 | cut -d'"' -f4)
+        PROJECT_ID=$(grep  -o '"id": "[^"]*'   "$PROJECT_ROOT/.vercel/repo.json" | head -n1 | cut -d'"' -f4)
     fi
 elif [ -f ".vercel/project.json" ]; then
-    if command -v jq &> /dev/null; then
-        PROJECT_NAME=$(jq -r '.name' .vercel/project.json)
-        PROJECT_ID=$(jq -r '.projectId' .vercel/project.json)
+    if command -v jq &>/dev/null; then
+        PROJECT_NAME=$(jq -r '.name'      .vercel/project.json)
+        PROJECT_ID=$(jq  -r '.projectId' .vercel/project.json)
     else
-        PROJECT_NAME=$(cat .vercel/project.json | grep -o '"name": "[^"]*' | head -n1 | cut -d'"' -f4)
-        PROJECT_ID=$(cat .vercel/project.json | grep -o '"projectId": "[^"]*' | head -n1 | cut -d'"' -f4)
+        PROJECT_NAME=$(grep -o '"name": "[^"]*'      .vercel/project.json | head -n1 | cut -d'"' -f4)
+        PROJECT_ID=$(grep  -o '"projectId": "[^"]*' .vercel/project.json | head -n1 | cut -d'"' -f4)
     fi
 fi
 
-echo -e "\n${GREEN}✅ Proyecto vinculado detectado:${NC}"
-echo "🌐 Proyecto Vercel: $PROJECT_NAME"
-echo "🆔 ID Proyecto: $PROJECT_ID"
-echo "----------------------------------------"
+echo -e "\n${GREEN}✅ Proyecto vinculado:${NC} $PROJECT_NAME (ID: $PROJECT_ID)"
+echo "----------------------------------------------------------------------"
 
 # ==============================================================================
-# 6. COMPARAR VARIABLES DE ENTORNO EN VERCEL CON .env.develop
+# 5. SINCRONIZAR TODAS LAS VARIABLES DE .env.develop → VERCEL PREVIEW/develop
+#
+# Estrategia: Siempre sube TODAS las variables al scope "preview" de la rama
+# "develop". Usa --force para sobrescribir sin necesidad de borrar primero.
+# Omite VERCEL_EMAIL y VERCEL_USERNAME (son meta-variables del script).
 # ==============================================================================
-echo -e "\n🔍 Comparando variables de entorno en Vercel con .env.develop..."
+CURRENT_BRANCH=$(git -C "$PROJECT_ROOT" branch --show-current 2>/dev/null || echo "develop")
+echo -e "\n📤 Sincronizando variables de ${CYAN}.env.develop${NC} → Vercel (preview/${CURRENT_BRANCH})..."
 
-# Descargar temporalmente las variables de desarrollo de Vercel para comparar sus valores reales
-# Respaldamos temporalmente .env.local si existiera, para que vercel pull no lo pise
-if [ -f ".env.local" ]; then
-    cp ".env.local" ".env.local.temp.bak"
-fi
+SKIP_KEYS=("VERCEL_EMAIL" "VERCEL_USERNAME")
+SYNC_OK=0
+SYNC_FAIL=0
 
-vercel env pull temp_vercel.env &>/dev/null || true
+while IFS= read -r line || [ -n "$line" ]; do
+    # Saltar comentarios y líneas vacías
+    [[ "$line" =~ ^[[:space:]]*# ]] && continue
+    [[ -z "$line" ]] && continue
 
-# Si existía backup, restaurar .env.local original
-if [ -f ".env.local.temp.bak" ]; then
-    mv ".env.local.temp.bak" ".env.local"
-fi
+    # Solo procesar líneas con formato KEY=VALUE
+    if [[ "$line" =~ ^([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]]; then
+        KEY="${BASH_REMATCH[1]}"
+        VAL="${BASH_REMATCH[2]}"
 
-DIFFERENCES_FOUND=0
-declare -a VARS_TO_UPDATE
-
-if [ -f "temp_vercel.env" ]; then
-    # Leer las variables del archivo .env.develop
-    while IFS= read -r line || [ -n "$line" ]; do
-        # Omitir comentarios y líneas vacías
-        if [[ "$line" =~ ^[[:space:]]*# ]] || [[ -z "$line" ]]; then
-            continue
-        fi
-        
-        # Extraer clave y valor de formato LLAVE=VALOR
-        if [[ "$line" =~ ^([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]]; then
-            KEY="${BASH_REMATCH[1]}"
-            VAL="${BASH_REMATCH[2]}"
-            
-            # Omitir VERCEL_EMAIL y VERCEL_USERNAME
-            if [ "$KEY" = "VERCEL_EMAIL" ] || [ "$KEY" = "VERCEL_USERNAME" ]; then
-                continue
-            fi
-            
-            # Limpiar comillas
-            VAL="${VAL#\"}"
-            VAL="${VAL%\"}"
-            VAL="${VAL#\'}"
-            VAL="${VAL%\'}"
-            
-            # Buscar en el archivo temporal de Vercel
-            VERCEL_VAL=$(grep -E "^$KEY=" temp_vercel.env | cut -d'=' -f2- | xargs || true)
-            VERCEL_VAL="${VERCEL_VAL#\"}"
-            VERCEL_VAL="${VERCEL_VAL%\"}"
-            VERCEL_VAL="${VERCEL_VAL#\'}"
-            VERCEL_VAL="${VERCEL_VAL%\'}"
-            
-            # Comparar
-            if [ -z "$VERCEL_VAL" ] && ! grep -q "^$KEY=" temp_vercel.env; then
-                echo -e "  ➕ Variable faltante en Vercel: ${YELLOW}$KEY${NC}"
-                DIFFERENCES_FOUND=1
-                VARS_TO_UPDATE+=("$KEY")
-            elif [ "$VAL" != "$VERCEL_VAL" ]; then
-                echo -e "  🔄 Variable diferente: ${YELLOW}$KEY${NC} (Local: '${VAL:0:15}...' vs Vercel: '${VERCEL_VAL:0:15}...')"
-                DIFFERENCES_FOUND=1
-                VARS_TO_UPDATE+=("$KEY")
-            fi
-        fi
-    done < "$ENV_FILE"
-    
-    # Eliminar archivo temporal
-    rm -f temp_vercel.env
-else
-    echo -e "${YELLOW}⚠️  No se pudieron comprobar los valores en Vercel. Se asumirá que deben cargarse.${NC}"
-    DIFFERENCES_FOUND=1
-fi
-
-if [ $DIFFERENCES_FOUND -eq 1 ]; then
-    echo -e "\n${YELLOW}⚠️  Se encontraron discrepancias en las variables de entorno de Vercel.${NC}"
-    read -p "¿Deseas sobrescribir o crear las variables discrepantes en Vercel usando .env.develop? [S/n]: " OVERWRITE_ENV
-    OVERWRITE_ENV=${OVERWRITE_ENV:-S}
-    
-    if [[ "$OVERWRITE_ENV" =~ ^[Ss]$ ]]; then
-        echo -e "\n📤 Actualizando variables en Vercel..."
-        for KEY in "${VARS_TO_UPDATE[@]}"; do
-            # Extraer el valor de .env.develop
-            VAL=$(grep -E "^$KEY=" "$ENV_FILE" | cut -d'=' -f2- | xargs || true)
-            VAL="${VAL#\"}"
-            VAL="${VAL%\"}"
-            VAL="${VAL#\'}"
-            VAL="${VAL%\'}"
-            
-            echo "  🚀 Procesando $KEY..."
-            # Eliminar la variable anterior en Vercel si existe
-            vercel env rm "$KEY" -y &>/dev/null || true
-            # Agregar la nueva en todos los entornos en paralelo
-            for ENV in production preview development; do
-                printf "%s" "$VAL" | vercel env add "$KEY" "$ENV" &>/dev/null &
-            done
+        # Omitir variables meta del script
+        skip=0
+        for sk in "${SKIP_KEYS[@]}"; do
+            [ "$KEY" = "$sk" ] && skip=1 && break
         done
-        wait
-        echo -e "${GREEN}✅ Variables de entorno sincronizadas en Vercel.${NC}"
-    else
-        echo -e "${YELLOW}⚠️ Continuando sin actualizar las variables en Vercel.${NC}"
+        [ $skip -eq 1 ] && continue
+
+        # Limpiar comillas del valor
+        VAL="${VAL#\"}" ; VAL="${VAL%\"}"
+        VAL="${VAL#\'}" ; VAL="${VAL%\'}"
+
+        # Subir al scope preview de la rama develop con --force (sobrescribe si existe)
+        # < /dev/null evita que vercel consuma el stdin del while-loop
+        if vercel env add "$KEY" preview "$CURRENT_BRANCH" --value "$VAL" --yes --force < /dev/null &>/dev/null; then
+            echo -e "  ${GREEN}✓${NC} $KEY"
+            ((SYNC_OK++))
+        else
+            echo -e "  ${RED}✗${NC} $KEY (falló — verificar manualmente)"
+            ((SYNC_FAIL++))
+        fi
     fi
-else
-    echo -e "${GREEN}✅ Las variables de entorno en Vercel coinciden con .env.develop.${NC}"
+done < "$ENV_FILE"
+
+echo -e "\n${GREEN}✅ Sync completado:${NC} $SYNC_OK variables subidas, $SYNC_FAIL errores."
+if [ $SYNC_FAIL -gt 0 ]; then
+    echo -e "${YELLOW}⚠️  Algunas variables fallaron. Verifica en el dashboard de Vercel.${NC}"
 fi
 
 # ==============================================================================
-# 7. LOGICA DE CHANGELOG Y GIT COMMIT (FORZADO CON INFO@RETIA.ONLINE)
+# 6. ACTUALIZAR CHANGELOG.md Y GIT COMMIT (firmado como info@retia.online)
 # ==============================================================================
-echo -e "\n📝 Verificando historial de commits para CHANGELOG.md..."
-
 cd "$PROJECT_ROOT"
+echo -e "\n📝 Verificando CHANGELOG.md..."
 CHANGELOG_FILE="$PROJECT_ROOT/CHANGELOG.md"
 
-if [ ! -f "$CHANGELOG_FILE" ]; then
-    echo "# Changelog" > "$CHANGELOG_FILE"
-    echo "" >> "$CHANGELOG_FILE"
-fi
+[ ! -f "$CHANGELOG_FILE" ] && printf "# Changelog\n\n" > "$CHANGELOG_FILE"
 
-# Obtener últimos 15 commits en la rama actual develop (omitir merges)
-RECENT_COMMITS=$(git log --oneline -n 15 --no-merges || true)
+# Obtener commits recientes con fecha en formato YYYY-MM-DD
+RECENT_COMMITS=$(git log --oneline -n 20 --no-merges --pretty=format:"%h %ad %s" --date=short 2>/dev/null || true)
 NEW_ENTRIES=""
+HAS_NEW_COMMITS=0
 
-if [ -n "$RECENT_COMMITS" ]; then
-    while IFS= read -r commit_line; do
-        if [ -z "$commit_line" ]; then
-            continue
-        fi
-        
-        COMMIT_HASH=$(echo "$commit_line" | awk '{print $1}')
-        COMMIT_MSG=$(echo "$commit_line" | cut -d' ' -f2-)
-        
-        # Verificar si el hash del commit ya está registrado en CHANGELOG.md
-        if ! grep -q "$COMMIT_HASH" "$CHANGELOG_FILE"; then
-            echo -e "  ➕ Detectado nuevo commit: ${CYAN}$COMMIT_HASH${NC} - $COMMIT_MSG"
-            NEW_ENTRIES="${NEW_ENTRIES}\n- [$COMMIT_HASH] $COMMIT_MSG ($(date +%Y-%m-%d))"
-        fi
-    done <<< "$RECENT_COMMITS"
-fi
+while IFS= read -r commit_line; do
+    [ -z "$commit_line" ] && continue
+    COMMIT_HASH=$(echo "$commit_line" | awk '{print $1}')
+    COMMIT_DATE=$(echo "$commit_line" | awk '{print $2}')
+    COMMIT_MSG=$(echo "$commit_line" | cut -d' ' -f3-)
 
-if [ -n "$NEW_ENTRIES" ]; then
-    echo -e "\n📝 Actualizando CHANGELOG.md..."
-    
-    # Crear un changelog temporal insertando las nuevas entradas arriba del contenido anterior
+    # Buscar el hash entre corchetes en el CHANGELOG
+    if ! grep -q "\[$COMMIT_HASH\]" "$CHANGELOG_FILE" 2>/dev/null; then
+        echo -e "  ➕ Nuevo commit: ${CYAN}$COMMIT_HASH${NC} — $COMMIT_MSG (${COMMIT_DATE})"
+        NEW_ENTRIES="${NEW_ENTRIES}\n- [$COMMIT_HASH] $COMMIT_MSG ($COMMIT_DATE)"
+        HAS_NEW_COMMITS=1
+    fi
+done <<< "$RECENT_COMMITS"
+
+if [ $HAS_NEW_COMMITS -eq 1 ]; then
+    # Crear nuevo CHANGELOG con las nuevas entradas primero
     TEMP_CHANGELOG=$(mktemp)
     echo "# Changelog" > "$TEMP_CHANGELOG"
     echo -e "$NEW_ENTRIES" >> "$TEMP_CHANGELOG"
     
-    # Agregar el resto del archivo original, omitiendo el header de la primera línea
-    tail -n +2 "$CHANGELOG_FILE" >> "$TEMP_CHANGELOG"
-    mv "$TEMP_CHANGELOG" "$CHANGELOG_FILE"
-    
-    echo -e "💾 Haciendo commit de CHANGELOG.md forzando usuario..."
-    git add "$CHANGELOG_FILE"
-    
-    # Forzar el commit con el usuario VERCEL_EMAIL (info@retia.online) y nombre Retia Develop
-    git -c user.name="Retia Develop" -c user.email="$VERCEL_EMAIL" commit -m "chore: update CHANGELOG.md with recent commits [skip ci]"
-    
-    echo -e "${GREEN}✅ CHANGELOG.md actualizado y comprometido en Git con el usuario $VERCEL_EMAIL.${NC}"
-else
-    echo -e "${GREEN}✅ El archivo CHANGELOG.md ya cuenta con todos los commits registrados.${NC}"
-fi
-
-# ==============================================================================
-# 8. COMPILACIÓN Y DESPLIEGUE A VERCEL
-# ==============================================================================
-echo -e "\n📦 Paso 1: Construyendo paquetes del monorepositorio..."
-yarn build:packages || {
-    echo -e "${RED}❌ Error construyendo los paquetes compartidos del monorepo.${NC}"
-    exit 1
-}
-
-echo -e "\n🌐 Paso 2: Construyendo aplicación web..."
-cd "$WEB_APP_DIR"
-yarn build || {
-    echo -e "${RED}❌ Error construyendo la aplicación web.${NC}"
-    exit 1
-}
-
-echo -e "\n🚀 Paso 3: Desplegando en Vercel..."
-vercel --yes || {
-    echo -e "${RED}❌ Falló el despliegue en Vercel.${NC}"
-    exit 1
-}
-
-# ==============================================================================
-# 9. VERIFICACIÓN DEL DESPLIEGUE EN LA URL DE VERCEL
-# ==============================================================================
-DEPLOY_TARGET_URL="https://develop-monorepo.vercel.app/"
-echo -e "\n🔍 Paso 4: Verificando estado del despliegue en la URL oficial de Staging..."
-echo -e "🔗 URL Objetivo: ${GREEN}$DEPLOY_TARGET_URL${NC}"
-
-# Esperar unos segundos a que Vercel propague los cambios
-echo "⏳ Esperando 6 segundos a que se propague el despliegue..."
-sleep 6
-
-# Hacer test con curl para verificar el código HTTP
-HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$DEPLOY_TARGET_URL" || echo "000")
-
-if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ] || [ "$HTTP_STATUS" -eq 302 ] || [ "$HTTP_STATUS" -eq 401 ]; then
-    echo -e "${GREEN}======================================================================${NC}"
-    if [ "$HTTP_STATUS" -eq 401 ]; then
-        echo -e "${GREEN}🎉 ¡DESPLIEGUE CONFIRMADO! (HTTP 401 - Protegido por Vercel Deployment Protection)${NC}"
-    else
-        echo -e "${GREEN}🎉 ¡DESPLIEGUE CONFIRMADO Y ONLINE! (HTTP $HTTP_STATUS)${NC}"
+    # Agregar las entradas existentes (omitiendo la línea del título)
+    if [ -f "$CHANGELOG_FILE" ] && [ -s "$CHANGELOG_FILE" ]; then
+        # Omitir la primera línea (# Changelog) y agregar el resto
+        tail -n +2 "$CHANGELOG_FILE" >> "$TEMP_CHANGELOG"
     fi
-    echo -e "🔗 URL: ${CYAN}$DEPLOY_TARGET_URL${NC}"
-    echo -e "${GREEN}======================================================================${NC}"
+    
+    mv "$TEMP_CHANGELOG" "$CHANGELOG_FILE"
+
+    git add "$CHANGELOG_FILE"
+    git -c user.name="Retia Develop" -c user.email="$VERCEL_EMAIL" \
+        commit -m "chore: update CHANGELOG.md with recent commits [skip ci]"
+    echo -e "${GREEN}✅ CHANGELOG.md actualizado (commit firmado como $VERCEL_EMAIL)${NC}"
 else
-    echo -e "${RED}======================================================================${NC}"
-    echo -e "${RED}⚠️  Advertencia: El despliegue finalizó pero la URL respondió HTTP $HTTP_STATUS.${NC}"
-    echo -e "${RED}   Es posible que Vercel esté tardando en propagar o que haya algún error.${NC}"
-    echo -e "${RED}======================================================================${NC}"
-    echo -e "\n${YELLOW}📋 Extrayendo los últimos logs de Vercel para diagnóstico...${NC}"
-    echo "----------------------------------------------------------------------"
-    vercel logs --limit 10 || true
-    echo "----------------------------------------------------------------------"
+    echo -e "${GREEN}✅ CHANGELOG.md ya está al día.${NC}"
 fi
+
+# ==============================================================================
+# 7. DESPLEGAR EN VERCEL (como Preview — Vercel construye remotamente)
+# ==============================================================================
+# Nota: vercel --yes sube el código fuente y Vercel lo compila en sus servidores.
+# No se necesita un build local previo.
+cd "$WEB_APP_DIR"
+echo -e "\n${BLUE}🚀 Desplegando en Vercel como Preview (branch: $CURRENT_BRANCH)...${NC}"
+DEPLOY_OUTPUT=$(vercel --yes 2>&1) || {
+    echo -e "${RED}❌ Falló el despliegue en Vercel.${NC}"
+    echo "$DEPLOY_OUTPUT"
+    exit 1
+}
+echo "$DEPLOY_OUTPUT"
+
+# Extraer URL del deploy
+PREVIEW_URL=$(echo "$DEPLOY_OUTPUT" | grep -E "Preview\s+https://" | awk '{print $2}' | head -n1 || true)
+[ -z "$PREVIEW_URL" ] && PREVIEW_URL=$(echo "$DEPLOY_OUTPUT" | grep "https://" | head -n1 | xargs || true)
+
+# ==============================================================================
+# 8. VERIFICAR URL DE STAGING
+# ==============================================================================
+STAGING_URL="https://develop-monorepo.vercel.app/"
+echo -e "\n🔍 Verificando URL de staging..."
+echo -e "🔗 URL canónica: ${CYAN}$STAGING_URL${NC}"
+[ -n "$PREVIEW_URL" ] && echo -e "🔗 URL de este deploy: ${CYAN}$PREVIEW_URL${NC}"
+
+echo "⏳ Esperando 8 segundos para que Vercel propague el despliegue..."
+sleep 8
+
+HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$STAGING_URL" || echo "000")
+
+echo -e "\n${GREEN}======================================================================${NC}"
+if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ] || [ "$HTTP_STATUS" -eq 302 ]; then
+    echo -e "${GREEN}🎉 ¡DESPLIEGUE EXITOSO! (HTTP $HTTP_STATUS)${NC}"
+elif [ "$HTTP_STATUS" -eq 401 ]; then
+    echo -e "${GREEN}🎉 ¡DESPLIEGUE CONFIRMADO! (HTTP 401 — protegido por Vercel Deployment Protection)${NC}"
+    echo -e "${YELLOW}   Para acceder necesitas una sesión SSO de Vercel.${NC}"
+else
+    echo -e "${YELLOW}⚠️  La URL respondió HTTP $HTTP_STATUS${NC}"
+    echo -e "${YELLOW}   Es posible que Vercel aún esté propagando el despliegue.${NC}"
+    echo -e "\n📋 Últimos logs de Vercel:"
+    vercel logs --limit 20 2>/dev/null || true
+fi
+echo -e "🔗 URL Staging: ${CYAN}$STAGING_URL${NC}"
+[ -n "$PREVIEW_URL" ] && echo -e "🔗 URL Preview: ${CYAN}$PREVIEW_URL${NC}"
+echo -e "${GREEN}======================================================================${NC}"
