@@ -339,7 +339,14 @@ REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
 REPO_PATH=$(echo "$REMOTE_URL" | sed -E 's|git@github\.com:||; s|https://github\.com/||; s|\.git$||')
 HTTPS_REMOTE="https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${REPO_PATH}.git"
 
-# Checkout main limpio (sin commits locales pendientes)
+# Asegurar que develop remoto tiene todos los commits locales antes del merge
+echo -e "   Sincronizando develop → remoto..."
+git checkout develop
+if git push "$HTTPS_REMOTE" develop 2>&1 | sed "s|${GITHUB_TOKEN}|***|g"; then
+    echo -e "   ${GREEN}✅ develop sincronizado con remoto.${NC}"
+else
+    echo -e "   ${YELLOW}⚠️  No se pudo sincronizar develop (puede que ya esté al día).${NC}"
+fi
 git checkout main
 git fetch "$HTTPS_REMOTE" main:main --update-head-ok 2>&1 | sed "s|${GITHUB_TOKEN}|***|g" || true
 git fetch "$HTTPS_REMOTE" develop:develop --update-head-ok 2>&1 | sed "s|${GITHUB_TOKEN}|***|g" || true
