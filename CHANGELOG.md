@@ -1,5 +1,8 @@
 # Changelog
 
+- [6cc9707] fix: force nodejs runtime in middleware to resolve global is not defined error (2026-06-07)
+- [aeba805] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
 - [8732d3c] fix: make @core/api import dynamic in auth middleware to prevent Edge runtime error (2026-06-07)
 - [d7b0eba] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
 
