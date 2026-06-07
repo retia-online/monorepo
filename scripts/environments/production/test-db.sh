@@ -156,6 +156,6 @@ else
 fi
 echo -e "\n${YELLOW}📝 Configuración en MongoDB Atlas para usuario '${CYAN}$DB_USER${NC}${YELLOW}':${NC}"
 echo -e "   ✅ readWrite en ${CYAN}app_production${NC}"
-echo -e "   ❌ Sin acceso a ${CYAN}app_develop${NC}"
-echo -e "   ❌ Sin 'readWriteAnyDatabase' ni 'atlasAdmin'"
+echo -e "   ✅ Sin acceso a ${CYAN}app_develop${NC} (aislamiento correcto)"
+echo -e "   ✅ Sin 'readWriteAnyDatabase' ni 'atlasAdmin' (principio de mínimo privilegio)"
 echo -e "${GREEN}======================================================================${NC}"
