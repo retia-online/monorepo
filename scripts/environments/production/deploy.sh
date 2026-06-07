@@ -5,13 +5,15 @@
 # Ubicación: /scripts/environments/production/deploy.sh
 #
 # Qué hace este script:
-#   1. Verifica que la sesión de Vercel CLI sea la correcta (retia-online)
-#   2. Vincula el proyecto si no está vinculado
-#   3. Sube TODAS las variables de .env.production al scope production de Vercel
-#   4. Actualiza CHANGELOG.md con commits recientes (firmado como info@retia.online)
-#   5. Hace git push de main usando el GITHUB_TOKEN de .env.production (usuario retia-online)
-#      → Vercel detecta el push vía webhook y lanza el deployment de producción
-#   6. Verifica que la URL de producción responda correctamente
+#   1. Verifica credenciales de Vercel y GitHub
+#   2. Sube las variables de .env.production al scope production de Vercel
+#   3. Hace merge de develop → main via GitHub API (como retia-online)
+#      → Sin commits propios en main — el merge ES el deployment
+#   4. Vercel detecta el push a main vía webhook y lanza el deployment
+#   5. Verifica que la URL de producción responda
+#
+# Flujo correcto:
+#   develop (probado) → merge a main → Vercel production deployment
 # ==============================================================================
 
 set -e
@@ -23,23 +25,21 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 CYAN='\033[0;36m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 echo -e "${GREEN}🚀 Iniciando Despliegue Automatizado a PRODUCCIÓN (Vercel)${NC}"
 echo "=========================================================================="
-echo -e "${RED}⚠️  ATENCIÓN: Este script despliega a PRODUCCIÓN (rama main).${NC}"
-echo -e "${RED}   Asegúrate de que los cambios están probados en develop/staging.${NC}"
+echo -e "${RED}⚠️  ATENCIÓN: Este script despliega a PRODUCCIÓN (merge develop → main).${NC}"
+echo -e "${RED}   Asegúrate de que develop está probado y estable.${NC}"
 echo "=========================================================================="
 
 # ==============================================================================
 # 1. VERIFICAR HERRAMIENTAS REQUERIDAS
 # ==============================================================================
 if ! command -v vercel &> /dev/null; then
-    echo -e "${RED}❌ Vercel CLI no está instalado.${NC}"
-    echo "Instálalo ejecutando: npm install -g vercel"
+    echo -e "${RED}❌ Vercel CLI no está instalado. Ejecuta: npm install -g vercel${NC}"
     exit 1
 fi
-
 if ! command -v git &> /dev/null; then
     echo -e "${RED}❌ Git no está instalado.${NC}"
     exit 1
@@ -51,60 +51,64 @@ fi
 ENV_FILE="$PROJECT_ROOT/apps/web/.env.production"
 
 if [ ! -f "$ENV_FILE" ]; then
-    echo -e "${RED}❌ No se encontró el archivo de variables: $ENV_FILE${NC}"
+    echo -e "${RED}❌ No se encontró: $ENV_FILE${NC}"
     exit 1
 fi
 
-# Leer cuenta de Vercel
-VERCEL_EMAIL=$(grep -E "^VERCEL_EMAIL=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "info@retia.online")
-VERCEL_USERNAME=$(grep -E "^VERCEL_USERNAME=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "retia-online")
-[ -z "$VERCEL_EMAIL" ]    && VERCEL_EMAIL="info@retia.online"
-[ -z "$VERCEL_USERNAME" ] && VERCEL_USERNAME="retia-online"
+_read_env() { grep -E "^$1=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo ""; }
 
-# Leer credenciales de GitHub
-GITHUB_USERNAME=$(grep -E "^GITHUB_USERNAME=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
-GITHUB_EMAIL=$(grep -E "^GITHUB_EMAIL=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
-GITHUB_TOKEN=$(grep -E "^GITHUB_TOKEN=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
+VERCEL_EMAIL=$(_read_env "VERCEL_EMAIL");   [ -z "$VERCEL_EMAIL" ]    && VERCEL_EMAIL="info@retia.online"
+VERCEL_USERNAME=$(_read_env "VERCEL_USERNAME"); [ -z "$VERCEL_USERNAME" ] && VERCEL_USERNAME="retia-online"
+GITHUB_USERNAME=$(_read_env "GITHUB_USERNAME")
+GITHUB_EMAIL=$(_read_env "GITHUB_EMAIL")
+GITHUB_TOKEN=$(_read_env "GITHUB_TOKEN")
+MONGODB_URI=$(_read_env "MONGODB_URI")
+NEXTAUTH_SECRET=$(_read_env "NEXTAUTH_SECRET")
+NEXTAUTH_URL=$(_read_env "NEXTAUTH_URL")
 
-echo -e "📧 Cuenta Vercel objetivo: ${GREEN}$VERCEL_EMAIL${NC} (usuario: ${GREEN}$VERCEL_USERNAME${NC})"
-[ -n "$GITHUB_USERNAME" ] && echo -e "🐙 Cuenta GitHub objetivo: ${GREEN}$GITHUB_USERNAME${NC} (${GREEN}$GITHUB_EMAIL${NC})"
-echo -e "📄 Usando variables de: ${CYAN}$ENV_FILE${NC}"
-
-# ==============================================================================
-# 2b. VERIFICAR QUE ESTAMOS EN LA RAMA main
-# ==============================================================================
-CURRENT_BRANCH=$(git -C "$PROJECT_ROOT" branch --show-current 2>/dev/null || echo "")
-
-if [ "$CURRENT_BRANCH" != "main" ]; then
-    echo -e "\n${RED}❌ Este script solo puede ejecutarse desde la rama 'main'.${NC}"
-    echo -e "   Rama actual: ${YELLOW}$CURRENT_BRANCH${NC}"
-    echo -e "\n   Opciones:"
-    echo -e "   1. Cambia a main: ${CYAN}git checkout main${NC}"
-    echo -e "   2. Mergea develop a main: ${CYAN}git checkout main && git merge develop${NC}"
-    exit 1
-fi
-
-echo -e "\n✅ Rama correcta: ${GREEN}main${NC}"
+echo -e "📧 Cuenta Vercel:  ${GREEN}$VERCEL_EMAIL${NC} (${GREEN}$VERCEL_USERNAME${NC})"
+[ -n "$GITHUB_USERNAME" ] && echo -e "🐙 Cuenta GitHub:  ${GREEN}$GITHUB_USERNAME${NC} (${GREEN}$GITHUB_EMAIL${NC})"
+echo -e "📄 Variables de:   ${CYAN}$ENV_FILE${NC}"
 
 # ==============================================================================
-# 2c. VERIFICAR QUE LAS VARIABLES CRÍTICAS ESTÁN CONFIGURADAS
+# 2b. VERIFICAR VARIABLES CRÍTICAS
 # ==============================================================================
-MONGODB_URI=$(grep -E "^MONGODB_URI=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
-NEXTAUTH_SECRET=$(grep -E "^NEXTAUTH_SECRET=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
-NEXTAUTH_URL=$(grep -E "^NEXTAUTH_URL=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
-
-MISSING_VARS=0
-[ -z "$MONGODB_URI" ]     && echo -e "${RED}❌ MONGODB_URI no está configurado en .env.production${NC}"     && MISSING_VARS=1
-[ -z "$NEXTAUTH_SECRET" ] && echo -e "${RED}❌ NEXTAUTH_SECRET no está configurado en .env.production${NC}" && MISSING_VARS=1
-[ -z "$NEXTAUTH_URL" ]    && echo -e "${RED}❌ NEXTAUTH_URL no está configurado en .env.production${NC}"    && MISSING_VARS=1
-[ -z "$GITHUB_TOKEN" ]    && echo -e "${RED}❌ GITHUB_TOKEN no está configurado en .env.production${NC}"    && MISSING_VARS=1
-
-if [ $MISSING_VARS -eq 1 ]; then
-    echo -e "\n${RED}❌ Faltan variables críticas. Completa el archivo .env.production antes de continuar.${NC}"
-    exit 1
-fi
+MISSING=0
+[ -z "$MONGODB_URI" ]     && echo -e "${RED}❌ Falta MONGODB_URI en .env.production${NC}"     && MISSING=1
+[ -z "$NEXTAUTH_SECRET" ] && echo -e "${RED}❌ Falta NEXTAUTH_SECRET en .env.production${NC}" && MISSING=1
+[ -z "$NEXTAUTH_URL" ]    && echo -e "${RED}❌ Falta NEXTAUTH_URL en .env.production${NC}"    && MISSING=1
+[ -z "$GITHUB_TOKEN" ]    && echo -e "${RED}❌ Falta GITHUB_TOKEN en .env.production${NC}"    && MISSING=1
+[ $MISSING -eq 1 ]        && echo -e "${RED}❌ Completa .env.production y vuelve a ejecutar.${NC}" && exit 1
 
 echo -e "✅ Variables críticas verificadas."
+
+# ==============================================================================
+# 2c. VERIFICAR QUE develop ESTÁ ACTUALIZADO
+# ==============================================================================
+echo -e "\n${BLUE}🔍 Verificando estado de la rama develop...${NC}"
+cd "$PROJECT_ROOT"
+
+# Asegurarse de tener los refs remotos actualizados
+git fetch origin develop main --quiet 2>/dev/null || true
+
+DEV_LOCAL=$(git rev-parse develop 2>/dev/null || echo "")
+DEV_REMOTE=$(git rev-parse origin/develop 2>/dev/null || echo "")
+
+if [ -z "$DEV_LOCAL" ]; then
+    echo -e "${RED}❌ La rama 'develop' no existe localmente.${NC}"
+    exit 1
+fi
+
+if [ "$DEV_LOCAL" != "$DEV_REMOTE" ] && [ -n "$DEV_REMOTE" ]; then
+    echo -e "${YELLOW}⚠️  La rama 'develop' local difiere del remoto.${NC}"
+    echo -e "${YELLOW}   Local:  $DEV_LOCAL${NC}"
+    echo -e "${YELLOW}   Remote: $DEV_REMOTE${NC}"
+    echo -e "${YELLOW}   Ejecuta 'git pull origin develop' antes de continuar.${NC}"
+    read -p "¿Continuar de todas formas? (s/N): " -n 1 -r; echo
+    [[ ! $REPLY =~ ^[Ss]$ ]] && exit 1
+fi
+
+echo -e "✅ develop está listo para mergear."
 
 # ==============================================================================
 # 3. VERIFICAR SESIÓN DE VERCEL
@@ -115,18 +119,16 @@ CURRENT_USER=$(vercel whoami 2>&1 | sed 's/> Logged in as //g' | head -n1 | xarg
 if [ "$CURRENT_USER" = "$VERCEL_USERNAME" ] || [ "$CURRENT_USER" = "$VERCEL_EMAIL" ]; then
     echo -e "✅ Sesión correcta: ${GREEN}$CURRENT_USER${NC}"
 elif [[ "$CURRENT_USER" == *"Error"* ]] || [ -z "$CURRENT_USER" ]; then
-    echo -e "${YELLOW}⚠️  Sin sesión activa. Iniciando sesión con: ${GREEN}$VERCEL_EMAIL${NC}"
+    echo -e "${YELLOW}⚠️  Sin sesión activa. Iniciando login...${NC}"
     vercel login "$VERCEL_EMAIL"
 else
-    echo -e "${YELLOW}⚠️  Sesión activa de otra cuenta: ${RED}$CURRENT_USER${NC}"
-    echo -e "🔄 Cambiando a la cuenta correcta: ${GREEN}$VERCEL_EMAIL${NC}"
+    echo -e "${YELLOW}⚠️  Sesión de otra cuenta: ${RED}$CURRENT_USER${NC}"
     vercel logout || true
     vercel login "$VERCEL_EMAIL"
 fi
 
 if ! vercel whoami &>/dev/null; then
-    echo -e "${RED}❌ No se pudo verificar la sesión.${NC}"
-    exit 1
+    echo -e "${RED}❌ No se pudo verificar la sesión de Vercel.${NC}"; exit 1
 fi
 echo -e "👤 Conectado como: ${GREEN}$(vercel whoami | head -n1)${NC}"
 
@@ -141,14 +143,11 @@ if [ ! -f ".vercel/project.json" ] && [ ! -f "$PROJECT_ROOT/.vercel/repo.json" ]
     [ -f ".env.local" ] && cp ".env.local" ".env.local.bak"
     vercel link --yes || true
     [ -f ".env.local.bak" ] && mv ".env.local.bak" ".env.local"
-
     if [ ! -f ".vercel/project.json" ] && [ ! -f "$PROJECT_ROOT/.vercel/repo.json" ]; then
-        echo -e "${RED}❌ No se pudo vincular el proyecto.${NC}"
-        exit 1
+        echo -e "${RED}❌ No se pudo vincular el proyecto.${NC}"; exit 1
     fi
 fi
 
-# Extraer nombre e ID del proyecto vinculado
 if [ -f "$PROJECT_ROOT/.vercel/repo.json" ]; then
     if command -v jq &>/dev/null; then
         PROJECT_NAME=$(jq -r '.projects[0].name' "$PROJECT_ROOT/.vercel/repo.json")
@@ -167,132 +166,104 @@ elif [ -f ".vercel/project.json" ]; then
     fi
 fi
 
-echo -e "\n${GREEN}✅ Proyecto vinculado:${NC} $PROJECT_NAME (ID: $PROJECT_ID)"
+echo -e "\n${GREEN}✅ Proyecto:${NC} $PROJECT_NAME (ID: $PROJECT_ID)"
 echo "----------------------------------------------------------------------"
 
 # ==============================================================================
-# 5. SINCRONIZAR VARIABLES DE .env.production → VERCEL PRODUCTION SCOPE
+# 5. SINCRONIZAR VARIABLES → VERCEL PRODUCTION SCOPE
 # ==============================================================================
-echo -e "\n📤 Sincronizando variables de ${CYAN}.env.production${NC} → Vercel (production)..."
+echo -e "\n📤 Sincronizando ${CYAN}.env.production${NC} → Vercel (production)..."
 
 SKIP_KEYS=("VERCEL_EMAIL" "VERCEL_USERNAME" "GITHUB_USERNAME" "GITHUB_EMAIL" "GITHUB_TOKEN" "ATLAS_PUBLIC_KEY" "ATLAS_PRIVATE_KEY" "ATLAS_PROJECT_ID")
-SYNC_OK=0
-SYNC_FAIL=0
+SYNC_OK=0; SYNC_FAIL=0
 
 while IFS= read -r line || [ -n "$line" ]; do
     [[ "$line" =~ ^[[:space:]]*# ]] && continue
     [[ -z "$line" ]] && continue
-
     if [[ "$line" =~ ^([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]]; then
-        KEY="${BASH_REMATCH[1]}"
-        VAL="${BASH_REMATCH[2]}"
-
+        KEY="${BASH_REMATCH[1]}"; VAL="${BASH_REMATCH[2]}"
         skip=0
-        for sk in "${SKIP_KEYS[@]}"; do
-            [ "$KEY" = "$sk" ] && skip=1 && break
-        done
+        for sk in "${SKIP_KEYS[@]}"; do [ "$KEY" = "$sk" ] && skip=1 && break; done
         [ $skip -eq 1 ] && continue
-
-        VAL="${VAL#\"}" ; VAL="${VAL%\"}"
-        VAL="${VAL#\'}" ; VAL="${VAL%\'}"
-
-        # Subir al scope "production" (no preview, no rama específica)
+        VAL="${VAL#\"}" ; VAL="${VAL%\"}" ; VAL="${VAL#\'}" ; VAL="${VAL%\'}"
         if vercel env add "$KEY" production --value "$VAL" --yes --force < /dev/null &>/dev/null; then
-            echo -e "  ${GREEN}✓${NC} $KEY"
-            ((SYNC_OK++))
+            echo -e "  ${GREEN}✓${NC} $KEY"; ((SYNC_OK++))
         else
-            echo -e "  ${RED}✗${NC} $KEY (falló — verificar manualmente)"
-            ((SYNC_FAIL++))
+            echo -e "  ${RED}✗${NC} $KEY"; ((SYNC_FAIL++))
         fi
     fi
 done < "$ENV_FILE"
 
-echo -e "\n${GREEN}✅ Sync completado:${NC} $SYNC_OK variables subidas, $SYNC_FAIL errores."
-if [ $SYNC_FAIL -gt 0 ]; then
-    echo -e "${YELLOW}⚠️  Algunas variables fallaron. Verifica en el dashboard de Vercel.${NC}"
-fi
+echo -e "\n${GREEN}✅ Sync:${NC} $SYNC_OK variables subidas, $SYNC_FAIL errores."
+[ $SYNC_FAIL -gt 0 ] && echo -e "${YELLOW}⚠️  Verifica las variables fallidas en el dashboard de Vercel.${NC}"
 
 # ==============================================================================
-# 6. ACTUALIZAR CHANGELOG.md Y GIT COMMIT (firmado como info@retia.online)
-# ==============================================================================
-cd "$PROJECT_ROOT"
-echo -e "\n📝 Verificando CHANGELOG.md..."
-CHANGELOG_FILE="$PROJECT_ROOT/CHANGELOG.md"
-
-[ ! -f "$CHANGELOG_FILE" ] && printf "# Changelog\n\n" > "$CHANGELOG_FILE"
-
-RECENT_COMMITS=$(git log --oneline -n 20 --no-merges --pretty=format:"%h %ad %s" --date=short 2>/dev/null || true)
-NEW_ENTRIES=""
-HAS_NEW_COMMITS=0
-
-while IFS= read -r commit_line; do
-    [ -z "$commit_line" ] && continue
-    COMMIT_HASH=$(echo "$commit_line" | awk '{print $1}')
-    COMMIT_DATE=$(echo "$commit_line" | awk '{print $2}')
-    COMMIT_MSG=$(echo "$commit_line" | cut -d' ' -f3-)
-
-    if ! grep -q "\[$COMMIT_HASH\]" "$CHANGELOG_FILE" 2>/dev/null; then
-        echo -e "  ➕ Nuevo commit: ${CYAN}$COMMIT_HASH${NC} — $COMMIT_MSG (${COMMIT_DATE})"
-        NEW_ENTRIES="${NEW_ENTRIES}\n- [$COMMIT_HASH] $COMMIT_MSG ($COMMIT_DATE)"
-        HAS_NEW_COMMITS=1
-    fi
-done <<< "$RECENT_COMMITS"
-
-if [ $HAS_NEW_COMMITS -eq 1 ]; then
-    TEMP_CHANGELOG=$(mktemp)
-    echo "# Changelog" > "$TEMP_CHANGELOG"
-    echo -e "$NEW_ENTRIES" >> "$TEMP_CHANGELOG"
-    [ -f "$CHANGELOG_FILE" ] && [ -s "$CHANGELOG_FILE" ] && tail -n +2 "$CHANGELOG_FILE" >> "$TEMP_CHANGELOG"
-    mv "$TEMP_CHANGELOG" "$CHANGELOG_FILE"
-
-    git add "$CHANGELOG_FILE"
-    git -c user.name="Retia Production" -c user.email="$VERCEL_EMAIL" \
-        commit -m "chore: update CHANGELOG.md for production release [skip ci]"
-    echo -e "${GREEN}✅ CHANGELOG.md actualizado (commit firmado como $VERCEL_EMAIL)${NC}"
-else
-    echo -e "${GREEN}✅ CHANGELOG.md ya está al día.${NC}"
-fi
-
-# ==============================================================================
-# 7. GIT PUSH A main CON USUARIO CORRECTO (via HTTPS token)
+# 6. MERGE develop → main Y PUSH COMO retia-online
+#    Sin commits propios — el merge ES el evento que dispara Vercel
 # ==============================================================================
 cd "$PROJECT_ROOT"
-echo -e "\n📤 Publicando commits en GitHub (rama main)..."
+echo -e "\n${BLUE}🔀 Mergeando develop → main como ${GREEN}$GITHUB_USERNAME${NC}${BLUE}...${NC}"
 
 REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
+REPO_PATH=$(echo "$REMOTE_URL" | sed -E 's|git@github\.com:||; s|https://github\.com/||; s|\.git$||')
+HTTPS_REMOTE="https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${REPO_PATH}.git"
 
-if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_USERNAME" ]; then
-    REPO_PATH=$(echo "$REMOTE_URL" | sed -E 's|git@github\.com:||; s|https://github\.com/||; s|\.git$||')
-    HTTPS_REMOTE="https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${REPO_PATH}.git"
+# Checkout main limpio (sin commits locales pendientes)
+git checkout main
+git fetch "$HTTPS_REMOTE" main:main --update-head-ok 2>&1 | sed "s|${GITHUB_TOKEN}|***|g" || true
+git fetch "$HTTPS_REMOTE" develop:develop --update-head-ok 2>&1 | sed "s|${GITHUB_TOKEN}|***|g" || true
 
-    echo -e "🐙 Push como: ${GREEN}$GITHUB_USERNAME${NC} → github.com/${REPO_PATH} (main)"
+# Merge con identidad correcta — sin commit de CHANGELOG, sin commits extras
+git -c user.name="Retia Production" -c user.email="$GITHUB_EMAIL" \
+    merge develop \
+    --no-ff \
+    -m "chore: release to production — merge develop into main [skip ci]" \
+    2>/dev/null || {
+        # Si hay conflictos en CHANGELOG, tomamos la versión de develop
+        if git status | grep -q "CHANGELOG.md"; then
+            git checkout develop -- CHANGELOG.md
+            git add CHANGELOG.md
+            git -c user.name="Retia Production" -c user.email="$GITHUB_EMAIL" \
+                commit --no-edit 2>/dev/null || true
+        else
+            echo -e "${RED}❌ Hay conflictos de merge que requieren resolución manual.${NC}"
+            git merge --abort 2>/dev/null || true
+            exit 1
+        fi
+    }
 
-    if git push "$HTTPS_REMOTE" main 2>&1 | sed "s|${GITHUB_TOKEN}|***|g"; then
-        echo -e "${GREEN}✅ Push exitoso como $GITHUB_USERNAME${NC}"
-    else
-        echo -e "${YELLOW}⚠️  Push con token falló. Intentando con remote original...${NC}"
-        git push origin main || echo -e "${RED}❌ Push falló. Continúa sin push.${NC}"
-    fi
+MERGE_COMMIT=$(git rev-parse --short HEAD)
+echo -e "   ${GREEN}✅ Merge completado: $MERGE_COMMIT${NC}"
+
+# Push a GitHub como retia-online
+echo -e "\n🐙 Push como: ${GREEN}$GITHUB_USERNAME${NC} → github.com/${REPO_PATH} (main)"
+
+if git push "$HTTPS_REMOTE" main 2>&1 | sed "s|${GITHUB_TOKEN}|***|g"; then
+    echo -e "${GREEN}✅ Push exitoso — Vercel detectará el push y lanzará el deployment.${NC}"
 else
-    echo -e "${YELLOW}⚠️  GITHUB_TOKEN no configurado — usando credenciales por defecto.${NC}"
-    git push origin main || echo -e "${RED}❌ Push falló.${NC}"
+    echo -e "${RED}❌ Push falló. Verifica permisos del GITHUB_TOKEN.${NC}"
+    exit 1
 fi
 
+# Sincronizar develop con el merge commit para evitar divergencias futuras
+git checkout develop
+git -c user.name="Retia Production" -c user.email="$GITHUB_EMAIL" \
+    merge main --ff-only 2>/dev/null || true
+git push "$HTTPS_REMOTE" develop 2>&1 | sed "s|${GITHUB_TOKEN}|***|g" || true
+git checkout main
+
 # ==============================================================================
-# 8. ESPERAR QUE VERCEL CONSTRUYA (triggerado por el git push vía webhook)
+# 7. ESPERAR Y VERIFICAR URL DE PRODUCCIÓN
 # ==============================================================================
-PROD_URL=$(grep -E "^NEXTAUTH_URL=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null | sed 's|/$||')
+PROD_URL=$(echo "$NEXTAUTH_URL" | sed 's|/$||')
 [ -z "$PROD_URL" ] && PROD_URL="https://retia.online"
 
-echo -e "\n${BLUE}🚀 Deployment de producción triggerado por git push a main...${NC}"
-echo -e "🔗 URL de producción: ${CYAN}$PROD_URL${NC}"
+echo -e "\n${BLUE}🚀 Deployment de producción triggerado por push a main...${NC}"
+echo -e "🔗 URL: ${CYAN}$PROD_URL${NC}"
 echo -e "📋 Dashboard: ${CYAN}https://vercel.com/retias-projects/monorepo${NC}"
-echo "⏳ Esperando 15 segundos para que Vercel reciba el webhook..."
+echo "⏳ Esperando 15 segundos..."
 sleep 15
 
-# ==============================================================================
-# 9. VERIFICAR URL DE PRODUCCIÓN
-# ==============================================================================
 echo -e "\n🔍 Verificando URL de producción..."
 HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$PROD_URL" || echo "000")
 
@@ -300,11 +271,11 @@ echo -e "\n${GREEN}=============================================================
 if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ] || [ "$HTTP_STATUS" -eq 302 ]; then
     echo -e "${GREEN}🎉 ¡PRODUCCIÓN ACTIVA! (HTTP $HTTP_STATUS)${NC}"
 elif [ "$HTTP_STATUS" -eq 401 ]; then
-    echo -e "${GREEN}🎉 ¡PRODUCCIÓN ACTIVA! (HTTP 401 — protegido por Vercel Deployment Protection)${NC}"
+    echo -e "${GREEN}🎉 ¡PRODUCCIÓN ACTIVA! (HTTP 401 — Vercel Deployment Protection)${NC}"
 else
-    echo -e "${YELLOW}⚠️  La URL respondió HTTP $HTTP_STATUS — el build puede estar aún en curso.${NC}"
-    echo -e "   Verifica el progreso en el dashboard de Vercel."
+    echo -e "${YELLOW}⚠️  HTTP $HTTP_STATUS — el build puede estar aún en curso.${NC}"
+    echo -e "   Verifica en el dashboard de Vercel."
 fi
-echo -e "🔗 URL Producción: ${CYAN}$PROD_URL${NC}"
-echo -e "📋 Dashboard:      ${CYAN}https://vercel.com/retias-projects/monorepo${NC}"
+echo -e "🔗 URL:       ${CYAN}$PROD_URL${NC}"
+echo -e "📋 Dashboard: ${CYAN}https://vercel.com/retias-projects/monorepo${NC}"
 echo -e "${GREEN}======================================================================${NC}"
