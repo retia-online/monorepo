@@ -175,7 +175,7 @@ echo "----------------------------------------------------------------------"
 # ==============================================================================
 echo -e "\n📤 Sincronizando variables de ${CYAN}.env.production${NC} → Vercel (production)..."
 
-SKIP_KEYS=("VERCEL_EMAIL" "VERCEL_USERNAME" "GITHUB_USERNAME" "GITHUB_EMAIL" "GITHUB_TOKEN")
+SKIP_KEYS=("VERCEL_EMAIL" "VERCEL_USERNAME" "GITHUB_USERNAME" "GITHUB_EMAIL" "GITHUB_TOKEN" "ATLAS_PUBLIC_KEY" "ATLAS_PRIVATE_KEY" "ATLAS_PROJECT_ID")
 SYNC_OK=0
 SYNC_FAIL=0
 

@@ -145,7 +145,7 @@ echo "----------------------------------------------------------------------"
 CURRENT_BRANCH=$(git -C "$PROJECT_ROOT" branch --show-current 2>/dev/null || echo "develop")
 echo -e "\n📤 Sincronizando variables de ${CYAN}.env.develop${NC} → Vercel (preview/${CURRENT_BRANCH})..."
 
-SKIP_KEYS=("VERCEL_EMAIL" "VERCEL_USERNAME" "GITHUB_USERNAME" "GITHUB_EMAIL" "GITHUB_TOKEN")
+SKIP_KEYS=("VERCEL_EMAIL" "VERCEL_USERNAME" "GITHUB_USERNAME" "GITHUB_EMAIL" "GITHUB_TOKEN" "ATLAS_PUBLIC_KEY" "ATLAS_PRIVATE_KEY" "ATLAS_PROJECT_ID")
 SYNC_OK=0
 SYNC_FAIL=0
 
