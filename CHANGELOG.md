@@ -1,5 +1,9 @@
 # Changelog
 
+- [9ecd0dd] fix: ensure all local commits are pushed — develop validates branch, production syncs develop before merge (2026-06-07)
+- [2a0fb39] fix: add timeout to vercel list and logs calls in production deploy check (2026-06-07)
+- [3b349e3] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
 - [a758545] feat: production deploy verifies develop health before proceeding — warns if not Ready or has 500 errors (2026-06-07)
 - [1c4e201] feat: add auto-versioning to production deploy — auto-increments patch tag or accepts --tag vX.Y.Z (2026-06-07)
 - [949d554] refactor: production deploy now merges develop→main without extra commits, eliminates future divergence (2026-06-07)
