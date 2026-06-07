@@ -7,11 +7,12 @@
 # Qué hace este script:
 #   1. Verifica credenciales de Vercel y GitHub
 #   2. Sube las variables de .env.production al scope production de Vercel
-#   3. Hace merge de develop → main via GitHub API (como retia-online)
-#      → Sin commits propios en main — el merge ES el deployment
-#   4. Crea un tag de versión (auto-incrementa patch o usa --tag vX.Y.Z)
-#   5. Vercel detecta el push a main vía webhook y lanza el deployment
-#   6. Verifica que la URL de producción responda
+#   3. Verifica que el último deployment de develop está Ready y sin errores 500
+#      → Warning + confirmación si develop no está saludable
+#   4. Hace merge de develop → main (como retia-online, sin commits extras)
+#   5. Crea un tag de versión (auto-incrementa patch o usa --tag vX.Y.Z)
+#   6. Vercel detecta el push a main vía webhook y lanza el deployment
+#   7. Verifica que la URL de producción responda
 #
 # Uso:
 #   ./deploy.sh              ← auto-incrementa el patch (v1.0.2 → v1.0.3)
@@ -142,8 +143,79 @@ MISSING=0
 echo -e "✅ Variables críticas verificadas."
 
 # ==============================================================================
-# 2c. VERIFICAR QUE develop ESTÁ ACTUALIZADO
+# 2d. VERIFICAR QUE develop FUE DESPLEGADO Y ESTÁ SALUDABLE EN VERCEL
 # ==============================================================================
+echo -e "\n${BLUE}🔍 Verificando estado del último deployment de develop en Vercel...${NC}"
+
+DEVELOP_OK=0
+DEVELOP_SKIP=0
+
+# Obtener el deployment más reciente de la rama develop
+DEV_DEPLOYMENT=$(vercel list 2>/dev/null | grep "Preview" | grep -i "retia-online" | head -n1 || echo "")
+
+if [ -z "$DEV_DEPLOYMENT" ]; then
+    echo -e "${YELLOW}⚠️  No se encontró ningún deployment previo de develop en Vercel.${NC}"
+    DEVELOP_SKIP=1
+else
+    DEV_STATUS=$(echo "$DEV_DEPLOYMENT" | grep -oE '● (Ready|Error|Building|Queued|Canceled)' | head -n1)
+    DEV_URL=$(echo "$DEV_DEPLOYMENT" | grep -oE 'https://[^ ]+' | head -n1)
+    DEV_AGE=$(echo "$DEV_DEPLOYMENT" | awk '{print $2, $3}' | head -n1)
+
+    echo -e "   Último deployment develop: ${CYAN}$DEV_URL${NC}"
+    echo -e "   Estado: $DEV_STATUS | Edad: $DEV_AGE"
+
+    if echo "$DEV_STATUS" | grep -q "Ready"; then
+        # Verificar que responde correctamente
+        if [ -n "$DEV_URL" ]; then
+            DEV_HTTP=$(curl -o /dev/null -s -w "%{http_code}" "$DEV_URL" --max-time 10 || echo "000")
+            if [ "$DEV_HTTP" = "200" ] || [ "$DEV_HTTP" = "307" ] || [ "$DEV_HTTP" = "301" ] || [ "$DEV_HTTP" = "401" ]; then
+                echo -e "   HTTP: ${GREEN}$DEV_HTTP${NC} ✅"
+                DEVELOP_OK=1
+            else
+                echo -e "   HTTP: ${RED}$DEV_HTTP${NC} — la URL de develop no responde correctamente."
+            fi
+        else
+            # Ready sin URL verificable — aceptamos el status de Vercel
+            DEVELOP_OK=1
+        fi
+    else
+        echo -e "${RED}   El último deployment de develop NO está en estado Ready.${NC}"
+    fi
+fi
+
+# Verificar también los logs del deployment de develop — buscar errores 500
+if [ $DEVELOP_OK -eq 1 ] && [ -n "$DEV_URL" ]; then
+    echo -e "   Revisando logs de develop..."
+    DEV_ERRORS=$(vercel logs "$DEV_URL" --limit 20 2>/dev/null | grep -c "error.*500\|500.*error\|ReferenceError\|TypeError.*undefined" || echo "0")
+    if [ "$DEV_ERRORS" -gt 0 ]; then
+        echo -e "${RED}   ⚠️  Se encontraron $DEV_ERRORS errores en los logs de develop.${NC}"
+        DEVELOP_OK=0
+    else
+        echo -e "   ${GREEN}✅ Sin errores críticos en los logs de develop.${NC}"
+    fi
+fi
+
+# Decisión final
+if [ $DEVELOP_OK -eq 1 ]; then
+    echo -e "${GREEN}✅ develop está desplegado y saludable — se puede proceder a producción.${NC}"
+elif [ $DEVELOP_SKIP -eq 1 ]; then
+    echo -e "\n${YELLOW}╔══════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${YELLOW}║  ⚠️  WARNING: No se encontró deployment de develop en Vercel.     ║${NC}"
+    echo -e "${YELLOW}║  Se recomienda ejecutar primero:                                  ║${NC}"
+    echo -e "${YELLOW}║  ./scripts/environments/develop/deploy.sh                        ║${NC}"
+    echo -e "${YELLOW}╚══════════════════════════════════════════════════════════════════╝${NC}"
+    read -p "¿Continuar con el deployment de producción de todas formas? (s/N): " -n 1 -r; echo
+    [[ ! $REPLY =~ ^[Ss]$ ]] && echo -e "${YELLOW}Abortado. Ejecuta primero el deploy de develop.${NC}" && exit 1
+else
+    echo -e "\n${RED}╔══════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${RED}║  ❌ El último deployment de develop tiene problemas.              ║${NC}"
+    echo -e "${RED}║  Despliega y verifica develop antes de ir a producción:           ║${NC}"
+    echo -e "${RED}║  ./scripts/environments/develop/deploy.sh                        ║${NC}"
+    echo -e "${RED}╚══════════════════════════════════════════════════════════════════╝${NC}"
+    read -p "¿Continuar con el deployment de producción de todas formas? (s/N): " -n 1 -r; echo
+    [[ ! $REPLY =~ ^[Ss]$ ]] && echo -e "${RED}Abortado.${NC}" && exit 1
+    echo -e "${YELLOW}⚠️  Continuando a pesar del estado de develop...${NC}"
+fi
 echo -e "\n${BLUE}🔍 Verificando estado de la rama develop...${NC}"
 cd "$PROJECT_ROOT"
 
