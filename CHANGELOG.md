@@ -1,5 +1,8 @@
 # Changelog
 
+- [afe2f3c] fix: remove vercel --yes to avoid duplicate deployments, push via GitHub token (2026-06-07)
+- [e02efa0] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
 - [9313aac] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
 
 - [7811f9c] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
