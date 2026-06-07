@@ -104,8 +104,41 @@ else
 fi
 
 # ==============================================================================
-# 4. RESUMEN
+# 4. VERIFICAR AISLAMIENTO — intentar acceder a app_develop con este usuario
 # ==============================================================================
+echo -e "\n${BLUE}🛡️  Verificando aislamiento: intentando acceder a app_develop con usuario '$DB_USER'...${NC}"
+
+DEV_URI=$(python3 -c "
+import re, sys
+uri = sys.argv[1]
+new = re.sub(r'/([^/?]+)(\?|$)', '/app_develop\\\\2', uri, count=1)
+print(new)
+" "$MONGODB_URI")
+
+if command -v mongosh &>/dev/null; then
+    DEV_RESULT=$(mongosh "$DEV_URI" \
+        --eval "try { db.users.find().limit(1).toArray(); print('ACCESS_OK'); } catch(e) { print('BLOCKED:', e.message); }" \
+        --quiet 2>&1 | grep -E "^ACCESS_OK|^BLOCKED:" | head -n1 || echo "ERROR")
+
+    if echo "$DEV_RESULT" | grep -q "^BLOCKED:"; then
+        echo -e "${GREEN}✅ AISLAMIENTO CORRECTO — El usuario '$DB_USER' NO puede leer/escribir en app_develop.${NC}"
+    elif echo "$DEV_RESULT" | grep -q "^ACCESS_OK"; then
+        echo -e "${RED}╔══════════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║  ⚠️  WARNING DE SEGURIDAD: AISLAMIENTO ROTO                      ║${NC}"
+        echo -e "${RED}║                                                                  ║${NC}"
+        echo -e "${RED}║  El usuario '$DB_USER' puede leer/escribir en app_develop.      ║${NC}"
+        echo -e "${RED}║                                                                  ║${NC}"
+        echo -e "${RED}║  Acción requerida:                                               ║${NC}"
+        echo -e "${RED}║  ./scripts/environments/common/setup-mongodb.sh                 ║${NC}"
+        echo -e "${RED}╚══════════════════════════════════════════════════════════════════╝${NC}"
+        ISOLATION_BROKEN=1
+    else
+        echo -e "${YELLOW}⚠️  No se pudo verificar el aislamiento (timeout o red).${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠️  mongosh no disponible — verifica manualmente en Atlas.${NC}"
+    echo -e "${YELLOW}   Usuario '$DB_USER' debe tener acceso SOLO a 'app_production'.${NC}"
+fi
 echo -e "\n${GREEN}======================================================================${NC}"
 echo -e "${BLUE}📋 RESUMEN — PRODUCTION${NC}"
 echo -e "👤 Usuario DB:      ${CYAN}$DB_USER${NC}"
@@ -116,7 +149,13 @@ if [ "${CONNECT_FAILED}" = "1" ]; then
 else
     echo -e "🔌 Conexión:       ${GREEN}EXITOSA${NC}"
 fi
-echo -e "\n${YELLOW}ℹ️  El usuario '${CYAN}$DB_USER${NC}${YELLOW}' tiene permisos amplios en el cluster.${NC}"
-echo -e "${YELLOW}   El aislamiento se garantiza desde el lado de develop:${NC}"
-echo -e "   → ${CYAN}scripts/environments/develop/test-db.sh${NC}"
+if [ "${ISOLATION_BROKEN}" = "1" ]; then
+    echo -e "🛡️  Aislamiento:   ${RED}ROTO — ejecuta setup-mongodb.sh${NC}"
+else
+    echo -e "🛡️  Aislamiento:   ${GREEN}OK${NC}"
+fi
+echo -e "\n${YELLOW}📝 Configuración en MongoDB Atlas para usuario '${CYAN}$DB_USER${NC}${YELLOW}':${NC}"
+echo -e "   ✅ readWrite en ${CYAN}app_production${NC}"
+echo -e "   ❌ Sin acceso a ${CYAN}app_develop${NC}"
+echo -e "   ❌ Sin 'readWriteAnyDatabase' ni 'atlasAdmin'"
 echo -e "${GREEN}======================================================================${NC}"

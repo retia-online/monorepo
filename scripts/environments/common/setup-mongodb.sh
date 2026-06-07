@@ -7,8 +7,9 @@
 # Qué hace:
 #   1. Lee .env.develop y .env.production para obtener usuarios, passwords y
 #      credenciales de la Atlas Admin API
-#   2. Configura el usuario DEVELOP (ej: 'test') con readWrite SOLO en app_develop
-#   3. Configura el usuario PRODUCTION (ej: 'retia') con atlasAdmin (acceso total)
+#   2. Configura el usuario DEVELOP con readWrite SOLO en app_develop
+#   3. Configura el usuario PRODUCTION con readWrite SOLO en app_production
+#      → Aislamiento total: ningún usuario puede tocar la base del otro
 #   4. Agrega la IP pública actual al whitelist de Network Access
 #   5. Verifica el aislamiento ejecutando los test-db.sh de cada entorno
 #
@@ -79,19 +80,13 @@ setup_db_user() {
     local USERNAME="$1"
     local PASSWORD="$2"
     local DB_NAME="$3"
-    local ROLE="$4"       # "readWrite" o "atlasAdmin"
-    local LABEL="$5"      # "DEVELOP" o "PRODUCTION"
+    local LABEL="$4"      # "DEVELOP" o "PRODUCTION"
 
     echo -e "\n${BLUE}👤 Configurando usuario ${BOLD}$USERNAME${NC}${BLUE} [$LABEL]...${NC}"
 
-    # Construir roles según el tipo
-    if [ "$ROLE" = "atlasAdmin" ]; then
-        ROLES_JSON='[{"roleName":"atlasAdmin","databaseName":"admin"}]'
-        ROLE_DESC="atlasAdmin (acceso total al cluster)"
-    else
-        ROLES_JSON="[{\"roleName\":\"readWrite\",\"databaseName\":\"${DB_NAME}\"}]"
-        ROLE_DESC="readWrite SOLO en $DB_NAME"
-    fi
+    # Ambos entornos usan readWrite restringido a su propia base de datos
+    local ROLES_JSON="[{\"roleName\":\"readWrite\",\"databaseName\":\"${DB_NAME}\"}]"
+    local ROLE_DESC="readWrite SOLO en $DB_NAME"
 
     local PAYLOAD
     PAYLOAD=$(python3 -c "
@@ -210,8 +205,8 @@ echo -e "   ✅ Usuarios y bases de datos distintos — configuración válida."
 # ==============================================================================
 # 4. CONFIGURAR USUARIOS EN ATLAS
 # ==============================================================================
-setup_db_user "$DEV_USER"  "$DEV_PASS"  "$DEV_DB"  "readWrite"  "DEVELOP"
-setup_db_user "$PROD_USER" "$PROD_PASS" "$PROD_DB" "atlasAdmin" "PRODUCTION"
+setup_db_user "$DEV_USER"  "$DEV_PASS"  "$DEV_DB"  "DEVELOP"
+setup_db_user "$PROD_USER" "$PROD_PASS" "$PROD_DB" "PRODUCTION"
 
 # ==============================================================================
 # 5. AGREGAR IP ACTUAL AL WHITELIST
