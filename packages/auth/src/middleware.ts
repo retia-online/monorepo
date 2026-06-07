@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import { auth } from './auth-config';
-import { connectDB, User } from '@core/api';
 
 // Environment helper - simplified version for the SDK
 function getAuthMode(): string {
@@ -72,6 +71,7 @@ export async function requireAdmin() {
  * If no users exist, redirects to register
  */
 export async function checkFirstUser() {
+  const { connectDB, User } = await import('@core/api');
   await connectDB();
   const userCount = await User.countDocuments();
 
