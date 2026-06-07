@@ -109,7 +109,6 @@ fi
 # ==============================================================================
 echo -e "\n${BLUE}🛡️  Verificando aislamiento: intentando acceder a app_production con usuario '$DB_USER'...${NC}"
 
-# Construir URI hacia production con las mismas credenciales
 PROD_URI=$(python3 -c "
 import re, sys
 uri = sys.argv[1]
@@ -120,27 +119,28 @@ print(new)
 if command -v mongosh &>/dev/null; then
     PROD_RESULT=$(mongosh "$PROD_URI" --eval "db.adminCommand({ping:1})" --quiet 2>&1 || echo "ERROR")
 
-    if echo "$PROD_RESULT" | grep -qi "not authorized\|authentication\|Unauthorized\|13\|18"; then
+    if echo "$PROD_RESULT" | grep -qi "not authorized\|authentication\|Unauthorized\|13\|18\|command.*not.*allowed"; then
         echo -e "${GREEN}✅ AISLAMIENTO CORRECTO — El usuario '$DB_USER' NO tiene acceso a app_production.${NC}"
     elif echo "$PROD_RESULT" | grep -q '"ok".*1\|ok: 1'; then
         echo -e "${RED}╔══════════════════════════════════════════════════════════════════╗${NC}"
         echo -e "${RED}║  ⚠️  WARNING DE SEGURIDAD: AISLAMIENTO ROTO                      ║${NC}"
         echo -e "${RED}║                                                                  ║${NC}"
-        echo -e "${RED}║  El usuario '$DB_USER' tiene acceso a app_production.           ║${NC}"
+        echo -e "${RED}║  El usuario '$DB_USER' puede conectar a app_production.         ║${NC}"
+        echo -e "${RED}║  Un bug en develop podría afectar datos de producción.           ║${NC}"
         echo -e "${RED}║                                                                  ║${NC}"
         echo -e "${RED}║  Acción requerida en MongoDB Atlas:                              ║${NC}"
-        echo -e "${RED}║  1. Database Access → usuario '$DB_USER'                        ║${NC}"
-        echo -e "${RED}║  2. Limitar permisos SOLO a app_develop                         ║${NC}"
-        echo -e "${RED}║  3. Remover acceso a app_production y 'readWriteAnyDatabase'    ║${NC}"
+        echo -e "${RED}║  1. Database Access → editar usuario '$DB_USER'                 ║${NC}"
+        echo -e "${RED}║  2. Cambiar a: Built-in Role → readWrite → Database: app_develop ║${NC}"
+        echo -e "${RED}║  3. Eliminar 'readWriteAnyDatabase' si está activo              ║${NC}"
         echo -e "${RED}╚══════════════════════════════════════════════════════════════════╝${NC}"
+        ISOLATION_BROKEN=1
     else
-        echo -e "${YELLOW}⚠️  No se pudo verificar el aislamiento (posible timeout o red).${NC}"
+        echo -e "${YELLOW}⚠️  No se pudo verificar el aislamiento (timeout o red).${NC}"
         echo -e "${YELLOW}   Verifica manualmente en MongoDB Atlas → Database Access.${NC}"
     fi
 else
-    echo -e "${YELLOW}⚠️  mongosh no disponible — no se puede verificar aislamiento automáticamente.${NC}"
-    echo -e "${YELLOW}   Verifica manualmente en MongoDB Atlas → Database Access → usuario '$DB_USER'${NC}"
-    echo -e "${YELLOW}   debe tener acceso SOLO a 'app_develop'.${NC}"
+    echo -e "${YELLOW}⚠️  mongosh no disponible — verifica manualmente en Atlas.${NC}"
+    echo -e "${YELLOW}   Usuario '$DB_USER' debe tener acceso SOLO a 'app_develop'.${NC}"
 fi
 
 # ==============================================================================
@@ -156,8 +156,12 @@ if [ "${CONNECT_FAILED}" = "1" ]; then
 else
     echo -e "🔌 Conexión:       ${GREEN}EXITOSA${NC}"
 fi
-echo -e "\n${YELLOW}📝 Configuración recomendada en MongoDB Atlas:${NC}"
-echo -e "   Usuario '${CYAN}$DB_USER${NC}' debe tener:"
+if [ "${ISOLATION_BROKEN}" = "1" ]; then
+    echo -e "🛡️  Aislamiento:   ${RED}ROTO — arreglar en MongoDB Atlas${NC}"
+else
+    echo -e "🛡️  Aislamiento:   ${GREEN}OK${NC}"
+fi
+echo -e "\n${YELLOW}📝 Configuración recomendada en MongoDB Atlas para usuario '${CYAN}$DB_USER${NC}${YELLOW}':${NC}"
 echo -e "   ✅ readWrite en ${CYAN}app_develop${NC}"
 echo -e "   ❌ Sin acceso a ${CYAN}app_production${NC}"
 echo -e "   ❌ Sin 'readWriteAnyDatabase' ni 'atlasAdmin'"
