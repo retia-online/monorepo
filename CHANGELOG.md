@@ -1,5 +1,17 @@
 # Changelog
 
+- [8369e35] fix: push any pending local commits at start of develop deploy, before CHANGELOG commit (2026-06-07)
+- [087a89b] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
+- [9ecd0dd] fix: ensure all local commits are pushed — develop validates branch, production syncs develop before merge (2026-06-07)
+- [2a0fb39] fix: add timeout to vercel list and logs calls in production deploy check (2026-06-07)
+- [3b349e3] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
+- [a758545] feat: production deploy verifies develop health before proceeding — warns if not Ready or has 500 errors (2026-06-07)
+- [1c4e201] feat: add auto-versioning to production deploy — auto-increments patch tag or accepts --tag vX.Y.Z (2026-06-07)
+- [949d554] refactor: production deploy now merges develop→main without extra commits, eliminates future divergence (2026-06-07)
+- [8d589b1] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
 - [0943e5f] docs: update develop and production READMEs — fix script list, add Odoo technical user setup guide (2026-06-07)
 - [f2c87e8] fix: exclude Atlas API keys from Vercel env sync (admin credentials, not needed at runtime) (2026-06-07)
 - [4a62971] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)

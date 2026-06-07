@@ -68,8 +68,25 @@ echo -e "📧 Cuenta Vercel objetivo: ${GREEN}$VERCEL_EMAIL${NC} (usuario: ${GRE
 echo -e "📄 Usando variables de: ${CYAN}$ENV_FILE${NC}"
 
 # ==============================================================================
-# 3. VERIFICAR SESIÓN DE VERCEL
+# 2b. VERIFICAR RAMA Y SINCRONIZAR CAMBIOS LOCALES PENDIENTES
 # ==============================================================================
+cd "$PROJECT_ROOT"
+CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "")
+
+if [ "$CURRENT_BRANCH" != "develop" ]; then
+    echo -e "\n${RED}❌ Este script debe ejecutarse desde la rama 'develop'.${NC}"
+    echo -e "   Rama actual: ${YELLOW}$CURRENT_BRANCH${NC}"
+    echo -e "   Cambia a develop: ${CYAN}git checkout develop${NC}"
+    exit 1
+fi
+
+# Si hay cambios sin commitear, avisar
+if ! git diff --quiet || ! git diff --cached --quiet; then
+    echo -e "\n${YELLOW}⚠️  Hay cambios locales sin commitear en 'develop'.${NC}"
+    git status --short
+    read -p "¿Continuar de todas formas? (los cambios sin commitear NO se pushearán) (s/N): " -n 1 -r; echo
+    [[ ! $REPLY =~ ^[Ss]$ ]] && exit 1
+fi
 echo -e "\n🔑 Verificando sesión de Vercel CLI..."
 CURRENT_USER=$(vercel whoami 2>&1 | sed 's/> Logged in as //g' | head -n1 | xargs 2>/dev/null || true)
 
@@ -137,11 +154,24 @@ echo "----------------------------------------------------------------------"
 
 # ==============================================================================
 # 5. SINCRONIZAR TODAS LAS VARIABLES DE .env.develop → VERCEL PREVIEW/develop
-#
-# Estrategia: Siempre sube TODAS las variables al scope "preview" de la rama
-# "develop". Usa --force para sobrescribir sin necesidad de borrar primero.
-# Omite VERCEL_EMAIL y VERCEL_USERNAME (son meta-variables del script).
 # ==============================================================================
+cd "$PROJECT_ROOT"
+
+# Antes de cualquier cosa: pushear commits locales pendientes que pudieran
+# haber quedado de runs anteriores (ej: commits generados por production/deploy.sh)
+REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
+if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_USERNAME" ]; then
+    REPO_PATH=$(echo "$REMOTE_URL" | sed -E 's|git@github\.com:||; s|https://github\.com/||; s|\.git$||')
+    HTTPS_REMOTE="https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${REPO_PATH}.git"
+    PENDING=$(git log --oneline origin/develop..develop 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$PENDING" -gt 0 ]; then
+        echo -e "\n📤 ${YELLOW}Hay $PENDING commit(s) locales pendientes — pusheando antes de continuar...${NC}"
+        git push "$HTTPS_REMOTE" develop 2>&1 | sed "s|${GITHUB_TOKEN}|***|g" \
+            && echo -e "   ${GREEN}✅ Commits pendientes subidos.${NC}" \
+            || echo -e "   ${YELLOW}⚠️  No se pudieron pushear commits pendientes.${NC}"
+    fi
+fi
+
 CURRENT_BRANCH=$(git -C "$PROJECT_ROOT" branch --show-current 2>/dev/null || echo "develop")
 echo -e "\n📤 Sincronizando variables de ${CYAN}.env.develop${NC} → Vercel (preview/${CURRENT_BRANCH})..."
 
@@ -238,7 +268,7 @@ else
 fi
 
 # ==============================================================================
-# 7. GIT PUSH CON USUARIO CORRECTO (via HTTPS token si está configurado)
+# 7. GIT PUSH — todos los commits locales de develop al remoto
 # ==============================================================================
 cd "$PROJECT_ROOT"
 echo -e "\n📤 Publicando commits en GitHub..."
@@ -246,28 +276,21 @@ echo -e "\n📤 Publicando commits en GitHub..."
 REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
 
 if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_USERNAME" ]; then
-    # Extraer owner/repo desde la URL del remote (SSH o HTTPS)
-    # SSH:   git@github.com:owner/repo.git   → owner/repo
-    # HTTPS: https://github.com/owner/repo.git → owner/repo
     REPO_PATH=$(echo "$REMOTE_URL" | sed -E 's|git@github\.com:||; s|https://github\.com/||; s|\.git$||')
     HTTPS_REMOTE="https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${REPO_PATH}.git"
 
-    echo -e "🐙 Push como: ${GREEN}$GITHUB_USERNAME${NC} → github.com/${REPO_PATH}"
+    echo -e "🐙 Push como: ${GREEN}$GITHUB_USERNAME${NC} → github.com/${REPO_PATH} (develop)"
 
-    if git push "$HTTPS_REMOTE" "$CURRENT_BRANCH" 2>&1 | sed "s|${GITHUB_TOKEN}|***|g"; then
+    # Pushear todos los commits locales de develop (incluyendo el commit del CHANGELOG)
+    if git push "$HTTPS_REMOTE" develop 2>&1 | sed "s|${GITHUB_TOKEN}|***|g"; then
         echo -e "${GREEN}✅ Push exitoso como $GITHUB_USERNAME${NC}"
     else
         echo -e "${YELLOW}⚠️  Push con token falló. Intentando con remote original...${NC}"
-        git push origin "$CURRENT_BRANCH" || echo -e "${RED}❌ Push falló. Continúa sin push.${NC}"
+        git push origin develop || echo -e "${RED}❌ Push falló.${NC}"
     fi
 else
-    echo -e "${YELLOW}⚠️  GITHUB_TOKEN no configurado en .env.develop — usando credenciales por defecto.${NC}"
-    echo -e "   Para forzar el usuario correcto en GitHub/Vercel, agrega:"
-    echo -e "   ${CYAN}GITHUB_USERNAME=retia-online${NC}"
-    echo -e "   ${CYAN}GITHUB_EMAIL=info@retia.online${NC}"
-    echo -e "   ${CYAN}GITHUB_TOKEN=<tu-token>${NC}"
-    echo -e "   en ${CYAN}apps/web/.env.develop${NC}"
-    git push origin "$CURRENT_BRANCH" || echo -e "${RED}❌ Push falló.${NC}"
+    echo -e "${YELLOW}⚠️  GITHUB_TOKEN no configurado — usando credenciales por defecto.${NC}"
+    git push origin develop || echo -e "${RED}❌ Push falló.${NC}"
 fi
 
 # ==============================================================================
