@@ -154,11 +154,24 @@ echo "----------------------------------------------------------------------"
 
 # ==============================================================================
 # 5. SINCRONIZAR TODAS LAS VARIABLES DE .env.develop → VERCEL PREVIEW/develop
-#
-# Estrategia: Siempre sube TODAS las variables al scope "preview" de la rama
-# "develop". Usa --force para sobrescribir sin necesidad de borrar primero.
-# Omite VERCEL_EMAIL y VERCEL_USERNAME (son meta-variables del script).
 # ==============================================================================
+cd "$PROJECT_ROOT"
+
+# Antes de cualquier cosa: pushear commits locales pendientes que pudieran
+# haber quedado de runs anteriores (ej: commits generados por production/deploy.sh)
+REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
+if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_USERNAME" ]; then
+    REPO_PATH=$(echo "$REMOTE_URL" | sed -E 's|git@github\.com:||; s|https://github\.com/||; s|\.git$||')
+    HTTPS_REMOTE="https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${REPO_PATH}.git"
+    PENDING=$(git log --oneline origin/develop..develop 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$PENDING" -gt 0 ]; then
+        echo -e "\n📤 ${YELLOW}Hay $PENDING commit(s) locales pendientes — pusheando antes de continuar...${NC}"
+        git push "$HTTPS_REMOTE" develop 2>&1 | sed "s|${GITHUB_TOKEN}|***|g" \
+            && echo -e "   ${GREEN}✅ Commits pendientes subidos.${NC}" \
+            || echo -e "   ${YELLOW}⚠️  No se pudieron pushear commits pendientes.${NC}"
+    fi
+fi
+
 CURRENT_BRANCH=$(git -C "$PROJECT_ROOT" branch --show-current 2>/dev/null || echo "develop")
 echo -e "\n📤 Sincronizando variables de ${CYAN}.env.develop${NC} → Vercel (preview/${CURRENT_BRANCH})..."
 
