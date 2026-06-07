@@ -1,5 +1,17 @@
 # Changelog
 
+- [9692017] chore: remove old generic .env.template (replaced by per-environment templates) (2026-06-07)
+- [75a7931] fix: replace red X checklist items with green checkmarks in DB test summaries (2026-06-07)
+- [7b12eee] fix: enforce full isolation — both users get readWrite only on their own DB, production no longer gets atlasAdmin (2026-06-07)
+- [4faddbd] feat: add per-environment .env templates, fix gitignore to track templates but ignore real .env files (2026-06-07)
+- [b9ec3a4] refactor: move setup-mongodb to common, configure both dev and prod users in one script (2026-06-07)
+- [654a4f0] fix: use find() instead of ping for isolation check — ping is allowed on any db regardless of permissions (2026-06-07)
+- [432b63d] feat: add MongoDB Atlas setup script for develop environment (isolates user permissions via API) (2026-06-07)
+- [3e5e220] fix: simplify production test-db, only develop enforces isolation check (2026-06-07)
+- [84eee60] refactor: consolidate db test scripts, add isolation check between environments (2026-06-07)
+- [03a608a] feat: add production deploy script mirroring develop workflow (push main via GitHub token) (2026-06-07)
+- [56ae7d5] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
 - [6cc9707] fix: force nodejs runtime in middleware to resolve global is not defined error (2026-06-07)
 - [aeba805] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
 
