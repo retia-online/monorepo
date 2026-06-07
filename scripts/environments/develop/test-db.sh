@@ -117,15 +117,17 @@ print(new)
 " "$MONGODB_URI")
 
 if command -v mongosh &>/dev/null; then
-    PROD_RESULT=$(mongosh "$PROD_URI" --eval "db.adminCommand({ping:1})" --quiet 2>&1 || echo "ERROR")
+    PROD_RESULT=$(mongosh "$PROD_URI" \
+        --eval "try { db.users.find().limit(1).toArray(); print('ACCESS_OK'); } catch(e) { print('BLOCKED:', e.message); }" \
+        --quiet 2>&1 | grep -E "^ACCESS_OK|^BLOCKED:" | head -n1 || echo "ERROR")
 
-    if echo "$PROD_RESULT" | grep -qi "not authorized\|authentication\|Unauthorized\|13\|18\|command.*not.*allowed"; then
-        echo -e "${GREEN}✅ AISLAMIENTO CORRECTO — El usuario '$DB_USER' NO tiene acceso a app_production.${NC}"
-    elif echo "$PROD_RESULT" | grep -q '"ok".*1\|ok: 1'; then
+    if echo "$PROD_RESULT" | grep -q "^BLOCKED:"; then
+        echo -e "${GREEN}✅ AISLAMIENTO CORRECTO — El usuario '$DB_USER' NO puede leer/escribir en app_production.${NC}"
+    elif echo "$PROD_RESULT" | grep -q "^ACCESS_OK"; then
         echo -e "${RED}╔══════════════════════════════════════════════════════════════════╗${NC}"
         echo -e "${RED}║  ⚠️  WARNING DE SEGURIDAD: AISLAMIENTO ROTO                      ║${NC}"
         echo -e "${RED}║                                                                  ║${NC}"
-        echo -e "${RED}║  El usuario '$DB_USER' puede conectar a app_production.         ║${NC}"
+        echo -e "${RED}║  El usuario '$DB_USER' puede leer/escribir en app_production.   ║${NC}"
         echo -e "${RED}║  Un bug en develop podría afectar datos de producción.           ║${NC}"
         echo -e "${RED}║                                                                  ║${NC}"
         echo -e "${RED}║  Acción requerida en MongoDB Atlas:                              ║${NC}"
