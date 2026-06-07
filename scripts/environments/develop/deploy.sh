@@ -9,9 +9,9 @@
 #   2. Vincula el proyecto si no está vinculado
 #   3. Sube TODAS las variables de .env.develop al scope preview/develop de Vercel
 #   4. Actualiza CHANGELOG.md con commits recientes (firmado como info@retia.online)
-#   5. Construye los paquetes y la app web localmente
-#   6. Despliega como Preview (rama develop) en Vercel
-#   7. Verifica que la URL de staging responda correctamente
+#   5. Hace git push usando el GITHUB_TOKEN de .env.develop (usuario retia-online)
+#      → Vercel detecta el push vía webhook y lanza el deployment automáticamente
+#   6. Verifica que la URL de staging responda correctamente
 # ==============================================================================
 
 set -e
@@ -58,7 +58,13 @@ VERCEL_USERNAME=$(grep -E "^VERCEL_USERNAME=" "$ENV_FILE" | cut -d'=' -f2- | xar
 [ -z "$VERCEL_EMAIL" ]    && VERCEL_EMAIL="info@retia.online"
 [ -z "$VERCEL_USERNAME" ] && VERCEL_USERNAME="retia-online"
 
-echo -e "📧 Cuenta objetivo: ${GREEN}$VERCEL_EMAIL${NC} (usuario: ${GREEN}$VERCEL_USERNAME${NC})"
+# Leer credenciales de GitHub para push con usuario correcto
+GITHUB_USERNAME=$(grep -E "^GITHUB_USERNAME=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
+GITHUB_EMAIL=$(grep -E "^GITHUB_EMAIL=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
+GITHUB_TOKEN=$(grep -E "^GITHUB_TOKEN=" "$ENV_FILE" | cut -d'=' -f2- | xargs 2>/dev/null || echo "")
+
+echo -e "📧 Cuenta Vercel objetivo: ${GREEN}$VERCEL_EMAIL${NC} (usuario: ${GREEN}$VERCEL_USERNAME${NC})"
+[ -n "$GITHUB_USERNAME" ] && echo -e "🐙 Cuenta GitHub objetivo: ${GREEN}$GITHUB_USERNAME${NC} (${GREEN}$GITHUB_EMAIL${NC})"
 echo -e "📄 Usando variables de: ${CYAN}$ENV_FILE${NC}"
 
 # ==============================================================================
@@ -139,7 +145,7 @@ echo "----------------------------------------------------------------------"
 CURRENT_BRANCH=$(git -C "$PROJECT_ROOT" branch --show-current 2>/dev/null || echo "develop")
 echo -e "\n📤 Sincronizando variables de ${CYAN}.env.develop${NC} → Vercel (preview/${CURRENT_BRANCH})..."
 
-SKIP_KEYS=("VERCEL_EMAIL" "VERCEL_USERNAME")
+SKIP_KEYS=("VERCEL_EMAIL" "VERCEL_USERNAME" "GITHUB_USERNAME" "GITHUB_EMAIL" "GITHUB_TOKEN")
 SYNC_OK=0
 SYNC_FAIL=0
 
@@ -232,48 +238,68 @@ else
 fi
 
 # ==============================================================================
-# 7. DESPLEGAR EN VERCEL (como Preview — Vercel construye remotamente)
+# 7. GIT PUSH CON USUARIO CORRECTO (via HTTPS token si está configurado)
 # ==============================================================================
-# Nota: vercel --yes sube el código fuente y Vercel lo compila en sus servidores.
-# No se necesita un build local previo.
-cd "$WEB_APP_DIR"
-echo -e "\n${BLUE}🚀 Desplegando en Vercel como Preview (branch: $CURRENT_BRANCH)...${NC}"
-DEPLOY_OUTPUT=$(vercel --yes 2>&1) || {
-    echo -e "${RED}❌ Falló el despliegue en Vercel.${NC}"
-    echo "$DEPLOY_OUTPUT"
-    exit 1
-}
-echo "$DEPLOY_OUTPUT"
+cd "$PROJECT_ROOT"
+echo -e "\n📤 Publicando commits en GitHub..."
 
-# Extraer URL del deploy
-PREVIEW_URL=$(echo "$DEPLOY_OUTPUT" | grep -E "Preview\s+https://" | awk '{print $2}' | head -n1 || true)
-[ -z "$PREVIEW_URL" ] && PREVIEW_URL=$(echo "$DEPLOY_OUTPUT" | grep "https://" | head -n1 | xargs || true)
+REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
+
+if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_USERNAME" ]; then
+    # Extraer owner/repo desde la URL del remote (SSH o HTTPS)
+    # SSH:   git@github.com:owner/repo.git   → owner/repo
+    # HTTPS: https://github.com/owner/repo.git → owner/repo
+    REPO_PATH=$(echo "$REMOTE_URL" | sed -E 's|git@github\.com:||; s|https://github\.com/||; s|\.git$||')
+    HTTPS_REMOTE="https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${REPO_PATH}.git"
+
+    echo -e "🐙 Push como: ${GREEN}$GITHUB_USERNAME${NC} → github.com/${REPO_PATH}"
+
+    if git push "$HTTPS_REMOTE" "$CURRENT_BRANCH" 2>&1 | sed "s|${GITHUB_TOKEN}|***|g"; then
+        echo -e "${GREEN}✅ Push exitoso como $GITHUB_USERNAME${NC}"
+    else
+        echo -e "${YELLOW}⚠️  Push con token falló. Intentando con remote original...${NC}"
+        git push origin "$CURRENT_BRANCH" || echo -e "${RED}❌ Push falló. Continúa sin push.${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠️  GITHUB_TOKEN no configurado en .env.develop — usando credenciales por defecto.${NC}"
+    echo -e "   Para forzar el usuario correcto en GitHub/Vercel, agrega:"
+    echo -e "   ${CYAN}GITHUB_USERNAME=retia-online${NC}"
+    echo -e "   ${CYAN}GITHUB_EMAIL=info@retia.online${NC}"
+    echo -e "   ${CYAN}GITHUB_TOKEN=<tu-token>${NC}"
+    echo -e "   en ${CYAN}apps/web/.env.develop${NC}"
+    git push origin "$CURRENT_BRANCH" || echo -e "${RED}❌ Push falló.${NC}"
+fi
 
 # ==============================================================================
-# 8. VERIFICAR URL DE STAGING
+# 8. ESPERAR QUE VERCEL CONSTRUYA (triggerado por el git push vía webhook)
 # ==============================================================================
+# El git push a GitHub ya disparó el deployment automático en Vercel.
+# Solo esperamos y verificamos la URL canónica de staging.
 STAGING_URL="https://develop-monorepo.vercel.app/"
-echo -e "\n🔍 Verificando URL de staging..."
+echo -e "\n${BLUE}🚀 Deployment triggerado por git push — esperando que Vercel construya...${NC}"
 echo -e "🔗 URL canónica: ${CYAN}$STAGING_URL${NC}"
-[ -n "$PREVIEW_URL" ] && echo -e "🔗 URL de este deploy: ${CYAN}$PREVIEW_URL${NC}"
+echo -e "📋 Puedes seguir el progreso en: ${CYAN}https://vercel.com/retias-projects/monorepo${NC}"
 
-echo "⏳ Esperando 8 segundos para que Vercel propague el despliegue..."
-sleep 8
+echo "⏳ Esperando 15 segundos para que Vercel reciba el webhook y empiece el build..."
+sleep 15
+
+# ==============================================================================
+# 9. VERIFICAR URL DE STAGING
+# ==============================================================================
+echo -e "\n🔍 Verificando URL de staging..."
 
 HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$STAGING_URL" || echo "000")
 
 echo -e "\n${GREEN}======================================================================${NC}"
 if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ] || [ "$HTTP_STATUS" -eq 302 ]; then
-    echo -e "${GREEN}🎉 ¡DESPLIEGUE EXITOSO! (HTTP $HTTP_STATUS)${NC}"
+    echo -e "${GREEN}🎉 ¡STAGING RESPONDIENDO! (HTTP $HTTP_STATUS)${NC}"
 elif [ "$HTTP_STATUS" -eq 401 ]; then
-    echo -e "${GREEN}🎉 ¡DESPLIEGUE CONFIRMADO! (HTTP 401 — protegido por Vercel Deployment Protection)${NC}"
+    echo -e "${GREEN}🎉 ¡STAGING ACTIVO! (HTTP 401 — protegido por Vercel Deployment Protection)${NC}"
     echo -e "${YELLOW}   Para acceder necesitas una sesión SSO de Vercel.${NC}"
 else
-    echo -e "${YELLOW}⚠️  La URL respondió HTTP $HTTP_STATUS${NC}"
-    echo -e "${YELLOW}   Es posible que Vercel aún esté propagando el despliegue.${NC}"
-    echo -e "\n📋 Últimos logs de Vercel:"
-    vercel logs --limit 20 2>/dev/null || true
+    echo -e "${YELLOW}⚠️  La URL respondió HTTP $HTTP_STATUS — el build puede estar aún en curso.${NC}"
+    echo -e "${YELLOW}   Verifica el progreso en el dashboard de Vercel.${NC}"
 fi
-echo -e "🔗 URL Staging: ${CYAN}$STAGING_URL${NC}"
-[ -n "$PREVIEW_URL" ] && echo -e "🔗 URL Preview: ${CYAN}$PREVIEW_URL${NC}"
+echo -e "🔗 URL Staging:  ${CYAN}$STAGING_URL${NC}"
+echo -e "📋 Dashboard:    ${CYAN}https://vercel.com/retias-projects/monorepo${NC}"
 echo -e "${GREEN}======================================================================${NC}"
