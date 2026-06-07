@@ -1,5 +1,8 @@
 # Changelog
 
+- [8732d3c] fix: make @core/api import dynamic in auth middleware to prevent Edge runtime error (2026-06-07)
+- [d7b0eba] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
+
 - [afe2f3c] fix: remove vercel --yes to avoid duplicate deployments, push via GitHub token (2026-06-07)
 - [e02efa0] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-07)
 
