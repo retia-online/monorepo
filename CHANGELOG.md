@@ -1,5 +1,8 @@
 # Changelog
 
+- [aaea456] feat: add MongoDB connection test scripts for develop environment (2026-06-06)
+- [9546c0d] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
+
 - [56cceed] fix: handle global reference in both Node.js and Edge runtime environments (2026-06-06)
 - [bf7fad9] chore: update CHANGELOG.md with recent commits [skip ci] (2026-06-06)
 
