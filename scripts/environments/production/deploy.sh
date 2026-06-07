@@ -151,7 +151,7 @@ DEVELOP_OK=0
 DEVELOP_SKIP=0
 
 # Obtener el deployment más reciente de la rama develop
-DEV_DEPLOYMENT=$(vercel list 2>/dev/null | grep "Preview" | grep -i "retia-online" | head -n1 || echo "")
+DEV_DEPLOYMENT=$(timeout 20 vercel list 2>/dev/null | grep "Preview" | grep -i "retia-online" | head -n1 || echo "")
 
 if [ -z "$DEV_DEPLOYMENT" ]; then
     echo -e "${YELLOW}⚠️  No se encontró ningún deployment previo de develop en Vercel.${NC}"
@@ -186,7 +186,7 @@ fi
 # Verificar también los logs del deployment de develop — buscar errores 500
 if [ $DEVELOP_OK -eq 1 ] && [ -n "$DEV_URL" ]; then
     echo -e "   Revisando logs de develop..."
-    DEV_ERRORS=$(vercel logs "$DEV_URL" --limit 20 2>/dev/null | grep -c "error.*500\|500.*error\|ReferenceError\|TypeError.*undefined" || echo "0")
+    DEV_ERRORS=$(timeout 15 vercel logs "$DEV_URL" --limit 20 2>/dev/null | grep -c "error.*500\|500.*error\|ReferenceError\|TypeError.*undefined" || echo "0")
     if [ "$DEV_ERRORS" -gt 0 ]; then
         echo -e "${RED}   ⚠️  Se encontraron $DEV_ERRORS errores en los logs de develop.${NC}"
         DEVELOP_OK=0
