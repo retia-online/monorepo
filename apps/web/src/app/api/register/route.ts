@@ -86,33 +86,6 @@ export async function POST(request: NextRequest) {
             // Determine approval status for standard flow
             const needsApproval = authMode === 'whitelist' && !isFirstUserAtStart;
 
-            let odooUid: number | undefined;
-            const enabledProviders = (process.env.AUTH_PROVIDERS || 'email').split(',');
-
-            if (enabledProviders.includes('odoo')) {
-                try {
-                    const { createOdooService } = await import('@core/api');
-                    const odoo = createOdooService();
-                    odooUid = await odoo.createUser(
-                        validated.name,
-                        validated.email,
-                        validated.password
-                    );
-                    logger.info({ email: validated.email, odooUid }, 'Created user in Odoo');
-                } catch (odooError) {
-                    logger.error(
-                        { error: odooError, email: validated.email },
-                        'Failed to create user in Odoo'
-                    );
-                    return NextResponse.json(
-                        {
-                            error: 'Error al sincronizar con Odoo. Por favor intenta más tarde.',
-                        },
-                        { status: 500 }
-                    );
-                }
-            }
-
             // Create new user
             user = await User.create({
                 name: validated.name,
@@ -120,11 +93,7 @@ export async function POST(request: NextRequest) {
                 password: validated.password,
                 role: isFirstUserAtStart ? UserRole.ADMIN : UserRole.USER,
                 approved: isFirstUserAtStart ? true : !needsApproval,
-                metadata: odooUid
-                    ? {
-                          odoo_uid: odooUid,
-                      }
-                    : {},
+                metadata: {},
             });
         }
 

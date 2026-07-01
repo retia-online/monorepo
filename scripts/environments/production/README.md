@@ -70,50 +70,6 @@ NEXTAUTH_SECRET=...   # openssl rand -base64 32  (DIFERENTE al de develop)
 
 ---
 
-## 🔌 Configuración de Odoo (si se usa como provider de auth)
-
-El sistema puede autenticar usuarios contra Odoo usando `AUTH_PROVIDERS=odoo`.
-Para eso necesita un **usuario técnico dedicado en Odoo** — no el admin master.
-
-### Por qué NO usar el admin master
-El usuario admin de Odoo tiene acceso total al ERP (contabilidad, inventario, ventas, RRHH...).
-Si esas credenciales se exponen, un atacante tendría control total de Odoo.
-El usuario técnico solo necesita permisos para gestionar usuarios — nada más.
-
-### Cómo crear el usuario técnico en Odoo
-
-1. **Odoo → Settings → Users & Companies → Users → New**
-
-2. Rellenar:
-   - **Name**: `Retia API Production`
-   - **Email / Login**: `api-production@retia.online`
-   - **Password**: (generar uno seguro — diferente al de develop)
-
-3. En la pestaña **Access Rights**, asignar **solo**:
-   - Sección **Technical** → `Access Rights` ✅
-   - Todo lo demás: vacío ❌ (sin Ventas, Contabilidad, Inventario, etc.)
-
-4. Guardar. Verificar el **UID** del usuario:
-   - Al abrir el usuario la URL mostrará algo como `/web#id=22&model=res.users`
-   - El número `22` es el UID
-
-5. Actualizar `.env.production`:
-   ```env
-   ODOO_URL=https://odoo.tu-dominio.com/
-   ODOO_DB=nombre-de-la-base-odoo
-   ODOO_ADMIN_UID=22
-   ODOO_ADMIN_PASSWORD=password-del-usuario-tecnico-produccion
-   ODOO_WEBHOOK_SECRET=un-secreto-diferente-al-de-develop
-   ```
-
-6. Activar el provider en:
-   ```env
-   AUTH_PROVIDERS=odoo   # o: email,odoo
-   ```
-
-> **Principio de mínimo privilegio**: el usuario técnico de producción solo puede
-> crear/modificar usuarios en Odoo. No tiene acceso a ningún otro módulo del ERP.
-
 ---
 
 ## 🔒 Diferencias clave vs develop
@@ -126,7 +82,6 @@ El usuario técnico solo necesita permisos para gestionar usuarios — nada más
 | LOG_LEVEL | `debug` | `error` |
 | MONGODB_URI | `app_develop` | `app_production` |
 | NEXTAUTH_SECRET | Secret de staging | Secret **diferente** |
-| Odoo usuario técnico | `api-develop@retia.online` | `api-production@retia.online` |
 
 ---
 

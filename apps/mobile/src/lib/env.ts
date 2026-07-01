@@ -3,7 +3,7 @@
  */
 
 export type AuthMode = 'required' | 'disabled' | 'optional' | 'whitelist' | 'invite-only';
-export type AuthMethod = 'email' | 'odoo' | 'phone' | 'facebook' | 'google';
+export type AuthMethod = 'email' | 'phone' | 'facebook' | 'google';
 
 interface EnvConfig {
     apiUrl: string;
@@ -51,7 +51,7 @@ export function getEnvConfig(): EnvConfig {
         : 'required';
 
     // Parse auth methods
-    const validAuthMethods: AuthMethod[] = ['email', 'odoo', 'phone', 'facebook', 'google'];
+    const validAuthMethods: AuthMethod[] = ['email', 'phone', 'facebook', 'google'];
     const authMethods: AuthMethod[] = authMethodsRaw
         .split(',')
         .map((method: string) => method.trim() as AuthMethod)
@@ -172,7 +172,6 @@ export function getAuthConfig() {
         isWhitelist: config.authMode === 'whitelist',
         isInviteOnly: config.authMode === 'invite-only',
         allowsEmail: config.authMethods.includes('email'),
-        allowsOdoo: config.authMethods.includes('odoo'),
         allowsPhone: config.authMethods.includes('phone'),
         allowsGoogle: config.authMethods.includes('google') && !!config.googleClientId,
         allowsFacebook: config.authMethods.includes('facebook') && !!config.facebookAppId,

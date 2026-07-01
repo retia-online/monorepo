@@ -11,8 +11,6 @@ export interface ITask extends Document {
     title: string;
     description?: string;
     status: TaskStatus;
-    odooTaskId?: number;
-    projectId?: number;
     assignedTo?: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
@@ -33,14 +31,6 @@ const taskSchema = new Schema<ITask>(
             type: String,
             enum: Object.values(TaskStatus),
             default: TaskStatus.TODO,
-        },
-        odooTaskId: {
-            type: Number,
-            index: true,
-        },
-        projectId: {
-            type: Number,
-            index: true,
         },
         assignedTo: {
             type: Schema.Types.ObjectId,

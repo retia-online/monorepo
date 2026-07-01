@@ -51,10 +51,8 @@ module.exports = {
       fontFamily: process.env.EXPO_PUBLIC_FONT_FAMILY || "Manrope",
       defaultLocale: process.env.EXPO_PUBLIC_DEFAULT_LOCALE || "es",
       locales: process.env.EXPO_PUBLIC_LOCALES || "es,en,pt",
-      // OAuth config
       googleClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || "",
       facebookAppId: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || "",
-      odooUrl: process.env.EXPO_PUBLIC_ODOO_URL || "",
       // Analytics (opcional)
       metaPixelId: process.env.EXPO_PUBLIC_META_PIXEL_ID || "",
       tiktokPixelId: process.env.EXPO_PUBLIC_TIKTOK_PIXEL_ID || "",

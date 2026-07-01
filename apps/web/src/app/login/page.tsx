@@ -10,7 +10,6 @@ const getEnabledProviders = (): string[] => {
 
     const final: string[] = [];
     if (list.includes('email')) final.push('email');
-    if (list.includes('odoo')) final.push('odoo');
 
     // Only enable OAuth providers if they are in the list AND have secrets configured
     if (

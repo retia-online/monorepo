@@ -50,8 +50,7 @@ module.exports = {
       defaultLocale: process.env.EXPO_PUBLIC_DEFAULT_LOCALE || "es",
       locales: process.env.EXPO_PUBLIC_LOCALES || "es,en,pt",
       googleClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || "",
-      facebookAppId: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || "",
-      odooUrl: process.env.EXPO_PUBLIC_ODOO_URL || ""
+      facebookAppId: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || ""
     }
   }
 };

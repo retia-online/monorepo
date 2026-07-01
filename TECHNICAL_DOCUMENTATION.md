@@ -28,9 +28,9 @@ monorepo/
 │       └── package.json
 │
 ├── packages/                  # Paquetes compartidos (Yarn Workspaces)
-│   ├── api/                   # Servicios API, modelos, integración Odoo
+│   ├── api/                   # Servicios API, modelos
 │   │   └── src/
-│   │       ├── services/      # OdooService, EmailService, etc.
+│   │       ├── services/      # EmailService, etc.
 │   │       ├── models/        # Modelos Mongoose (User, etc.)
 │   │       └── index.ts       # Exports públicos
 │   │
@@ -117,7 +117,7 @@ monorepo/
 
 | Paquete | Tecnologías |
 |---------|-------------|
-| **@core/api** | Odoo XML-RPC, MongoDB, Nodemailer, Zod, bcryptjs |
+| **@core/api** | MongoDB, Nodemailer, Zod, bcryptjs |
 | **@core/auth** | NextAuth.js v5, jose |
 | **@core/ui** | React, React Native, Storybook |
 | **@core/configs** | Tailwind, TypeScript, ESLint |
@@ -135,140 +135,4 @@ monorepo/
 | **Husky** | Git hooks |
 | **tsup** | Build de packages |
 
----
-
-## 🔗 Integración con Odoo
-
-### Visión General
-
-La aplicación se integra con **Odoo** (ERP) para:
-
-1. **Autenticación** - Login usando credenciales de Odoo
-2. **Sincronización de usuarios** - Crear usuarios en Odoo al registrarse
-3. **Gestión de contraseñas** - Sincronizar cambios de contraseña
-
-### Arquitectura de la Integración
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     apps/web                                │
-│                  (Next.js App)                              │
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  /api/auth/[...nextauth]  - NextAuth handlers       │   │
-│  │  /api/register            - Registro de usuarios    │   │
-│  │  /api/change-password     - Cambio de contraseña    │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              OdooService (JSON-RPC)                  │   │
-│  │  • authenticate()                                    │   │
-│  │  • createUser()                                      │   │
-│  │  • updatePassword()                                  │   │
-│  │  • read()                                            │   │
-│  │  • executeKeyword()                                  │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Odoo Server                                │
-│                  (External ERP)                             │
-│                                                             │
-│  Database: res.users, res.partner, etc.                    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Configuración de Odoo
-
-**Variables de entorno requeridas:**
-
-```bash
-# Odoo Server
-ODOO_URL=https://odoo.your-domain.com
-ODOO_DB=your_database_name
-ODOO_ADMIN_UID=2
-ODOO_ADMIN_PASSWORD=admin_password_for_operations
-
-# Métodos de autenticación habilitados
-AUTH_PROVIDERS=email,odoo
-```
-
-
-
-### Flujos de Autenticación
-
-#### 1. Login con Odoo
-
-```
-Usuario ingresa credenciales
-         │
-         ▼
-Mobile/Web → API /api/auth/login (provider=odoo)
-         │
-         ▼
-@core/api → OdooService.authenticate()
-         │
-         ▼
-Odoo XML-RPC → Odoo Server (common.login)
-         │
-         ▼
-Obtiene UID y datos del usuario
-         │
-         ▼
-Busca/crea usuario local en MongoDB
-         │
-         ▼
-Genera JWT/NextAuth session
-```
-
-#### 2. Registro de Usuario
-
-```
-Usuario completa formulario de registro
-         │
-         ▼
-API /api/register
-         │
-         ├──▶ Crear usuario en MongoDB
-         │
-         └──▶ Si AUTH_PROVIDERS incluye 'odoo':
-                  │
-                  ▼
-              OdooService.createUser()
-                  │
-                  ▼
-              Odoo XML-RPC → res.users/create
-                  │
-                  ▼
-              Asigna grupo 'Portal User'
-```
-
-#### 3. Cambio de Contraseña
-
-```
-Usuario solicita cambio de contraseña
-         │
-         ▼
-API /api/change-password
-         │
-         ├──▶ Valida contraseña actual contra Odoo
-         │         │
-         │         ▼
-         │    OdooService.authenticate()
-         │
-         ├──▶ Actualiza en MongoDB (bcrypt)
-         │
-         └──▶ Si tiene odoo_uid en metadata:
-                  │
-                  ▼
-              OdooService.updatePassword()
-                  │
-                  ▼
-              Odoo XML-RPC → res.users/write
-```
 

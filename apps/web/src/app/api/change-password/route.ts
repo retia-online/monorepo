@@ -57,50 +57,20 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Check if user has odoo integration
-        const isOdooEnabled = (process.env.AUTH_PROVIDERS || 'email').split(',').includes('odoo');
-        const odooUid = user.metadata?.odoo_uid;
+        // Verificar contraseña actual
+        console.log('🔍 Verifying current password...');
+        const isCurrentPasswordValid = await bcrypt.compare(
+            validatedData.currentPassword,
+            user.password || ''
+        );
+        console.log('✅ Current password valid:', isCurrentPasswordValid);
 
-        if (isOdooEnabled && odooUid) {
-            try {
-                const { createOdooService } = await import('@core/api');
-                const odoo = createOdooService();
-
-                // 1. Verify current password with Odoo
-                const odooAuth = await odoo.authenticate(user.email, validatedData.currentPassword);
-                if (!odooAuth) {
-                    return NextResponse.json(
-                        { error: 'La contraseña actual es incorrecta en Odoo' },
-                        { status: 400 }
-                    );
-                }
-
-                // 2. Update password in Odoo
-                await odoo.updatePassword(odooUid, validatedData.newPassword);
-            } catch (odooError) {
-                console.error('Odoo password update error:', odooError);
-                return NextResponse.json(
-                    { error: 'Error al actualizar contraseña en Odoo' },
-                    { status: 500 }
-                );
-            }
-        } else {
-            // Standard flow for local-only users
-            // Verificar contraseña actual
-            console.log('🔍 Verifying current password...');
-            const isCurrentPasswordValid = await bcrypt.compare(
-                validatedData.currentPassword,
-                user.password || ''
+        if (!isCurrentPasswordValid) {
+            console.log('❌ Current password is incorrect');
+            return NextResponse.json(
+                { error: 'La contraseña actual es incorrecta' },
+                { status: 400 }
             );
-            console.log('✅ Current password valid:', isCurrentPasswordValid);
-
-            if (!isCurrentPasswordValid) {
-                console.log('❌ Current password is incorrect');
-                return NextResponse.json(
-                    { error: 'La contraseña actual es incorrecta' },
-                    { status: 400 }
-                );
-            }
         }
 
         // Verificar que la nueva contraseña sea diferente

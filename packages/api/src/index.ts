@@ -27,8 +27,6 @@ export {
     sendPendingApprovalEmail,
 } from './services/email';
 
-// Odoo services
-export { OdooService, createOdooService, createOdooTask, updateOdooTask, readOdooTask } from './services/odoo';
 
 // Crypto utilities
 export {

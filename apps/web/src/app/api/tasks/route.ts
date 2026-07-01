@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { connectDB, Task, createOdooService, createOdooTask } from '@core/api';
+import { connectDB, Task } from '@core/api';
 import { z } from 'zod';
 
 const createTaskSchema = z.object({
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * POST: Crear una tarea local y sincronizarla con Odoo
+ * POST: Crear una tarea local
  */
 export async function POST(request: NextRequest) {
     try {
@@ -54,40 +54,10 @@ export async function POST(request: NextRequest) {
             projectId: validated.projectId,
         });
 
-        // 2. Sincronización con Odoo si está habilitado
-        const isOdooEnabled = (process.env.AUTH_PROVIDERS || 'email').split(',').includes('odoo');
-        let odooTaskId: number | undefined;
-
-        if (isOdooEnabled) {
-            try {
-                const odoo = createOdooService();
-                
-                // Intentamos crear la tarea en Odoo
-                odooTaskId = await createOdooTask(
-                    odoo,
-                    validated.title,
-                    validated.description || '',
-                    validated.projectId
-                );
-
-                if (odooTaskId) {
-                    // Actualizar tarea local con el ID devuelto por Odoo
-                    localTask.odooTaskId = odooTaskId;
-                    await localTask.save();
-                    console.log(`✅ Tarea sincronizada con Odoo con ID: ${odooTaskId}`);
-                }
-            } catch (odooError) {
-                // En producción podrías querer guardar una tarea de reintento en cola,
-                // pero permitiremos que la tarea se cree localmente.
-                console.error('⚠️ Error al crear tarea en Odoo (sincronización fallida):', odooError);
-            }
-        }
-
         return NextResponse.json(
             {
                 message: 'Tarea creada exitosamente',
                 task: localTask,
-                odooSynced: !!odooTaskId,
             },
             { status: 201 }
         );

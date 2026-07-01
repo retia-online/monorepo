@@ -27,7 +27,7 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://retia-app.vercel.app",
         "EXPO_PUBLIC_AUTH_MODE": "required",
-        "EXPO_PUBLIC_AUTH_METHODS": "odoo,email,google",
+        "EXPO_PUBLIC_AUTH_METHODS": "email,google",
         "EXPO_PUBLIC_INSTANCE": "Retia"
       }
     }
