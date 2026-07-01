@@ -30,9 +30,8 @@ export const nameSchema = z
     .max(50, 'Name must be less than 50 characters');
 
 export const loginSchema = z.object({
-    email: z.string().min(1, 'Email/Username is required'),
+    email: emailSchema,
     password: passwordSchema,
-    provider: z.string().optional(),
 });
 
 export const registerSchema = z.object({

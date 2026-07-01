@@ -25,7 +25,6 @@ export async function POST(request: NextRequest) {
 
         // Validate input
         const validated = loginSchema.parse(body);
-        console.log('Validated Provider:', validated.provider);
 
         // Connect to database
         await connectDB();

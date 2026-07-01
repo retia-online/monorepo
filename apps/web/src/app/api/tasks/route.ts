@@ -6,7 +6,6 @@ import { z } from 'zod';
 const createTaskSchema = z.object({
     title: z.string().min(1, 'Title is required'),
     description: z.string().optional(),
-    projectId: z.number().optional(),
 });
 
 /**
@@ -51,7 +50,6 @@ export async function POST(request: NextRequest) {
         const localTask = await Task.create({
             title: validated.title,
             description: validated.description || '',
-            projectId: validated.projectId,
         });
 
         return NextResponse.json(
