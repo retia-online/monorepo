@@ -1,11 +1,11 @@
-# @monorepo-vzla/auth
+# @core/auth
 
 Authentication SDK with NextAuth configuration and route protection middleware.
 
 ## Installation
 
 ```bash
-npm install @monorepo-vzla/auth
+npm install @core/auth
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @monorepo-vzla/auth
 ### Basic Setup
 
 ```typescript
-import { authConfig, handlers, auth } from '@monorepo-vzla/auth';
+import { authConfig, handlers, auth } from '@core/auth';
 
 // Use in your Next.js app
 export const { GET, POST } = handlers;
@@ -22,7 +22,7 @@ export const { GET, POST } = handlers;
 ### Route Protection
 
 ```typescript
-import { requireAuth, requireAdmin } from '@monorepo-vzla/auth';
+import { requireAuth, requireAdmin } from '@core/auth';
 
 // Protect a page
 export default async function ProtectedPage() {
@@ -40,7 +40,7 @@ export default async function AdminPage() {
 ### Middleware
 
 ```typescript
-import { createAuthMiddleware } from '@monorepo-vzla/auth';
+import { createAuthMiddleware } from '@core/auth';
 
 export const middleware = createAuthMiddleware({
   protectedRoutes: ['/dashboard', '/profile'],
@@ -65,7 +65,7 @@ Optional OAuth variables:
 For mobile applications that don't use NextAuth on the client, you can use JWT-based authentication:
 
 ```typescript
-import { generateMobileToken, verifyMobileToken } from '@monorepo-vzla/auth';
+import { generateMobileToken, verifyMobileToken } from '@core/auth';
 
 // In your API route
 const token = await generateMobileToken(user, process.env.NEXTAUTH_SECRET);

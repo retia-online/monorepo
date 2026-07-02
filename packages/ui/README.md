@@ -1,17 +1,17 @@
-# @monorepo-vzla/ui
+# @core/ui
 
 UI components and layouts for Monorepo applications.
 
 ## Installation
 
 ```bash
-npm install @monorepo-vzla/ui
+npm install @core/ui
 ```
 
 ## Usage
 
 ```tsx
-import { Button, Card, Input, PasswordStrength } from '@monorepo-vzla/ui';
+import { Button, Card, Input, PasswordStrength } from '@core/ui';
 
 function App() {
     return (

@@ -1,11 +1,11 @@
-# @monorepo-vzla/configs
+# @core/configs
 
 Shared configuration presets for Monorepo applications.
 
 ## Installation
 
 ```bash
-npm install @monorepo-vzla/configs
+npm install @core/configs
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install @monorepo-vzla/configs
 ```javascript
 // tailwind.config.js
 module.exports = {
-  presets: [require('@monorepo-vzla/configs/tailwind.preset')],
+  presets: [require('@core/configs/tailwind.preset')],
   content: [
     // your content paths
   ],
@@ -28,7 +28,7 @@ module.exports = {
 ```json
 // tsconfig.json
 {
-  "extends": "@monorepo-vzla/configs/tsconfig.base.json",
+  "extends": "@core/configs/tsconfig.base.json",
   "compilerOptions": {
     // your additional options
   }
@@ -40,7 +40,7 @@ For React projects:
 ```json
 // tsconfig.json
 {
-  "extends": "@monorepo-vzla/configs/tsconfig.react.json",
+  "extends": "@core/configs/tsconfig.react.json",
   "compilerOptions": {
     // your additional options
   }
@@ -51,7 +51,7 @@ For React projects:
 
 ```javascript
 // eslint.config.js
-const monorepoConfig = require('@monorepo-vzla/configs/eslint.config');
+const monorepoConfig = require('@core/configs/eslint.config');
 
 module.exports = [
   ...monorepoConfig,

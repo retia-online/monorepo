@@ -319,7 +319,7 @@ await secureStorage.removeToken();
 Todas las entradas se validan usando Zod (mismo que en el backend):
 
 ```typescript
-import { loginSchema } from '@monorepo-vzla/api';
+import { loginSchema } from '@core/api';
 
 const validated = loginSchema.parse({ email, password });
 ```
@@ -370,13 +370,13 @@ EXPO_PUBLIC_API_URL=http://192.168.1.100:3000
 
 La app móvil reutiliza:
 
-- **@monorepo-vzla/api**: Servicios de API y validación
-- **@monorepo-vzla/ui**: Componentes UI compartidos (cuando sea compatible con React Native)
+- **@core/api**: Servicios de API y validación
+- **@core/ui**: Componentes UI compartidos (cuando sea compatible con React Native)
 
 ```typescript
 // Importar desde SDKs externos
-import { loginSchema, registerSchema } from '@monorepo-vzla/api';
-import type { User } from '@monorepo-vzla/api';
+import { loginSchema, registerSchema } from '@core/api';
+import type { User } from '@core/api';
 ```
 
 ## 🧪 Testing
